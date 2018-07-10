@@ -7,6 +7,12 @@ qemu-system-x86_64 \
     -nographic -append "console=ttyS0" -enable-kvm
 }
 
+function delete {
+cd $TOP
+rm -rf *
+exit
+}
+
 function writeInit {
 cat <<EOF> init
 #!/bin/sh
@@ -14,8 +20,7 @@ cat <<EOF> init
 mount -t proc none /proc
 mount -t sysfs none /sys
  
-echo -e "\nBoot took $(cut -d' ' -f1 /proc/uptime) seconds"
-echo -e "\nPress Ctrl+A C to enter qemu monitor and then type quit. \n"
+echo -e "\nBoot took $(cut -d' ' -f1 /proc/uptime) seconds\n"
  
 exec /bin/sh
 EOF
@@ -68,11 +73,31 @@ TOP=$HOME/Linux/teeny-linux
 mkdir $TOP
 cd $TOP
 
+
+while [[ $# -gt 0 ]]
+do
+key="$1"
+case $key in
+    -d|-delete|-deleteall)
+    delete
+    shift; shift # past argument and value
+    ;;-init|-makeInit|-makeinit)
+    makeInitramfs
+    DoQemu
+    exit
+    shift; shift # past argument and value
+    ;;
+    
+esac
+done
+
 #Download if nececairy, clean an unclean build
-if [ ! -f $TOP/linux-4.17.5.tar.xz ] 
+if [ ! -f $TOP/linux-4.17.5.tar.xz ]; then
     wget -c https://cdn.kernel.org/pub/linux/kernel/v4.x/linux-4.17.5.tar.xz
-if [ ! -f $TOP/busybox-1.29.0.tar.bz2 ] 
+fi
+if [ ! -f $TOP/busybox-1.29.0.tar.bz2 ]; then
     wget -c https://busybox.net/downloads/busybox-1.29.0.tar.bz2
+fi
 
 if [ -f obj/linux-x86-basic/arch/x86_64/boot/bzImage ] && [ -f $TOP/obj/initramfs-busybox-x86.cpio.gz ]; then
     DoQemu
@@ -84,14 +109,18 @@ else
     exit
     else
         if [ -f $TOP/obj/busybox-x86/busybox ]; then
-        makeInitramfs
-        makeKernel
-        DoQemu
-        exit
+            makeInitramfs
+            if [ ! -f obj/linux-x86-basic/arch/x86_64/boot/bzImage ]; then
+                makeKernel
+            fi
+            DoQemu
+            exit
         else
         buildBusyBox
         makeInitramfs
-        makeKernel
+        if [ ! -f obj/linux-x86-basic/arch/x86_64/boot/bzImage ]; then
+                makeKernel
+        fi
         DoQemu
         exit
         fi
