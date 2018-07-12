@@ -14,13 +14,18 @@ exit
 }
 
 function writeInit {
-cat <<EOF> init
+cat << EOF> init 
 #!/bin/sh
  
 mount -t proc none /proc
 mount -t sysfs none /sys
  
-echo -e "\nBoot took $(cut -d' ' -f1 /proc/uptime) seconds\n"
+echo -e '\nWelcome to Teeny Linux\n'
+echo -e 'Amount of seconds to boot: '
+cut -d' ' -f1 /proc/uptime
+echo -e 'To shutdown and return to your CLI'
+echo -e 'type poweroff -f or \n Ctrl+a C, then "quit"\n'
+cat /proc/version
  
 exec /bin/sh
 EOF
@@ -99,27 +104,25 @@ if [ ! -f $TOP/busybox-1.29.0.tar.bz2 ]; then
     wget -c https://busybox.net/downloads/busybox-1.29.0.tar.bz2
 fi
 
-if [ -f obj/linux-x86-basic/arch/x86_64/boot/bzImage ] && [ -f $TOP/obj/initramfs-busybox-x86.cpio.gz ]; then
+if [ -f $TOP/obj/initramfs-busybox-x86.cpio.gz ]; then
+    if [ ! -f $TOP/obj/linux-x86-basic/arch/x86_64/boot/bzImage ]; then
+        makeKernel
+    fi
     DoQemu
     exit
 else
-    if [ -f $TOP/obj/initramfs-busybox-x86.cpio.gz ]; then
-    makeKernel
-    DoQemu
-    exit
+    if [ -f $TOP/obj/busybox-x86/busybox ]; then
+        makeInitramfs
+        if [ ! -f $TOP/obj/linux-x86-basic/arch/x86_64/boot/bzImage ]; then
+            makeKernel
+        fi
+        DoQemu
+        exit
     else
-        if [ -f $TOP/obj/busybox-x86/busybox ]; then
-            makeInitramfs
-            if [ ! -f obj/linux-x86-basic/arch/x86_64/boot/bzImage ]; then
-                makeKernel
-            fi
-            DoQemu
-            exit
-        else
         buildBusyBox
         makeInitramfs
-        if [ ! -f obj/linux-x86-basic/arch/x86_64/boot/bzImage ]; then
-                makeKernel
+        if [ ! -f $TOP/obj/linux-x86-basic/arch/x86_64/boot/bzImage ]; then
+            makeKernel
         fi
         DoQemu
         exit
