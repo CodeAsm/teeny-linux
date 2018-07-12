@@ -58,11 +58,11 @@ find . -print0 \
 
 function makeKernel {
 cd $TOP
-rm -rf linux-4.17.5/
+rm -rf linux-4.17.6/
 rm -rf obj/linux-x86-basic
-tar xJf linux-4.17.5.tar.xz
+tar xJf linux-4.17.6.tar.xz
 #Make our Kernel
-cd $TOP/linux-4.17.5
+cd $TOP/linux-4.17.6
 make O=../obj/linux-x86-basic x86_64_defconfig
 make O=../obj/linux-x86-basic kvmconfig
 make O=../obj/linux-x86-basic -j$(nproc)
@@ -92,8 +92,8 @@ esac
 done
 
 #Download if nececairy, clean an unclean build
-if [ ! -f $TOP/linux-4.17.5.tar.xz ]; then
-    wget -c https://cdn.kernel.org/pub/linux/kernel/v4.x/linux-4.17.5.tar.xz
+if [ ! -f $TOP/linux-4.17.6.tar.xz ]; then
+    wget -c https://cdn.kernel.org/pub/linux/kernel/v4.x/linux-4.17.6.tar.xz
 fi
 if [ ! -f $TOP/busybox-1.29.0.tar.bz2 ]; then
     wget -c https://busybox.net/downloads/busybox-1.29.0.tar.bz2
