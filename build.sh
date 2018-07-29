@@ -1,23 +1,18 @@
 #!/bin/bash 
+KERNEL="4.17.11"
+BUSY="1.29.1"
+ARCH="x86_64" #default
+TOP=$HOME/Linux/teeny-linux
 
-while [[ $# -gt 0 ]]
-do
-key="$1"
-case $key in
-    -arch|-cpu)
-    ARCH="$2"
-    shift; shift # past argument and value
-    ;;
-esac
-done
+#first stuff happening here.
+mkdir -p $TOP
+cd $TOP
 
-if [ -z $ARCH ]; then
-    ARCH="x86_64"; fi
-    
+#a bunch of helpfull functions
 function DoQemu {
 cd $TOP
-qemu-system-x86_64 \
-    -kernel obj/linux-x86-basic/arch/x86_64/boot/bzImage \
+qemu-system-$ARCH \
+    -kernel obj/linux-x86-basic/arch/$ARCH/boot/bzImage \
     -initrd obj/initramfs-busybox-x86.cpio.gz \
     -nographic -append "console=ttyS0" -enable-kvm
 }
@@ -25,7 +20,7 @@ qemu-system-x86_64 \
 function delete {
 cd $TOP
 rm -rf *
-exit
+exit 1
 }
 
 function writeInit {
@@ -48,10 +43,10 @@ EOF
 
 function buildBusyBox {
 cd $TOP
-rm -rf busybox-1.29.1/
-tar xjf busybox-1.29.1.tar.bz2
+rm -rf busybox-$BUSY/
+tar xjf busybox-$BUSY.tar.bz2
 rm -rf obj/busybox-x86
-cd $TOP/busybox-1.29.1
+cd $TOP/busybox-$BUSY
 mkdir -pv ../obj/busybox-x86
 make O=../obj/busybox-x86 defconfig
 # do a static lib thing for busy, 
@@ -78,45 +73,48 @@ find . -print0 \
 
 function makeKernel {
 cd $TOP
-rm -rf linux-4.17.10/
+rm -rf linux-$KERNEL/
 rm -rf obj/linux-x86-basic
-tar xJf linux-4.17.10.tar.xz
+tar xJf linux-$KERNEL.tar.xz
 #Make our Kernel
-cd $TOP/linux-4.17.10
+cd $TOP/linux-$KERNEL
 make O=../obj/linux-x86-basic x86_64_defconfig
 make O=../obj/linux-x86-basic kvmconfig
 make O=../obj/linux-x86-basic -j$(nproc)
 }
 
 
-TOP=$HOME/Linux/teeny-linux
-mkdir $TOP
-cd $TOP
-
-
+#process commandline arguments
 while [[ $# -gt 0 ]]
 do
 key="$1"
 case $key in
-    -d|-delete|-deleteall)
-    delete
+    -arch|-cpu)
+    ARCH="$2"
     shift; shift # past argument and value
     ;;-init|-makeInit|-makeinit)
     makeInitramfs
     DoQemu
     exit
     shift; shift # past argument and value
+    ;;-d|-delete|-deleteall)
+    delete
+    shift; # past argument and value
     ;;
-    
 esac
 done
 
+#sets defaults if arguments are empty or incorrect
+if [ -z $ARCH ]; then
+    ARCH="x86_64"; fi
+    
+    
 #Download if nececairy, clean an unclean build
-if [ ! -f $TOP/linux-4.17.10.tar.xz ]; then
-    wget -c https://cdn.kernel.org/pub/linux/kernel/v4.x/linux-4.17.10.tar.xz
+if [ ! -f $TOP/linux-$KERNEL.tar.xz ]; then
+    wget -c https://cdn.kernel.org/pub/linux/kernel/v4.x/linux-$KERNEL.tar.xz
 fi
-if [ ! -f $TOP/busybox-1.29.1.tar.bz2 ]; then
-    wget -c https://busybox.net/downloads/busybox-1.29.1.tar.bz2
+if [ ! -f $TOP/busybox-$BUSY.tar.bz2 ]; then
+    wget -c https://busybox.net/downloads/busybox-$BUSY.tar.bz2
 fi
 
 if [ -f $TOP/obj/initramfs-busybox-x86.cpio.gz ]; then
