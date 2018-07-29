@@ -1,4 +1,19 @@
 #!/bin/bash 
+
+while [[ $# -gt 0 ]]
+do
+key="$1"
+case $key in
+    -arch|-cpu)
+    ARCH="$2"
+    shift; shift # past argument and value
+    ;;
+esac
+done
+
+if [ -z $ARCH ]; then
+    ARCH="x86_64"; fi
+    
 function DoQemu {
 cd $TOP
 qemu-system-x86_64 \
@@ -33,10 +48,10 @@ EOF
 
 function buildBusyBox {
 cd $TOP
-rm -rf busybox-1.29.0/
-tar xjf busybox-1.29.0.tar.bz2
+rm -rf busybox-1.29.1/
+tar xjf busybox-1.29.1.tar.bz2
 rm -rf obj/busybox-x86
-cd $TOP/busybox-1.29.0
+cd $TOP/busybox-1.29.1
 mkdir -pv ../obj/busybox-x86
 make O=../obj/busybox-x86 defconfig
 # do a static lib thing for busy, 
@@ -63,11 +78,11 @@ find . -print0 \
 
 function makeKernel {
 cd $TOP
-rm -rf linux-4.17.6/
+rm -rf linux-4.17.10/
 rm -rf obj/linux-x86-basic
-tar xJf linux-4.17.6.tar.xz
+tar xJf linux-4.17.10.tar.xz
 #Make our Kernel
-cd $TOP/linux-4.17.6
+cd $TOP/linux-4.17.10
 make O=../obj/linux-x86-basic x86_64_defconfig
 make O=../obj/linux-x86-basic kvmconfig
 make O=../obj/linux-x86-basic -j$(nproc)
@@ -97,11 +112,11 @@ esac
 done
 
 #Download if nececairy, clean an unclean build
-if [ ! -f $TOP/linux-4.17.6.tar.xz ]; then
-    wget -c https://cdn.kernel.org/pub/linux/kernel/v4.x/linux-4.17.6.tar.xz
+if [ ! -f $TOP/linux-4.17.10.tar.xz ]; then
+    wget -c https://cdn.kernel.org/pub/linux/kernel/v4.x/linux-4.17.10.tar.xz
 fi
-if [ ! -f $TOP/busybox-1.29.0.tar.bz2 ]; then
-    wget -c https://busybox.net/downloads/busybox-1.29.0.tar.bz2
+if [ ! -f $TOP/busybox-1.29.1.tar.bz2 ]; then
+    wget -c https://busybox.net/downloads/busybox-1.29.1.tar.bz2
 fi
 
 if [ -f $TOP/obj/initramfs-busybox-x86.cpio.gz ]; then
