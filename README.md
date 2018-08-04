@@ -15,12 +15,16 @@ My goals in non particular order are:
 * boot from media instead of direct kernel
 
 Most of my research and/or playing is done on a x86_64 Arch Linux system, I asume the reader is skilled enough to translate any commands or hints to their own system or reading other resources to accomplish their own goals.
-This is never ment for production or replacing LFS for example. 100101
+This is never ment for production or replacing LFS for example. 
+
+I do not recommend this documentation or scripts as a learning tool or seen as fact. this is just me playing arround.
 
 # news
 Updated to the latest I know Kernel and applications
-* Linux Kernel  4.17.11 2018-07-28
-* BusyBox       1.29.1  2018-07-15
+* Linux Kernel  4.17.12 2018-08-03
+* BusyBox       1.29.2  2018-07-31
+
+Powerpc still fails, no other arch beside x86_64 work.
 
 # building
 run the buildscript :D
@@ -33,6 +37,7 @@ TobeDone
 
 
 # cross compiling
+_this is work in progress_
 To do crosscompiling ive made a script called "crosstools.sh" that will add crosscompile tools if you dont have any.
 From here on the variable arch can be set to the arch you made crostools for.
 
@@ -106,6 +111,7 @@ powerpc-linux-gnu-gcc -static -g hello.cpp -o hello
 qemu-ppc hello
 
 ## Building bare kernel
+_this is work in progress_
 git clone https://github.com/raspberrypi/linux raspberrypi-linux
 cd raspberrypi-linux
 cp arch/arm/configs/bcmrpi_cutdown_defconfig .config
