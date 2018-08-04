@@ -44,6 +44,11 @@ needed GPG keys for linux, patch and glibc headers:
 16792B4EA25340F8
 gpg --keyserver hkps://pgp.mit.edu --recv-keys 79BE3E4300411886 38DBBDC86092693E 16792B4EA25340F8
 
+
+These tools are 32bit, and for Powerpc G5 we need 64bits.
+And browsing the Arch forums... yeah, general public intrests.... they go with the dodo.
+Lets make our own Distro, with Doom and Anime... I mean documentries on space and sciense.
+
 ## powerpc-linux-gnu-binutils
 git clone https://aur.archlinux.org/powerpc-linux-gnu-binutils.git
 cd powerpc-linux-gnu-binutils/
