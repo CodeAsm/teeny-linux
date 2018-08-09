@@ -21,10 +21,38 @@ I do not recommend this documentation or scripts as a learning tool or seen as f
 
 # news
 Updated to the latest I know Kernel and applications
-* Linux Kernel  4.17.12 2018-08-03
+* Linux Kernel  4.17.14 2018-08-09
 * BusyBox       1.29.2  2018-07-31
+* added Kernel version option
 
 Powerpc still fails, no other arch beside x86_64 work.
+
+# options
+The build scribt knows the following commands passable as arguments:
+```bash
+./build.sh -d
+./build.sh -delete
+./build.sh -deleteall
+```
+deletes all but the tarbal files (handy to restart building without downloading the tarbals
+
+```bash
+./build.sh -arch [ppc|x86_64]
+./build.sh -cpu [ppc|x86_64]
+```
+builds for the selected arch, x86_64 is default tho, x86 isnt tested(yet)
+
+```bash
+./build.sh -init
+./build.sh -makeInit
+./build.sh -makeinit
+```
+Builds or rebuilds only the initramfs and then tries to run qemu, handy when trying new init programs or 
+other initramfs tests
+```bash
+./build.sh -k <kernel version>
+./build.sh-kernel
+```
 
 # building
 run the buildscript :D
@@ -53,79 +81,98 @@ gpg --keyserver hkps://pgp.mit.edu --recv-keys 79BE3E4300411886 38DBBDC86092693E
 These tools are 32bit, and for Powerpc G5 we need 64bits.
 And browsing the Arch forums... yeah, general public intrests.... they go with the dodo.
 Lets make our own Distro, with Doom and Anime... I mean documentries on space and sciense.
+## 64bit
+## powerpc64-linux-gnu-binutils
 
-## powerpc-linux-gnu-binutils
+```
+git clone https://aur.archlinux.org/powerpc64-linux-gnu-binutils.git
+cd powerpc64-linux-gnu-binutils/
+makepkg -si
+cd ..
+```
+
+## 32bit
+### powerpc-linux-gnu-binutils
+```
 git clone https://aur.archlinux.org/powerpc-linux-gnu-binutils.git
 cd powerpc-linux-gnu-binutils/
 makepkg -si
 cd ..
-
-## powerpc-linux-gnu-linux-api-headers
+```
+### powerpc-linux-gnu-linux-api-headers
+```
 git clone https://aur.archlinux.org/powerpc-linux-gnu-linux-api-headers.git
 cd powerpc-linux-gnu-linux-api-headers/
 makepkg -si
 cd ..
-
-## powerpc-linux-gnu-gcc-stage1
+```
+### powerpc-linux-gnu-gcc-stage1
+```
 git clone https://aur.archlinux.org/powerpc-linux-gnu-gcc-stage1.git
 cd powerpc-linux-gnu-gcc-stage1/
 makepkg -si
 cd ..
-
-## powerpc-linux-gnu-glibc-headers
+```
+### powerpc-linux-gnu-glibc-headers
+```
 git clone https://aur.archlinux.org/powerpc-linux-gnu-glibc-headers.git
 cd powerpc-linux-gnu-glibc-headers/
 makepkg -si
 cd ..
-
-## powerpc-linux-gnu-gcc-stage2
+```
+### powerpc-linux-gnu-gcc-stage2
+```
 git clone https://aur.archlinux.org/powerpc-linux-gnu-gcc-stage2.git
 cd powerpc-linux-gnu-gcc-stage2/
 makepkg -si
 cd ..
-
-## powerpc-linux-gnu-glibc
+```
+### powerpc-linux-gnu-glibc
+```
 git clone https://aur.archlinux.org/powerpc-linux-gnu-glibc.git
 cd powerpc-linux-gnu-glibc/
 makepkg -si
 cd ..
-
-## powerpc-linux-gnu-gcc
+```
+### powerpc-linux-gnu-gcc
+```
 git clone https://aur.archlinux.org/powerpc-linux-gnu-gcc.git
 cd powerpc-linux-gnu-gcc/
 makepkg -si
 cd ..
-
-## Testing the compiler
+```
+### Testing the compiler
 Write a file containing:
 -------------------------
+```c
 #include<stdio.h>
 
 int main () {
         printf("Hello PowerPC!\n");
         return 0;
 }
-
+```
 -------------------------
-powerpc-linux-gnu-gcc -static -g hello.cpp -o hello 
+```powerpc-linux-gnu-gcc -static -g hello.cpp -o hello 
 qemu-ppc hello
+```
 
 ## Building bare kernel
 _this is work in progress_
+```
 git clone https://github.com/raspberrypi/linux raspberrypi-linux
 cd raspberrypi-linux
 cp arch/arm/configs/bcmrpi_cutdown_defconfig .config
 make ARCH=arm CROSS_COMPILE=/usr/bin/arm-linux-gnueabi- oldconfig
 make ARCH=arm CROSS_COMPILE=/usr/bin/arm-linux-gnueabi- menuconfig
 make ARCH=arm CROSS_COMPILE=/usr/bin/arm-linux-gnueabi- -k
-
+```
 or do some defconfig for ppc
+```
 make -j 4 [u|z]Image dtbs modules
-
-
 make ARCH=arm CROSS_COMPILE=arm-none-linux-gnueabi-
-
-
+```
+```bash
 export ARCH:=arm
 export CROSS_COMPILE:=arm-none-linux-gnueabi-
 
@@ -152,7 +199,7 @@ default:
           $(MAKE) -C $(KDIR) M=$(PWD) modules
 clean:
           $(MAKE) -C $(KDIR) M=$(PWD) clean
-          
+```          
           
           
 # Resources

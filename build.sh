@@ -1,5 +1,5 @@
 #!/bin/bash 
-KERNEL="4.17.12"
+KERNEL="4.17.14"
 BUSY="1.29.2"
 ARCH="x86_64" #default
 ARC="x86"
@@ -55,7 +55,7 @@ rm -rf obj/busybox-$ARC
 cd $TOP/busybox-$BUSY
 mkdir -pv ../obj/busybox-$ARC
 if [ $ARCH != "x86_64" ]; then
-    make O=../obj/busybox-$ARC ARCH=$(ARCH) CROSS_COMPILE=$(COMPILER) defconfig
+    make O=../obj/busybox-$ARC ARCH=$ARCH CROSS_COMPILE=$COMPILER defconfig
 else
     make O=../obj/busybox-$ARC defconfig
 fi
@@ -63,7 +63,7 @@ fi
 sed -i '/# CONFIG_STATIC is not set/c\CONFIG_STATIC=y' ../obj/busybox-$ARC/.config
 cd ../obj/busybox-$ARC
 if [ $ARCH != "x86_64" ]; then
-    make -j$(nproc) ARCH=$(ARCH) CROSS_COMPILE=$(COMPILER)
+    make -j$(nproc) ARCH=$ARCH CROSS_COMPILE=$COMPILER
 else
     make -j$(nproc)
 fi
@@ -199,10 +199,10 @@ CONFIG_MSDOS_PARTITION=y
 CONFIG_NLS=y
 CONFIG_NLS_UTF8=y
 EOF
-#make O=../obj/linux-$ARC-basic ARCH=$ARCHF CROSS_COMPILE=$COMPILER miniconfig-linux
+make O=../obj/linux-$ARC-basic ARCH=$ARCHF CROSS_COMPILE=$COMPILER g5_defconfig
 #make O=../obj/linux-$ARC-basic ARCH=$ARCHF CROSS_COMPILE=$COMPILER menuconfig
 
-make O=../obj/linux-$ARC-basic ARCH=$ARCHF CROSS_COMPILE=$COMPILER kvmconfig
+#make O=../obj/linux-$ARC-basic ARCH=$ARCHF CROSS_COMPILE=$COMPILER kvmconfig
 make O=../obj/linux-$ARC-basic ARCH=$ARCHF CROSS_COMPILE=$COMPILER -j$(nproc)
 else
 
@@ -231,6 +231,9 @@ case $key in
     ;;-d|-delete|-deleteall)
     delete
     shift; # past argument and value
+    ;;-k|-kernel)
+    KERNEL="$2"
+    shift; shift;
     ;;
 esac
 done
