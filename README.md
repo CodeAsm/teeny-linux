@@ -72,10 +72,14 @@ From here on the variable arch can be set to the arch you made crostools for.
 # How to build Powerpc crosstools on Arch
 
 needed GPG keys for linux, patch and glibc headers:
+```
 79BE3E4300411886
 38DBBDC86092693E
 16792B4EA25340F8
+```
+```bash
 gpg --keyserver hkps://pgp.mit.edu --recv-keys 79BE3E4300411886 38DBBDC86092693E 16792B4EA25340F8
+```
 
 
 These tools are 32bit, and for Powerpc G5 we need 64bits.
@@ -206,3 +210,19 @@ clean:
 <https://gts3.org/2017/cross-kernel.html>
 <https://balau82.wordpress.com/2010/02/28/hello-world-for-bare-metal-arm-using-qemu/>
 <https://github.com/netbeast/docs/wiki/Cross-compile-test-application>
+<http://preshing.com/20141119/how-to-build-a-gcc-cross-compiler/>
+<http://www.clfs.org/view/CLFS-3.0.0-SYSTEMD/ppc64-64/materials/packages.html>
+<https://wiki.osdev.org/GCC_Cross-Compiler>
+<https://stackoverflow.com/questions/33450401/building-gcc-make-all-error-2>
+    <https://gcc.gnu.org/ml/gcc-help/2012-07/msg00018.html>
+
+
+
+# SIGINT
+Signals Intelligence, to recover, detect and preserve data from unkown origin.
+
+## EVT
+Further research required, but Kernel applied to TTF based underband scanners
+
+## DVT
+RTL-SDR based hardware and up, FPGA and grid chains allignment for further study
