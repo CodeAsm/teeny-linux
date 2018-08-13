@@ -1,5 +1,5 @@
 #!/bin/bash 
-KERNEL="4.17.14"
+KERNEL="4.18"
 BUSY="1.29.2"
 ARCH="x86_64" #default
 ARC="x86"

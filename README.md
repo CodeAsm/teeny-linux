@@ -4,6 +4,8 @@ This awesome guy also updated his buildinstructions so expect some updates on my
 
 http://mgalgs.github.io/2015/05/16/how-to-build-a-custom-linux-kernel-for-qemu-2015-edition.html
 
+[[https://github.com/codeasm/teeny-linux/blob/master/resources/Screenshot.png|alt=screenshot of teenylinux running]]
+
 
 My goals in non particular order are: 
 * Run Linux on any/most CPU (that qemu offers, and that intrests me ;) ).
@@ -21,7 +23,7 @@ I do not recommend this documentation or scripts as a learning tool or seen as f
 
 # news
 Updated to the latest I know Kernel and applications
-* Linux Kernel  4.17.14 2018-08-09
+* Linux Kernel  4.18    2018-08-12
 * BusyBox       1.29.2  2018-07-31
 * added Kernel version option
 
