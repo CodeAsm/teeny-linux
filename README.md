@@ -4,7 +4,7 @@ This awesome guy also updated his buildinstructions so expect some updates on my
 
 http://mgalgs.github.io/2015/05/16/how-to-build-a-custom-linux-kernel-for-qemu-2015-edition.html
 
-[[https://github.com/codeasm/teeny-linux/blob/master/resources/Screenshot.png|alt=screenshot of teenylinux running]]
+[[https://raw.githubusercontent.com/codeasm/teeny-linux/master/resources/Screenshot.png|alt=screenshot of teenylinux running]]
 
 
 My goals in non particular order are: 
