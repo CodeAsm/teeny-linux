@@ -1,6 +1,6 @@
 #!/bin/bash 
-KERNEL="4.18"
-BUSY="1.29.2"
+KERNEL="4.19"
+BUSY="1.29.3"
 ARCH="x86_64" #default
 ARC="x86"
 TOP=$HOME/Linux/teeny-linux
