@@ -1,34 +1,40 @@
 #!/bin/bash 
-KERNEL="4.19"
-BUSY="1.29.3"
-ARCH="x86_64" #default
-ARC="x86"
-TOP=$HOME/Linux/teeny-linux
-COMPILER="powerpc-linux-gnu-"
+KERNEL="4.20-rc4"               #Kernel release number.
+KTYPE="gz"                      #gz used by RC, xz by stable releases
+BUSY="1.29.3"                   #busybox release number
+ARCH="x86_64"                   #default arch
+ARC="x86"                       #short arch (can I use grep for this?)
+TOP=$HOME/Linux/teeny-linux     #location for the build
+COMPILER="powerpc-linux-gnu-"   #compiler pre.
 
+#DO NOT EDIT BELOW it should not be nececairy.
+#-----------------------------------------------------------
 #first stuff happening here.
 mkdir -p $TOP
 cd $TOP
 
 #a bunch of helpfull functions
+#----------------------------------------------------------------------
 function DoQemu {
 cd $TOP
 qemu-system-$ARCH \
-    -kernel obj/linux-$ARC-basic/arch/$ARCHF/boot/bzImage \
+    -kernel obj/linux-$ARC/arch/$ARCH/boot/bzImage \
     -initrd obj/initramfs-busybox-$ARC.cpio.gz \
     -nographic -append "console=ttyS0" #-enable-kvm
 }
 
+#----------------------------------------------------------------------
 function delete {
 cd $TOP
-mv linux-$KERNEL.tar.xz ../linux-$KERNEL.tar.xz
+mv linux-$KERNEL.tar.$KTYPE ../linux-$KERNEL.tar.$KTYPE
 mv busybox-$BUSY.tar.bz2 ../busybox-$BUSY.tar.bz2
 rm -rf *
-mv ../linux-$KERNEL.tar.xz linux-$KERNEL.tar.xz
+mv ../linux-$KERNEL.tar.$KTYPE linux-$KERNEL.tar.$KTYPE
 mv ../busybox-$BUSY.tar.bz2 busybox-$BUSY.tar.bz2
 exit 1
 }
 
+#----------------------------------------------------------------------
 function writeInit {
 cat << EOF> init 
 #!/bin/sh
@@ -46,6 +52,8 @@ cat /proc/version
 exec /bin/sh
 EOF
 }
+
+#----------------------------------------------------------------------
 
 function buildBusyBox {
 cd $TOP
@@ -70,13 +78,19 @@ fi
 make install
 }
 
-function makeInitramfs {
+function makeNewInitramfs {
 #Make the initramfs (first clean ofcourse)
 rm -rf $TOP/initramfs
 mkdir -pv $TOP/initramfs/$ARC-busybox
 cd $TOP/initramfs/$ARC-busybox
-mkdir -pv {bin,sbin,etc,proc,sys,usr/{bin,sbin}}
+mkdir -pv {bin,sbin,etc,proc,sys,usr/{bin,sbin,local/{bin,lib}}}
+makeInitramfs
+}
+
+function makeInitramfs {
+cd $TOP/initramfs/$ARC-busybox
 cp -av $TOP/obj/busybox-$ARC/_install/* .
+#add new files to copy here?
 writeInit
 chmod +x init
 find . -print0 \
@@ -84,22 +98,27 @@ find . -print0 \
     | gzip -9 > $TOP/obj/initramfs-busybox-$ARC.cpio.gz
 }
 
+#----------------------------------------------------------------------
 
 function makeKernel {
 cd $TOP
 rm -rf linux-$KERNEL/
-rm -rf obj/linux-$ARC-basic
-tar xJf linux-$KERNEL.tar.xz
+rm -rf obj/linux-$ARC
+if [ ! $KTYPE == "gz" ]; then #for gz we need xvf, due to RC being diferent
+    tar xJf linux-$KERNEL.tar.$KTYPE
+else
+    tar xvf linux-$KERNEL.tar.$KTYPE
+fi
 #Make our Kernel
 cd $TOP/linux-$KERNEL
 
 if [ $ARCH == "ppc" ]; then
 #for ppc, we need to make a selection somday
-#make O=../obj/linux-$ARC-basic ARCH=$ARCHF CROSS_COMPILE=$COMPILER g5_defconfig
+#make O=../obj/linux-$ARC ARCH=$ARCHF CROSS_COMPILE=$COMPILER g5_defconfig
 # Write out Linux kernel .config file
-mkdir "${TOP}"/obj/linux-$ARC-basic/
-#touch "${TOP}"/obj/linux-$ARC-basic/.config
-cat << EOF> "${TOP}"/obj/linux-$ARC-basic/.config
+mkdir "${TOP}"/obj/linux-$ARC/
+#touch "${TOP}"/obj/linux-$ARC/.config
+cat << EOF> "${TOP}"/obj/linux-$ARC/.config
 CONFIG_EXPERIMENTAL=y
 CONFIG_SWAP=y
 CONFIG_SYSVIPC=y
@@ -134,7 +153,7 @@ CONFIG_PREEMPT=y
 CONFIG_PREEMPT_BKL=y
 CONFIG_BINFMT_ELF=y
 CONFIG_CMDLINE_BOOL=y
-CONFIG_CMDLINE="rw init=/tools/bin/sh panic=1 PATH=/tools/bin root=/dev/hda console=ttyS0"
+CONFIG_CMDLINE="rw init=/bin/sh panic=1 PATH=/bin root=/dev/ram0 console=ttyS0"
 CONFIG_SECCOMP=y
 CONFIG_ISA=y
 CONFIG_ADVANCED_OPTIONS=y
@@ -187,7 +206,7 @@ CONFIG_INOTIFY=y
 CONFIG_INOTIFY_USER=y
 CONFIG_DNOTIFY=y
 CONFIG_PROC_FS=y
-CONFIG_PROC_KCORE=y
+CONFIG_PROC_KCORE=ytt
 CONFIG_PROC_SYSCTL=y
 CONFIG_SYSFS=y
 CONFIG_TMPFS=y
@@ -199,21 +218,21 @@ CONFIG_MSDOS_PARTITION=y
 CONFIG_NLS=y
 CONFIG_NLS_UTF8=y
 EOF
-make O=../obj/linux-$ARC-basic ARCH=$ARCHF CROSS_COMPILE=$COMPILER g5_defconfig
-#make O=../obj/linux-$ARC-basic ARCH=$ARCHF CROSS_COMPILE=$COMPILER menuconfig
+make O=../obj/linux-$ARC ARCH=$ARCHF CROSS_COMPILE=$COMPILER g5_defconfig
+#make O=../obj/linux-$ARC ARCH=$ARCHF CROSS_COMPILE=$COMPILER menuconfig
 
-#make O=../obj/linux-$ARC-basic ARCH=$ARCHF CROSS_COMPILE=$COMPILER kvmconfig
-make O=../obj/linux-$ARC-basic ARCH=$ARCHF CROSS_COMPILE=$COMPILER -j$(nproc)
+#make O=../obj/linux-$ARC ARCH=$ARCHF CROSS_COMPILE=$COMPILER kvmconfig
+make O=../obj/linux-$ARC ARCH=$ARCHF CROSS_COMPILE=$COMPILER -j$(nproc)
 else
 
-make O=../obj/linux-$ARC-basic x86_64_defconfig
-make O=../obj/linux-$ARC-basic kvmconfig
-make O=../obj/linux-$ARC-basic -j$(nproc)
+make O=../obj/linux-$ARC x86_64_defconfig
+make O=../obj/linux-$ARC kvmconfig
+make O=../obj/linux-$ARC -j$(nproc)
 fi
 
 }
 
-
+#----------------------------------------------------------------------
 #process commandline arguments
 while [[ $# -gt 0 ]]
 do
@@ -225,6 +244,7 @@ case $key in
     shift; shift # past argument and value
     ;;-init|-makeInit|-makeinit)
     makeInitramfs
+    ARCH="x86_64"
     DoQemu
     exit
     shift; shift # past argument and value
@@ -233,7 +253,7 @@ case $key in
     shift; # past argument and value
     ;;-k|-kernel)
     KERNEL="$2"
-    shift; shift;
+    shift; shift
     ;;
 esac
 done
@@ -242,14 +262,17 @@ done
 if [ -z $ARCH ]; then
     ARCH="x86_64"; fi
     
-    
+cd $TOP
+
 #Download if nececairy, clean an unclean build
-if [ ! -f $TOP/linux-$KERNEL.tar.xz ]; then
-    wget -c https://cdn.kernel.org/pub/linux/kernel/v4.x/linux-$KERNEL.tar.xz
+if [ ! -f $TOP/linux-$KERNEL.tar.$KTYPE ]; then
+        wget -c https://cdn.kernel.org/pub/linux/kernel/v4.x/linux-$KERNEL.tar.$KTYPE
+        wget -c https://git.kernel.org/torvalds/t/linux-$KERNEL.tar.$KTYPE
 fi
 if [ ! -f $TOP/busybox-$BUSY.tar.bz2 ]; then
-    wget -c https://busybox.net/downloads/busybox-$BUSY.tar.bz2
+        wget -c https://busybox.net/downloads/busybox-$BUSY.tar.bz2
 fi
+
 
 if [ $ARCH == "ppc" ]; then #this is to have a full arch name, but working functions
     ARCHF="powerpc"
@@ -258,23 +281,23 @@ else
 fi
 
 if [ -f $TOP/obj/initramfs-busybox-$ARC.cpio.gz ]; then
-    if [ ! -f $TOP/obj/linux-$ARC-basic/arch/$ARCHF/boot/bzImage ]; then
+    if [ ! -f $TOP/obj/linux-$ARC/arch/$ARCHF/boot/bzImage ]; then
         makeKernel
     fi
     DoQemu
     exit
 else
     if [ -f $TOP/obj/busybox-$ARC/busybox ]; then
-        makeInitramfs
-        if [ ! -f $TOP/obj/linux-$ARC-basic/arch/$ARCHF/boot/bzImage ]; then
+        makeNewInitramfs
+        if [ ! -f $TOP/obj/linux-$ARC/arch/$ARCHF/boot/bzImage ]; then
             makeKernel
         fi
         DoQemu
         exit
     else
         buildBusyBox
-        makeInitramfs
-        if [ ! -f $TOP/obj/linux-$ARC-basic/arch/$ARCHF/boot/bzImage ]; then
+        makeNewInitramfs
+        if [ ! -f $TOP/obj/linux-$ARC/arch/$ARCHF/boot/bzImage ]; then
             makeKernel
         fi
         DoQemu

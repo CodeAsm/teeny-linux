@@ -23,9 +23,12 @@ I do not recommend this documentation or scripts as a learning tool or seen as f
 
 # news
 Updated to the latest I know Kernel and applications
-* Linux Kernel  4.18    2018-08-12
+* Linux Kernel  4.19.4  2018-11-23
 * BusyBox       1.29.2  2018-07-31
+* TCC           0.9.27  2017-
 * added Kernel version option
+
+4.20-rc4 also works.
 
 Powerpc still fails, no other arch beside x86_64 work.
 
@@ -55,6 +58,20 @@ other initramfs tests
 ./build.sh -k <kernel version>
 ./build.sh-kernel
 ```
+
+To get the optional TCC (Tiny C Compiler) add the tcc switch like:
+```bash
+./build.sh -tcc
+```
+
+Binary directory    /usr/local/bin
+TinyCC directory    /usr/local/lib/tcc
+Library directory   /usr/local/lib
+Include directory   /usr/local/include
+Manual directory    /usr/local/share/man
+Info directory      /usr/local/share/info
+Doc directory       /usr/local/share/doc
+
 
 # building
 run the buildscript :D
