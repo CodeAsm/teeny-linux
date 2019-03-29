@@ -88,6 +88,8 @@ TobeDone
 
 
 # cross compiling
+![Crosscompiled Kernel on ARM target](https://raw.githubusercontent.com/codeasm/teeny-linux/master/resources/Screenshot2.png)
+as seen in picture, my static linked init dint get compiled against 5.0.5 kernel headers but to 3.2.0, ill fix that someday maybe
 _this is work in progress_
 To do crosscompiling ive made a script called "crosstools.sh" that will add crosscompile tools if you dont have any.
 From here on the variable arch can be set to the arch you made crostools for.

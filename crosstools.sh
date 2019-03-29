@@ -41,12 +41,10 @@ make O=../obj/linux-$ARCH ARCH=$ARCH CROSS_COMPILE=$COMPILER -j$(nproc)
 function makeTempRootFS {
 
 #${COMPILER}gcc -static ${TOP}/obj/init.c -o init
-cd $TOP
-cp ../test $TOP/obj/test
-rm $TOP/obj/rootfs
-echo  $TOP/obj/test | cpio -o --format=newc > $TOP/obj/rootfs
-
-
+cd $TOP/obj
+cp ../../test test
+rm rootfs
+echo  test | cpio -o --format=newc > rootfs
 
 }
 
