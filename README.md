@@ -234,6 +234,7 @@ default:
 clean:
           $(MAKE) -C $(KDIR) M=$(PWD) clean
 ```          
+a device tree database is required for proper functioning arm targets, for my example ive used versatile-pb.dtb that is also provided after compiling the kernel.
           
           
 # Resources
