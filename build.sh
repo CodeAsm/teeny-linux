@@ -1,7 +1,8 @@
 #!/bin/bash 
-KERNEL="4.20-rc4"               #Kernel release number.
+KERNEL="5.1-rc2"                  #Kernel release number.
+V="5"                           #Kernel version for folder (should use subsctring)
 KTYPE="gz"                      #gz used by RC, xz by stable releases
-BUSY="1.29.3"                   #busybox release number
+BUSY="1.30.1"                   #busybox release number
 ARCH="x86_64"                   #default arch
 ARC="x86"                       #short arch (can I use grep for this?)
 TOP=$HOME/Linux/teeny-linux     #location for the build
@@ -266,8 +267,8 @@ cd $TOP
 
 #Download if nececairy, clean an unclean build
 if [ ! -f $TOP/linux-$KERNEL.tar.$KTYPE ]; then
-        wget -c https://cdn.kernel.org/pub/linux/kernel/v4.x/linux-$KERNEL.tar.$KTYPE
-        wget -c https://git.kernel.org/torvalds/t/linux-$KERNEL.tar.$KTYPE
+        wget -c https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-$KERNEL.tar.$KTYPE
+        wget -c https://git.kernel.org/torvalds/t/linux-$KERNEL.tar.gz
 fi
 if [ ! -f $TOP/busybox-$BUSY.tar.bz2 ]; then
         wget -c https://busybox.net/downloads/busybox-$BUSY.tar.bz2

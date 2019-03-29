@@ -23,14 +23,15 @@ I do not recommend this documentation or scripts as a learning tool or seen as f
 
 # news
 Updated to the latest I know Kernel and applications
-* Linux Kernel  4.19.4  2018-11-23
-* BusyBox       1.29.2  2018-07-31
+* Linux Kernel  5.0.5   2019-03-27 
+* BusyBox       1.30.1  2019-02-14
 * TCC           0.9.27  2017-
 * added Kernel version option
 
-4.20-rc4 also works.
+5.1-rc2 also works.
 
 Powerpc still fails, no other arch beside x86_64 work.
+see crosstools.sh for a ARM attempt, currently boots the kernel, and no busybox or temp init.
 
 # options
 The build scribt knows the following commands passable as arguments:
@@ -79,6 +80,9 @@ run the buildscript :D
 __select arch support comming__ this feature is being worked on. I want 1 scritp to do all,
 altho I might consider building the crosstools externaly. so you might need to run that first.
 
+A temporarely ARM target inside crosstools is in the work. requires arm-none-eabi- set of build tools as well as a 
+fake init static compiled
+
 # Adding new programs
 TobeDone
 
@@ -87,6 +91,17 @@ TobeDone
 _this is work in progress_
 To do crosscompiling ive made a script called "crosstools.sh" that will add crosscompile tools if you dont have any.
 From here on the variable arch can be set to the arch you made crostools for.
+
+crosscompile.sh will build a arm based kernel and tries to boot it using qemu, for succesfull compiling, requires:
+arm-none-eabi- series.
+
+```bash
+./crosscompile.sh
+```
+or to delete the compile attempt (without removing large downloaded files)
+```bash
+./crosscompile.sh -d
+```
 
 # How to build Powerpc crosstools on Arch
 
@@ -225,3 +240,7 @@ clean:
 <https://gts3.org/2017/cross-kernel.html>
 <https://balau82.wordpress.com/2010/02/28/hello-world-for-bare-metal-arm-using-qemu/>
 <https://github.com/netbeast/docs/wiki/Cross-compile-test-application>
+<https://www.computerhope.com/unix/ucpio.htm>
+<https://unix.stackexchange.com/questions/56614/send-file-by-xmodem-or-kermit-protocol-with-gnu-screen/65362#65362>
+<https://balau82.wordpress.com/2010/03/22/compiling-linux-kernel-for-qemu-arm-emulator/>
+<https://designprincipia.com/compile-linux-kernel-for-arm-and-run-on-qemu/>
