@@ -23,12 +23,11 @@ I do not recommend this documentation or scripts as a learning tool or seen as f
 
 # news
 Updated to the latest I know Kernel and applications
-* Linux Kernel  5.0.5   2019-03-27 
-* BusyBox       1.30.1  2019-02-14
-* TCC           0.9.27  2017-
-* added Kernel version option
+* Linux Kernel  5.2.8   2019-08-09 
+* BusyBox       1.31.0  2019-07-10
+* beta tools script, based on LFS.
 
-5.1-rc2 also works.
+4.19.66 still works without altering the scipts
 
 Powerpc still fails, no other arch beside x86_64 work.
 see crosstools.sh for a ARM attempt, currently boots the kernel, and no busybox or temp init.
@@ -60,20 +59,6 @@ other initramfs tests
 ./build.sh-kernel
 ```
 
-To get the optional TCC (Tiny C Compiler) add the tcc switch like:
-```bash
-./build.sh -tcc
-```
-
-Binary directory    /usr/local/bin
-TinyCC directory    /usr/local/lib/tcc
-Library directory   /usr/local/lib
-Include directory   /usr/local/include
-Manual directory    /usr/local/share/man
-Info directory      /usr/local/share/info
-Doc directory       /usr/local/share/doc
-
-
 # building
 run the buildscript :D
 
@@ -85,7 +70,8 @@ fake init static compiled
 
 # Adding new programs
 TobeDone
-
+for now Im working on the tool scibt that will build a gcc compiler to be included with the builded kernel.
+when making a crosscompiled system, the tools should be native to the target.
 
 # cross compiling
 
