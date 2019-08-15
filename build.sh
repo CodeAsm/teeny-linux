@@ -1,11 +1,11 @@
 #!/bin/bash 
-KERNEL="5.1-rc2"                  #Kernel release number.
-V="5"                           #Kernel version for folder (should use subsctring)
-KTYPE="gz"                      #gz used by RC, xz by stable releases
-BUSY="1.30.1"                   #busybox release number
+KERNEL="5.2.8"                  #Kernel release number. (or see cli options)
+V="5"                           #Kernel version for folder (should use subsctring)(kinda fixed)
+KTYPE="gz"                      #gz used by RC, xz by stable releases, but should work.
+BUSY="1.31.0"                   #busybox release number
 ARCH="x86_64"                   #default arch
 ARC="x86"                       #short arch (can I use grep for this?)
-TOP=$HOME/Linux/teeny-linux     #location for the build
+TOP=$HOME/Projects/Emulation/Linux/bin  #location for the build, change this for your location
 COMPILER="powerpc-linux-gnu-"   #compiler pre.
 
 #DO NOT EDIT BELOW it should not be nececairy.
@@ -19,16 +19,17 @@ cd $TOP
 function DoQemu {
 cd $TOP
 qemu-system-$ARCH \
+    -m 2048\
     -kernel obj/linux-$ARC/arch/$ARCH/boot/bzImage \
     -initrd obj/initramfs-busybox-$ARC.cpio.gz \
-    -nographic -append "console=ttyS0" #-enable-kvm
+    -nographic -append "console=ttyS0" -enable-kvm
 }
 
 #----------------------------------------------------------------------
 function delete {
 cd $TOP
-mv linux-$KERNEL.tar.$KTYPE ../linux-$KERNEL.tar.$KTYPE
-mv busybox-$BUSY.tar.bz2 ../busybox-$BUSY.tar.bz2
+mv linux-* ../
+mv busybox-* ../
 rm -rf *
 mv ../linux-$KERNEL.tar.$KTYPE linux-$KERNEL.tar.$KTYPE
 mv ../busybox-$BUSY.tar.bz2 busybox-$BUSY.tar.bz2
@@ -51,11 +52,48 @@ echo -e 'type poweroff -f or \n Ctrl+a C, then "quit"\n'
 cat /proc/version
  
 exec /bin/sh
+source /root/.bash_profile
 EOF
 }
 
 #----------------------------------------------------------------------
+function copyCPP {
+#tar -xvJpf ../../../lfs_toolchain-8.0-x86_64.tar.xz --numeric-owner
+#tar -xvJpf ../../../tools.tar.xz --numeric-owner
+cp -r ../../../root/. .
+cd etc/
+cat << EOF> hostname
+teenyqemubox
+EOF
 
+cat << EOF> bash.bashrc
+#
+# /etc/bash.bashrc
+#
+
+# If not running interactively, don't do anything
+[[ $- != *i* ]] && return
+
+[[ $DISPLAY ]] && shopt -s checkwinsize
+
+PS1='[\u@\h \W]\$ '
+
+case ${TERM} in
+  xterm*|rxvt*|Eterm|aterm|kterm|gnome*)
+    PROMPT_COMMAND=${PROMPT_COMMAND:+$PROMPT_COMMAND; }'printf "\033]0;%s@%s:%s\007" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/\~}"'
+
+    ;;
+  screen*)
+    PROMPT_COMMAND=${PROMPT_COMMAND:+$PROMPT_COMMAND; }'printf "\033_%s@%s:%s\033\\" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/\~}"'
+    ;;
+esac
+
+[ -r /usr/share/bash-completion/bash_completion   ] && . /usr/share/bash-completion/bash_completion
+
+EOF
+}
+
+#----------------------------------------------------------------------
 function buildBusyBox {
 cd $TOP
 rm -rf busybox-$BUSY/
@@ -84,7 +122,7 @@ function makeNewInitramfs {
 rm -rf $TOP/initramfs
 mkdir -pv $TOP/initramfs/$ARC-busybox
 cd $TOP/initramfs/$ARC-busybox
-mkdir -pv {bin,sbin,etc,proc,sys,usr/{bin,sbin,local/{bin,lib}}}
+mkdir -pv {bin,sbin,root,etc,proc,sys,usr/{bin,sbin,local/{bin,lib}}}
 makeInitramfs
 }
 
@@ -93,6 +131,39 @@ cd $TOP/initramfs/$ARC-busybox
 cp -av $TOP/obj/busybox-$ARC/_install/* .
 #add new files to copy here?
 writeInit
+copyCPP
+cd $TOP/initramfs/$ARC-busybox/root
+cat << EOF> .bashrc
+#
+# ~/.bashrc
+#
+
+# If not running interactively, don't do anything
+[[ $- != *i* ]] && return
+alias ls='ls --color=auto'
+
+
+alias today='date +"%d-%m-%Y"'
+alias todaytime='date +"%d-%m-%Y %H:%M"'
+
+  PS1="\[\033[35m\]\t\[\033[m\] [\[\033[1;31m\]\u\[\033[0m\]@\[\e[1;34m\]\h\[\e[0m\]:\[\e[94m\]\w\[\e[0m\]]\\$ \[\e[m\]" 
+  
+EOF
+cat << EOF> .bash_profile
+PATH=/bin:/usr/bin:/sbin:/usr/sbin:/tools/bin:tools
+EOF
+
+cat << EOF> hello.c
+#include <stdio.h>
+int main()
+{
+	printf("Hello world.\n");
+	return 0;	
+}
+EOF
+
+cd $TOP/initramfs/$ARC-busybox
+
 chmod +x init
 find . -print0 \
     | cpio --null -ov --format=newc \
@@ -133,7 +204,7 @@ CONFIG_EMBEDDED=y
 CONFIG_SYSCTL_SYSCALL=y
 CONFIG_KALLSYMS=y
 CONFIG_HOTPLUG=y
-CONFIG_PRINTK=y
+CONFIG_PRINTK=n
 CONFIG_BUG=y
 CONFIG_ELF_CORE=y
 CONFIG_BASE_FULL=y
@@ -267,6 +338,11 @@ cd $TOP
 
 #Download if nececairy, clean an unclean build
 if [ ! -f $TOP/linux-$KERNEL.tar.$KTYPE ]; then
+
+        wget -c https://cdn.kernel.org/pub/linux/kernel/v1.x/linux-$KERNEL.tar.$KTYPE
+        wget -c https://cdn.kernel.org/pub/linux/kernel/v2.x/linux-$KERNEL.tar.$KTYPE
+        wget -c https://cdn.kernel.org/pub/linux/kernel/v3.x/linux-$KERNEL.tar.$KTYPE
+        wget -c https://cdn.kernel.org/pub/linux/kernel/v4.x/linux-$KERNEL.tar.$KTYPE
         wget -c https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-$KERNEL.tar.$KTYPE
         wget -c https://git.kernel.org/torvalds/t/linux-$KERNEL.tar.gz
 fi
