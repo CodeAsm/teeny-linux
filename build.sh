@@ -1,5 +1,5 @@
 #!/bin/bash 
-KERNEL="5.2.9"                  #Kernel release number. (or see cli options)
+KERNEL="5.2.13"                  #Kernel release number. (or see cli options)
 V="5"                           #Kernel version for folder (should use subsctring)(kinda fixed)
 KTYPE="gz"                      #gz used by RC, xz by stable releases, but should work.
 BUSY="1.31.0"                   #busybox release number
