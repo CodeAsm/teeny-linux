@@ -1,5 +1,5 @@
 #!/bin/bash 
-KERNEL="5.2.13"                  #Kernel release number. (or see cli options)
+KERNEL="5.3.5"                  #Kernel release number. (or see cli options)
 V="5"                           #Kernel version for folder (should use subsctring)(kinda fixed)
 KTYPE="gz"                      #gz used by RC, xz by stable releases, but should work.
 BUSY="1.31.0"                   #busybox release number
@@ -337,7 +337,7 @@ if [ -z $ARCH ]; then
 cd $TOP
 
 #Download if nececairy, clean an unclean build
-if [ ! -f $TOP/linux-$KERNEL.tar.$KTYPE ]; then
+#if [ ! -f $TOP/linux-$KERNEL.tar.$KTYPE ]; then #Maybe now partial downloads work?
 
         wget -c https://cdn.kernel.org/pub/linux/kernel/v1.x/linux-$KERNEL.tar.$KTYPE
         wget -c https://cdn.kernel.org/pub/linux/kernel/v2.x/linux-$KERNEL.tar.$KTYPE
@@ -345,7 +345,7 @@ if [ ! -f $TOP/linux-$KERNEL.tar.$KTYPE ]; then
         wget -c https://cdn.kernel.org/pub/linux/kernel/v4.x/linux-$KERNEL.tar.$KTYPE
         wget -c https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-$KERNEL.tar.$KTYPE
         wget -c https://git.kernel.org/torvalds/t/linux-$KERNEL.tar.gz
-fi
+#fi
 if [ ! -f $TOP/busybox-$BUSY.tar.bz2 ]; then
         wget -c https://busybox.net/downloads/busybox-$BUSY.tar.bz2
 fi
