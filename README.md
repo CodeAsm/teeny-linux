@@ -23,7 +23,7 @@ I do not recommend this documentation or scripts as a learning tool or seen as f
 
 # news
 Updated to the latest I know Kernel and applications
-* Linux Kernel  5.3.5   2019-10-07 
+* Linux Kernel  5.3.6   2019-10-11 
 * BusyBox       1.31.0  2019-07-10
 * beta tools script, based on LFS.
 
