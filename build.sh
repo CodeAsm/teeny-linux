@@ -1,7 +1,8 @@
 #!/bin/bash 
-KERNEL="5.3.5"                  #Kernel release number. (or see cli options)
+KERNEL="5.3.6"                  #Kernel release number. (or see cli options)
 V="5"                           #Kernel version for folder (should use subsctring)(kinda fixed)
-KTYPE="gz"                      #gz used by RC, xz by stable releases, but should work.
+KTYPE="xz"                      #gz used by RC, xz by stable releases, but should work.
+                                #if posible, I would prever xz for its size and decompress seed
 BUSY="1.31.0"                   #busybox release number
 ARCH="x86_64"                   #default arch
 ARC="x86"                       #short arch (can I use grep for this?)
@@ -28,8 +29,8 @@ qemu-system-$ARCH \
 #----------------------------------------------------------------------
 function delete {
 cd $TOP
-mv linux-* ../
-mv busybox-* ../
+mv linux-$KERNEL.tar.$KTYPE ../
+mv busybox-$BUSY.tar.bz2 ../
 rm -rf *
 mv ../linux-$KERNEL.tar.$KTYPE linux-$KERNEL.tar.$KTYPE
 mv ../busybox-$BUSY.tar.bz2 busybox-$BUSY.tar.bz2
