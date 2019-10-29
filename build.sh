@@ -1,5 +1,5 @@
 #!/bin/bash 
-KERNEL="5.3.6"                  #Kernel release number. (or see cli options)
+KERNEL="5.3.8"                  #Kernel release number. (or see cli options)
 V="5"                           #Kernel version for folder (should use subsctring)(kinda fixed)
 KTYPE="xz"                      #gz used by RC, xz by stable releases, but should work.
                                 #if posible, I would prever xz for its size and decompress seed
@@ -273,7 +273,7 @@ CONFIG_LOGO=y
 CONFIG_LOGO_LINUX_MONO=y
 CONFIG_LOGO_LINUX_VGA16=y
 CONFIG_LOGO_LINUX_CLUT224=y
-CONFIG_EXT2_FS=y
+CONFIG_EXT2_FS=n
 CONFIG_EXT3_FS=y
 CONFIG_INOTIFY=y
 CONFIG_INOTIFY_USER=y
