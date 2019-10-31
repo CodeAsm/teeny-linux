@@ -8,6 +8,9 @@ ARCH="x86_64"                   #default arch
 ARC="x86"                       #short arch (can I use grep for this?)
 TOP=$HOME/Projects/Emulation/Linux/bin  #location for the build, change this for your location
 COMPILER="powerpc-linux-gnu-"   #compiler pre.
+IP="10.0.2.15"                  #IP to be used by the virtual machine
+GATEWAY="10.0.2.2"             #default gateway to be used
+HOSTNAME="TeenyQemuBox"         #hostname
 
 #DO NOT EDIT BELOW it should not be nececairy.
 #-----------------------------------------------------------
@@ -48,22 +51,22 @@ mount -t sysfs none /sys
  
 mkdir -p /var/run/,/etc/network/{if-down.d,if-up.d,if-down.d,if-post-down.d,if-post-up.d,if-pre-down.d,if-pre-up.d}
  
- 
+ hostname 
 /sbin/mdev -s
 /sbin/ifconfig lo 127.0.0.1 netmask 255.0.0.0 up
-/sbin/ifconfig eth0 up 10.0.2.15 netmask 255.255.255.0 up
-/sbin/route add default gw 10.0.2.2
-
+/sbin/ifconfig eth0 up $IP netmask 255.255.255.0 up
+/sbin/route add default gw $GATEWAY
+hostname $HOSTNAME
 echo -e '\nWelcome to Teeny Linux\n'
 echo -e 'Amount of seconds to boot: '
 cut -d' ' -f1 /proc/uptime
 echo -e 'To shutdown and return to your CLI'
 echo -e 'type poweroff -f or \n Ctrl+a C, then "quit"\n'
 cat /proc/version
+ifconfig eth0 | grep -B1 'inet addr' | grep 'inet'
 
- 
+/usr/bin/setsid /bin/cttyhack /bin/sh --login
 exec /bin/sh
-source /root/.bash_profile
 EOF
 }
 
@@ -72,36 +75,6 @@ function copyCPP {
 #tar -xvJpf ../../../lfs_toolchain-8.0-x86_64.tar.xz --numeric-owner
 #tar -xvJpf ../../../tools.tar.xz --numeric-owner
 cp -r ../../../root/. .
-cd etc/
-cat << EOF> hostname
-teenyqemubox
-EOF
-
-cat << EOF> bash.bashrc
-#
-# /etc/bash.bashrc
-#
-
-# If not running interactively, don't do anything
-[[ $- != *i* ]] && return
-
-[[ $DISPLAY ]] && shopt -s checkwinsize
-
-PS1='[\u@\h \W]\$ '
-
-case ${TERM} in
-  xterm*|rxvt*|Eterm|aterm|kterm|gnome*)
-    PROMPT_COMMAND=${PROMPT_COMMAND:+$PROMPT_COMMAND; }'printf "\033]0;%s@%s:%s\007" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/\~}"'
-
-    ;;
-  screen*)
-    PROMPT_COMMAND=${PROMPT_COMMAND:+$PROMPT_COMMAND; }'printf "\033_%s@%s:%s\033\\" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/\~}"'
-    ;;
-esac
-
-[ -r /usr/share/bash-completion/bash_completion   ] && . /usr/share/bash-completion/bash_completion
-
-EOF
 }
 
 #----------------------------------------------------------------------
