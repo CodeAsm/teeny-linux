@@ -42,15 +42,25 @@ function writeInit {
 cat << EOF> init 
 #!/bin/sh
  
+mount -t devtmpfs devtmpfs /dev
 mount -t proc none /proc
 mount -t sysfs none /sys
  
+mkdir -p /var/run/,/etc/network/{if-down.d,if-up.d,if-down.d,if-post-down.d,if-post-up.d,if-pre-down.d,if-pre-up.d}
+ 
+ 
+/sbin/mdev -s
+/sbin/ifconfig lo 127.0.0.1 netmask 255.0.0.0 up
+/sbin/ifconfig eth0 up 10.0.2.15 netmask 255.255.255.0 up
+/sbin/route add default gw 10.0.2.2
+
 echo -e '\nWelcome to Teeny Linux\n'
 echo -e 'Amount of seconds to boot: '
 cut -d' ' -f1 /proc/uptime
 echo -e 'To shutdown and return to your CLI'
 echo -e 'type poweroff -f or \n Ctrl+a C, then "quit"\n'
 cat /proc/version
+
  
 exec /bin/sh
 source /root/.bash_profile
