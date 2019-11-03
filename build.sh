@@ -9,7 +9,7 @@ ARC="x86"                       #short arch (can I use grep for this?)
 TOP=$HOME/Projects/Emulation/Linux/bin  #location for the build, change this for your location
 COMPILER="powerpc-linux-gnu-"   #compiler pre.
 IP="10.0.2.15"                  #IP to be used by the virtual machine
-GATEWAY="10.0.2.2"             #default gateway to be used
+GATEWAY="10.0.2.2"              #default gateway to be used
 HOSTNAME="TeenyQemuBox"         #hostname
 
 #DO NOT EDIT BELOW it should not be nececairy.
@@ -26,7 +26,8 @@ qemu-system-$ARCH \
     -m 2048\
     -kernel obj/linux-$ARC/arch/$ARCH/boot/bzImage \
     -initrd obj/initramfs-busybox-$ARC.cpio.gz \
-    -nographic -append "console=ttyS0" -enable-kvm
+    -nographic -append "console=ttyS0" -enable-kvm \
+    $NET
 }
 
 #----------------------------------------------------------------------
@@ -309,6 +310,9 @@ case $key in
     shift; # past argument and value
     ;;-k|-kernel)
     KERNEL="$2"
+    shift; shift
+    ;;-net)
+    NET="-netdev tap,id=mynet0,ifname=tap1,script=no,downscript=no -device e1000,netdev=mynet0,mac=$2"
     shift; shift
     ;;
 esac

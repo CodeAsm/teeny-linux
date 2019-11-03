@@ -13,7 +13,10 @@ My goals in non particular order are:
 * Have Firewire terminal on PowerPC. (this is part of another project)
 * Compile and run Programs from within builded system
 * Have small amount of scripts that can build and partialy test various goals
-* network support, get a update system working
+* network support (is kinda working)
+    * optionaly require mac (its mandatory atm)
+    * specify IP or DHCP (requires custom iniramfs per vm, maybe just dhcp)
+* get a update system working
 * boot from media instead of direct kernel
 
 Most of my research and/or playing is done on a x86_64 Arch Linux system, I asume the reader is skilled enough to translate any commands or hints to their own system or reading other resources to accomplish their own goals.
@@ -26,6 +29,8 @@ Updated to the latest I know Kernel and applications
 * Linux Kernel  5.3.8   2019-10-27 
 * BusyBox       1.31.0  2019-07-10
 * beta tools script, based on LFS.
+* networking support added
+* including files from a fakeroot
 
 4.19.66 still works without altering the scipts
 
@@ -59,6 +64,16 @@ other initramfs tests
 ./build.sh-kernel
 ```
 
+Build and start a instance with a mac adress of choice
+```bash
+./build.sh -net <macaddr>
+```
+for example
+```bash
+./build.sh -net 52:55:00:d1:55:01
+```
+Will run a VM with that specific macaddr (you need to change the ip inside or do DHCP trickery).
+
 # building
 run the buildscript :D
 
@@ -72,6 +87,77 @@ fake init static compiled
 TobeDone
 for now Im working on the tool scibt that will build a gcc compiler to be included with the builded kernel.
 when making a crosscompiled system, the tools should be native to the target.
+
+# Network
+To get basic network working, the current buildscipt and setup of qemu will use basic networking.
+The IP will be 10.0.2.15 and you can reach the internet if your host and qemu allows other virtual machines aswell.
+
+To use a bridge setup (wich I wanted to try anyway) and be able to ping another virtual machine do the following:
+Create a bridge and 2 taps (1 tap for a virual machine, either eth0/or wireless for internet, or another tap for another virtual machine).
+As root (or use sudo)
+```bash
+ip tuntap add tap0 mode tap
+ip tuntap add tap1 mode tap
+```
+
+Create the actual bridge 
+```bash 
+brctl  addbr br0
+```
+
+Add the two taps to the bridge
+```bash 
+brctl addif br0 tap0
+brctl addif br0 tap1
+```
+Bring the interfaces up, so they actualy work.
+```bash
+ifconfig tap0 up
+ifconfig tap1 up
+ifconfig br0 up
+```
+then add a network device to your qemu instance, if using my buildscript, run the following
+add  
+```bash
+-net nic,model=virtio,macaddr=52:55:00:d1:55:01 -net tap,ifname=tap0,script=no,downscript=no
+```
+inside one of the qemu instances, change the static ip:
+```bash
+ifconfig eth0 down
+ifconfig eth0 up 10.0.2.16 netmask 255.255.255.0 up
+```
+And now you should be able to ping eachother and do stuff. If you setup a DHCP server or add the bridge to a network with a DHCP server, you can set the instances to recieve a IP from the said DHCP server.
+
+## Removing
+To remove interfaces and shutdown stuff
+delete a tap (also for tap1 or eth0) 
+and deteling the tap
+```bash
+brctl delif br0 tap0
+tunctl -d tap0
+```
+Bring the bridge down and remove it:
+```bash
+ifconfig br0 down
+brctl delbr br0
+```
+Now you can up your eth0 or wirelless again for internets or use a VM without these bridges and use usermode networking.
+
+## Extra handy network commands and links
+To flush the ip and be able to add eth0 of your host to the bridge:
+```bash
+ip addr flush dev eth0
+```
+Checking out if the bridge has the right and all taps or interfaces you wanted:
+```bash
+brctl show
+```
+
+
+More details and tips can be found at:
+<https://gist.github.com/extremecoders-re/e8fd8a67a515fee0c873dcafc81d811c>
+<https://wiki.qemu.org/Documentation/Networking#Tap>
+<https://wiki.archlinux.org/index.php/Network_bridge#With_bridge-utils>
 
 # cross compiling
 
