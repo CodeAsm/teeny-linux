@@ -26,7 +26,7 @@ I do not recommend this documentation or scripts as a learning tool or seen as f
 
 # news
 Updated to the latest I know Kernel and applications
-* Linux Kernel  5.3.8   2019-10-27 
+* Linux Kernel  5.3.9   2019-11-06 
 * BusyBox       1.31.0  2019-07-10
 * beta tools script, based on LFS.
 * networking support added
@@ -119,7 +119,7 @@ ifconfig br0 up
 then add a network device to your qemu instance, if using my buildscript, run the following
 add  
 ```bash
--net nic,model=virtio,macaddr=52:55:00:d1:55:01 -net tap,ifname=tap0,script=no,downscript=no
+./build -net 52:55:00:d1:55:01
 ```
 inside one of the qemu instances, change the static ip:
 ```bash
@@ -155,9 +155,9 @@ brctl show
 
 
 More details and tips can be found at:
-<https://gist.github.com/extremecoders-re/e8fd8a67a515fee0c873dcafc81d811c>
-<https://wiki.qemu.org/Documentation/Networking#Tap>
-<https://wiki.archlinux.org/index.php/Network_bridge#With_bridge-utils>
+* <https://gist.github.com/extremecoders-re/e8fd8a67a515fee0c873dcafc81d811c>
+* <https://wiki.qemu.org/Documentation/Networking#Tap>
+* <https://wiki.archlinux.org/index.php/Network_bridge#With_bridge-utils>
 
 # cross compiling
 
@@ -314,10 +314,10 @@ a device tree database is required for proper functioning arm targets, for my ex
           
           
 # Resources
-<https://gts3.org/2017/cross-kernel.html>
-<https://balau82.wordpress.com/2010/02/28/hello-world-for-bare-metal-arm-using-qemu/>
-<https://github.com/netbeast/docs/wiki/Cross-compile-test-application>
-<https://www.computerhope.com/unix/ucpio.htm>
-<https://unix.stackexchange.com/questions/56614/send-file-by-xmodem-or-kermit-protocol-with-gnu-screen/65362#65362>
-<https://balau82.wordpress.com/2010/03/22/compiling-linux-kernel-for-qemu-arm-emulator/>
-<https://designprincipia.com/compile-linux-kernel-for-arm-and-run-on-qemu/>
+* <https://gts3.org/2017/cross-kernel.html>
+* <https://balau82.wordpress.com/2010/02/28/hello-world-for-bare-metal-arm-using-qemu/>
+* <https://github.com/netbeast/docs/wiki/Cross-compile-test-application>
+* <https://www.computerhope.com/unix/ucpio.htm>
+* <https://unix.stackexchange.com/questions/56614/send-file-by-xmodem-or-kermit-protocol-with-gnu-screen/65362#65362>
+* <https://balau82.wordpress.com/2010/03/22/compiling-linux-kernel-for-qemu-arm-emulator/>
+* <https://designprincipia.com/compile-linux-kernel-for-arm-and-run-on-qemu/>
