@@ -17,6 +17,8 @@ My goals in non particular order are:
     * optionaly require mac (its mandatory atm)
     * specify IP or DHCP (requires custom iniramfs per vm, maybe just dhcp)
 * get a update system working
+* syslog option 
+* custom module loading
 * boot from media instead of direct kernel
 
 Most of my research and/or playing is done on a x86_64 Arch Linux system, I asume the reader is skilled enough to translate any commands or hints to their own system or reading other resources to accomplish their own goals.
@@ -26,11 +28,12 @@ I do not recommend this documentation or scripts as a learning tool or seen as f
 
 # news
 Updated to the latest I know Kernel and applications
-* Linux Kernel  5.4     2019-11-25 
+* Linux Kernel  5.4.3   2019-12-15
 * BusyBox       1.31.0  2019-07-10
 * beta tools script, based on LFS.
 * networking support added
 * including files from a fakeroot
+* modules support added
 
 4.19.66 still works without altering the scipts
 
@@ -312,7 +315,15 @@ clean:
 ```          
 a device tree database is required for proper functioning arm targets, for my example ive used versatile-pb.dtb that is also provided after compiling the kernel.
           
-          
+# module support
+currently loads a test module and supports
+```
+modprobe [module name]
+lsmod
+modprobe -r [module name]
+```
+check buildscipt where to place module or change code to load yours.
+
 # Resources
 * <https://gts3.org/2017/cross-kernel.html>
 * <https://balau82.wordpress.com/2010/02/28/hello-world-for-bare-metal-arm-using-qemu/>

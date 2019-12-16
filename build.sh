@@ -11,6 +11,7 @@ COMPILER="powerpc-linux-gnu-"   #compiler pre.
 IP="10.0.2.15"                  #IP to be used by the virtual machine
 GATEWAY="10.0.2.2"              #default gateway to be used
 HOSTNAME="TeenyQemuBox"         #hostname
+MODULE=true                     #add modules to linux (asuming kernel already supports this)
 
 #DO NOT EDIT BELOW it should not be nececairy.
 #-----------------------------------------------------------
@@ -45,12 +46,10 @@ exit 1
 function writeInit {
 cat << EOF> init 
 #!/bin/sh
- 
+syslogd 
 mount -t devtmpfs devtmpfs /dev
 mount -t proc none /proc
 mount -t sysfs none /sys
- 
-mkdir -p /var/run/,/etc/network/{if-down.d,if-up.d,if-down.d,if-post-down.d,if-post-up.d,if-pre-down.d,if-pre-up.d}
  
  hostname 
 /sbin/mdev -s
@@ -108,6 +107,12 @@ rm -rf $TOP/initramfs
 mkdir -pv $TOP/initramfs/$ARC-busybox
 cd $TOP/initramfs/$ARC-busybox
 mkdir -pv {bin,sbin,root,etc,proc,sys,usr/{bin,sbin,local/{bin,lib}}}
+mkdir -pv {var/run/,etc/network/{if-down.d,if-up.d,if-down.d,if-post-down.d,if-post-up.d,if-pre-down.d,if-pre-up.d}}
+ 
+if $MODULE ; then
+    mkdir -pv lib/modules/$KERNEL
+    cp ../../../mod/mod.ko lib/modules/$KERNEL
+fi    
 makeInitramfs
 }
 
