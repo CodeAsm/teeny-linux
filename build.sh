@@ -12,6 +12,7 @@ IP="10.0.2.15"                  #IP to be used by the virtual machine
 GATEWAY="10.0.2.2"              #default gateway to be used
 HOSTNAME="TeenyQemuBox"         #hostname
 MODULE=true                     #add modules to linux (asuming kernel already supports this)
+MODULEURL="../../../mod/mod.ko" #modprobe url
 
 #DO NOT EDIT BELOW it should not be nececairy.
 #-----------------------------------------------------------
@@ -111,7 +112,7 @@ mkdir -pv {var/run/,etc/network/{if-down.d,if-up.d,if-down.d,if-post-down.d,if-p
  
 if $MODULE ; then
     mkdir -pv lib/modules/$KERNEL
-    cp ../../../mod/mod.ko lib/modules/$KERNEL
+    cp $MODULEURL lib/modules/$KERNEL
 fi    
 makeInitramfs
 }
