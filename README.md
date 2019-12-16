@@ -26,7 +26,7 @@ I do not recommend this documentation or scripts as a learning tool or seen as f
 
 # news
 Updated to the latest I know Kernel and applications
-* Linux Kernel  5.4     2019-11-25 
+* Linux Kernel  5.4.3     2019-12-16
 * BusyBox       1.31.0  2019-07-10
 * beta tools script, based on LFS.
 * networking support added
