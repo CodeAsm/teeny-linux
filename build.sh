@@ -11,8 +11,8 @@ COMPILER="powerpc-linux-gnu-"   #compiler pre.
 IP="10.0.2.15"                  #IP to be used by the virtual machine
 GATEWAY="10.0.2.2"              #default gateway to be used
 HOSTNAME="TeenyQemuBox"         #hostname
-MODULE=false                     #add modules to linux (asuming kernel already supports this)
-MODULEURL="../../../mod/mod.ko" #modprobe url
+MODULE=false                    #add modules to linux (asuming kernel already supports this)
+MODULEURL=$TOP/hello.ko        #modprobe url
 
 #DO NOT EDIT BELOW it should not be nececairy.
 #-----------------------------------------------------------
@@ -320,6 +320,9 @@ case $key in
     ;;-net)
     NET="-netdev tap,id=mynet0,ifname=tap1,script=no,downscript=no -device e1000,netdev=mynet0,mac=$2"
     shift; shift
+    ;;-mod|-module)
+    MODULE=true
+    shift;
     ;;
 esac
 done
