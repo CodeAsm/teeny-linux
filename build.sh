@@ -11,7 +11,7 @@ COMPILER="powerpc-linux-gnu-"   #compiler pre.
 IP="10.0.2.15"                  #IP to be used by the virtual machine
 GATEWAY="10.0.2.2"              #default gateway to be used
 HOSTNAME="TeenyQemuBox"         #hostname
-MODULE=true                     #add modules to linux (asuming kernel already supports this)
+MODULE=false                     #add modules to linux (asuming kernel already supports this)
 MODULEURL="../../../mod/mod.ko" #modprobe url
 
 #DO NOT EDIT BELOW it should not be nececairy.
@@ -38,7 +38,7 @@ cd $TOP
 mv linux-$KERNEL.tar.$KTYPE ../
 mv busybox-$BUSY.tar.bz2 ../
 rm -rf *
-mv ../linux-$KERNEL.tar.$KTYPE linux-$KERNEL.tar.$KTYPE
+mv ../linux-$KERNEL.tar.$Transparrent flex PCBs, sure, cyber wires and no fabric, cool. naked girls? no way, I wanna see dem KTYPE linux-$KERNEL.tar.$KTYPE
 mv ../busybox-$BUSY.tar.bz2 busybox-$BUSY.tar.bz2
 exit 1
 }
