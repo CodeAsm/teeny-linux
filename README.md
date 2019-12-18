@@ -17,14 +17,13 @@ My goals in non particular order are:
     * optionaly require mac (its mandatory atm)
     * specify IP or DHCP (requires custom iniramfs per vm, maybe just dhcp)
 * get a update system working
-* syslog option 
-* custom module loading
 * boot from media instead of direct kernel
 
 Most of my research and/or playing is done on a x86_64 Arch Linux system, I asume the reader is skilled enough to translate any commands or hints to their own system or reading other resources to accomplish their own goals.
 This is never ment for production or replacing LFS for example. 
 
-I do not recommend this documentation or scripts as a learning tool or seen as fact. this is just me playing arround.
+I do not recommend this documentation or scripts as a teaching tool or seen as fact. this is just me playing arround.
+You can however learn from it, or teach how not to do things.
 
 # news
 Updated to the latest I know Kernel and applications
@@ -66,9 +65,25 @@ other initramfs tests
 ./build.sh -k <kernel version>
 ./build.sh-kernel
 ```
+Build and start a instance with a mac adress of choice
+```bash
+./build.sh -net <macaddr>
+```
+for example
+```bash
+./build.sh -net 52:55:00:d1:55:01
+```
+Will run a VM with that specific macaddr (you need to change the ip inside or do DHCP trickery).
 
 ## Modules
-before any module can be compiled, a first run without support has to be done, or atleast the linux kernel source folder should be compiled.
+before any module can be compiled, a first run without support has to be done, or atleast the linux kernel source folder should be compiled. The sample module is a git submodule, and you should init this if you havent already by:
+```
+git submodule init
+git submodule update
+```
+for more submodule details, check: [Cloning a Project with Submodules](https://git-scm.com/book/en/v2/Git-Tools-Submodules#)
+
+Then first do a dry run build without modules:
 ```
 ./build
 ```
@@ -84,16 +99,15 @@ cd ..
 ./build -mod
 ```
 feel free to do this diferently when requirements change
+currently loads a test module and supports
+```
+modprobe [module name]
+lsmod
+modprobe -r [module name]
+```
+check buildscipt where to place module or change code to load yours.
+default script copies the hello.ko to /lib/module/[arch]/
 
-Build and start a instance with a mac adress of choice
-```bash
-./build.sh -net <macaddr>
-```
-for example
-```bash
-./build.sh -net 52:55:00:d1:55:01
-```
-Will run a VM with that specific macaddr (you need to change the ip inside or do DHCP trickery).
 
 # building
 run the buildscript :D
@@ -333,16 +347,6 @@ clean:
 ```          
 a device tree database is required for proper functioning arm targets, for my example ive used versatile-pb.dtb that is also provided after compiling the kernel.
           
-# module support
-currently loads a test module and supports
-```
-modprobe [module name]
-lsmod
-modprobe -r [module name]
-```
-check buildscipt where to place module or change code to load yours.
-default script copies the hello.ko to /lib/module/[arch]/
-
 # Resources
 * <https://gts3.org/2017/cross-kernel.html>
 * <https://balau82.wordpress.com/2010/02/28/hello-world-for-bare-metal-arm-using-qemu/>
