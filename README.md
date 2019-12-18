@@ -28,7 +28,7 @@ I do not recommend this documentation or scripts as a learning tool or seen as f
 
 # news
 Updated to the latest I know Kernel and applications
-* Linux Kernel  5.4.3   2019-12-15
+* Linux Kernel  5.4.4   2019-12-17
 * BusyBox       1.31.0  2019-07-10
 * beta tools script, based on LFS.
 * networking support added
@@ -41,7 +41,7 @@ Powerpc still fails, no other arch beside x86_64 work.
 see crosstools.sh for a ARM attempt, currently boots the kernel, and no busybox or temp init.
 
 # options
-The build scribt knows the following commands passable as arguments:
+The build script knows the following commands passable as arguments:
 ```bash
 ./build.sh -d
 ./build.sh -delete
@@ -66,6 +66,24 @@ other initramfs tests
 ./build.sh -k <kernel version>
 ./build.sh-kernel
 ```
+
+## Modules
+before any module can be compiled, a first run without support has to be done, or atleast the linux kernel source folder should be compiled.
+```
+./build
+```
+After building the kernel, termination of the qemu instance is posible, a simple test to see there are no mods also posible
+Right after compilation, go into the modules folder, delete the old initramfs and compile a new module.
+after completion, rebuild initramfs and test the installed module:
+```
+cd module
+rm ../bin/obj/initramfs-busybox-x86.cpio.gz
+make clean
+make
+cd ..
+./build -mod
+```
+feel free to do this diferently when requirements change
 
 Build and start a instance with a mac adress of choice
 ```bash
@@ -323,6 +341,7 @@ lsmod
 modprobe -r [module name]
 ```
 check buildscipt where to place module or change code to load yours.
+default script copies the hello.ko to /lib/module/[arch]/
 
 # Resources
 * <https://gts3.org/2017/cross-kernel.html>

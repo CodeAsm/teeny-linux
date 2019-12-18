@@ -1,5 +1,5 @@
 #!/bin/bash 
-KERNEL="5.4.3"                  #Kernel release number. (or see cli options)
+KERNEL="5.4.4"                  #Kernel release number. (or see cli options)
 V="5"                           #Kernel version for folder (should use subsctring)(kinda fixed)
 KTYPE="xz"                      #gz used by RC, xz by stable releases, but should work.
                                 #if posible, I would prever xz for its size and decompress seed
