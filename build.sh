@@ -1,5 +1,5 @@
 #!/bin/bash 
-KERNEL="5.4.5"                  #Kernel release number. (or see cli options)
+KERNEL="5.4.6"                  #Kernel release number. (or see cli options)
 V="5"                           #Kernel version for folder (should use subsctring)(kinda fixed)
 KTYPE="xz"                      #gz used by RC, xz by stable releases, but should work.
                                 #if posible, I would prever xz for its size and decompress seed
@@ -111,8 +111,8 @@ mkdir -pv {bin,sbin,root,etc,proc,sys,usr/{bin,sbin,local/{bin,lib}}}
 mkdir -pv {var/run/,etc/network/{if-down.d,if-up.d,if-down.d,if-post-down.d,if-post-up.d,if-pre-down.d,if-pre-up.d}}
  
 if $MODULE ; then
-    mkdir -pv lib/modules/$KERNEL
-    cp $MODULEURL lib/modules/$KERNEL
+    mkdir -pv lib/modules/$KERNEL/extra
+    cp $MODULEURL lib/modules/$KERNEL/extra
 fi    
 makeInitramfs
 }
