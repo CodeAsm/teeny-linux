@@ -27,14 +27,12 @@ You can however learn from it, or teach how not to do things.
 
 # news
 Updated to the latest I know Kernel and applications
-* Linux Kernel  5.4.6   2019-12-21
-* BusyBox       1.31.0  2019-07-10
+* Linux Kernel  5.4.8   2020-01-04
+* BusyBox       1.31.1  2019-10-25
 * beta tools script, based on LFS.
-* networking support added
-* including files from a fakeroot
 * modules support added
 
-4.19.66 still works without altering the scipts
+4.18.1 still works without altering the scipts
 
 Powerpc still fails, no other arch beside x86_64 work.
 see crosstools.sh for a ARM attempt, currently boots the kernel, and no busybox or temp init.

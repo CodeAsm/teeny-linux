@@ -1,9 +1,9 @@
 #!/bin/bash 
-KERNEL="5.4.6"                  #Kernel release number. (or see cli options)
+KERNEL="5.4.8"                  #Kernel release number. (or see cli options)
 V="5"                           #Kernel version for folder (should use subsctring)(kinda fixed)
 KTYPE="xz"                      #gz used by RC, xz by stable releases, but should work.
                                 #if posible, I would prever xz for its size and decompress seed
-BUSY="1.31.0"                   #busybox release number
+BUSY="1.31.1"                   #busybox release number
 ARCH="x86_64"                   #default arch
 ARC="x86"                       #short arch (can I use grep for this?)
 TOP=$HOME/Projects/Emulation/Linux/bin  #location for the build, change this for your location
