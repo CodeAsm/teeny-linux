@@ -29,7 +29,7 @@ qemu-system-$ARCH \
     -kernel obj/linux-$ARC/arch/$ARCH/boot/bzImage \
     -initrd obj/initramfs-busybox-$ARC.cpio.gz \
     -nographic -append "console=ttyS0" -enable-kvm \
-    $NET
+    $NET $OPTION
 }
 
 #----------------------------------------------------------------------
@@ -72,10 +72,16 @@ EOF
 }
 
 #----------------------------------------------------------------------
-function copyCPP {
+function copytoimage {      #This function will copy nececairy files into the initramfs
 #tar -xvJpf ../../../lfs_toolchain-8.0-x86_64.tar.xz --numeric-owner
 #tar -xvJpf ../../../tools.tar.xz --numeric-owner
-cp -r ../../../root/. .
+cp $TOP/hello bin/
+
+# modules option
+if $MODULE ; then
+    mkdir -pv lib/modules/$KERNEL/extra
+    cp $MODULEURL lib/modules/$KERNEL/extra
+fi    
 }
 
 #----------------------------------------------------------------------
@@ -110,10 +116,6 @@ cd $TOP/initramfs/$ARC-busybox
 mkdir -pv {bin,sbin,root,etc,proc,sys,usr/{bin,sbin,local/{bin,lib}}}
 mkdir -pv {var/run/,etc/network/{if-down.d,if-up.d,if-down.d,if-post-down.d,if-post-up.d,if-pre-down.d,if-pre-up.d}}
  
-if $MODULE ; then
-    mkdir -pv lib/modules/$KERNEL/extra
-    cp $MODULEURL lib/modules/$KERNEL/extra
-fi    
 makeInitramfs
 }
 
@@ -122,7 +124,7 @@ cd $TOP/initramfs/$ARC-busybox
 cp -av $TOP/obj/busybox-$ARC/_install/* .
 #add new files to copy here?
 writeInit
-copyCPP
+copytoimage
 cd $TOP/initramfs/$ARC-busybox/root
 cat << EOF> .bashrc
 #
@@ -322,7 +324,10 @@ case $key in
     shift; shift
     ;;-mod|-module)
     MODULE=true
-    shift;
+    shift; shift
+    ;;-option)
+    OPTION="$2"
+    shift; shift
     ;;
 esac
 done

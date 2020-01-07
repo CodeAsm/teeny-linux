@@ -191,7 +191,7 @@ More details and tips can be found at:
 * <https://gist.github.com/extremecoders-re/e8fd8a67a515fee0c873dcafc81d811c>
 * <https://wiki.qemu.org/Documentation/Networking#Tap>
 * <https://wiki.archlinux.org/index.php/Network_bridge#With_bridge-utils>
-
+    
 # cross compiling
 
 ![Crosscompiled kernel on ARM Screenshot](https://raw.githubusercontent.com/codeasm/teeny-linux/master/resources/Screenshot2.png)
