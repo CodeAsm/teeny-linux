@@ -27,7 +27,7 @@ You can however learn from it, or teach how not to do things.
 
 # news
 Updated to the latest I know Kernel and applications
-* Linux Kernel  5.5.1   2020-02-01
+* Linux Kernel  5.5.2   2020-02-04
 * BusyBox       1.31.1  2019-10-25
 * beta tools script, based on LFS.
 * modules support added
