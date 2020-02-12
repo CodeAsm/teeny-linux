@@ -1,5 +1,5 @@
 #!/bin/bash 
-KERNEL="5.5.2"	                #Kernel release number. (or see cli options)
+KERNEL="5.5.3"	                #Kernel release number. (or see cli options)
 V="5"                           #Kernel version for folder (should use subsctring)(kinda fixed)
 KTYPE="xz"                      #gz used by RC, xz by stable releases, but should work.
                                 #if posible, I would prever xz for its size and decompress seed
@@ -341,10 +341,10 @@ cd $TOP
 #Download if nececairy, clean an unclean build
 #if [ ! -f $TOP/linux-$KERNEL.tar.$KTYPE ]; then #Maybe now partial downloads work?
 
-        wget -c https://cdn.kernel.org/pub/linux/kernel/v1.x/linux-$KERNEL.tar.$KTYPE
-        wget -c https://cdn.kernel.org/pub/linux/kernel/v2.x/linux-$KERNEL.tar.$KTYPE
-        wget -c https://cdn.kernel.org/pub/linux/kernel/v3.x/linux-$KERNEL.tar.$KTYPE
-        wget -c https://cdn.kernel.org/pub/linux/kernel/v4.x/linux-$KERNEL.tar.$KTYPE
+     #  wget -c https://cdn.kernel.org/pub/linux/kernel/v1.x/linux-$KERNEL.tar.$KTYPE
+     #  wget -c https://cdn.kernel.org/pub/linux/kernel/v2.x/linux-$KERNEL.tar.$KTYPE
+     #  wget -c https://cdn.kernel.org/pub/linux/kernel/v3.x/linux-$KERNEL.tar.$KTYPE
+     #  wget -c https://cdn.kernel.org/pub/linux/kernel/v4.x/linux-$KERNEL.tar.$KTYPE
         wget -c https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-$KERNEL.tar.$KTYPE
         wget -c https://git.kernel.org/torvalds/t/linux-$KERNEL.tar.gz
 #fi
