@@ -1,18 +1,18 @@
 #!/bin/bash 
-KERNEL="5.5.3"	                #Kernel release number. (or see cli options)
+KERNEL="5.7.8"	                #Kernel release number. (or see cli options)
 V="5"                           #Kernel version for folder (should use subsctring)(kinda fixed)
 KTYPE="xz"                      #gz used by RC, xz by stable releases, but should work.
                                 #if posible, I would prever xz for its size and decompress seed
-BUSY="1.31.1"                   #busybox release number
+BUSY="1.32.0"                   #busybox release number
 ARCH="x86_64"                   #default arch
 ARC="x86"                       #short arch (can I use grep for this?)
 TOP=$HOME/Projects/Emulation/Linux/bin  #location for the build, change this for your location
-COMPILER="powerpc-linux-gnu-"   #compiler pre.
+COMPILER="CC=musl-gcc"          #compiler pre. (2020 Musl fix for x86, might break other distro if musl missing)
 IP="10.0.2.15"                  #IP to be used by the virtual machine
 GATEWAY="10.0.2.2"              #default gateway to be used
 HOSTNAME="TeenyQemuBox"         #hostname
 MODULE=false                    #add modules to linux (asuming kernel already supports this)
-MODULEURL=$TOP/hello.ko        #modprobe url
+MODULEURL=$TOP/../teeny-linux/modules/        #modprobe url
 
 #DO NOT EDIT BELOW it should not be nececairy.
 #-----------------------------------------------------------
@@ -38,7 +38,7 @@ cd $TOP
 mv linux-$KERNEL.tar.$KTYPE ../
 mv busybox-$BUSY.tar.bz2 ../
 rm -rf *
-mv ../linux-$KERNEL.tar.$Transparrent flex PCBs, sure, cyber wires and no fabric, cool. naked girls? no way, I wanna see dem KTYPE linux-$KERNEL.tar.$KTYPE
+mv ../linux-$KERNEL.tar.$KTYPE linux-$KERNEL.tar.$KTYPE
 mv ../busybox-$BUSY.tar.bz2 busybox-$BUSY.tar.bz2
 exit 1
 }
@@ -80,7 +80,7 @@ cp $TOP/hello bin/
 # modules option
 if $MODULE ; then
     mkdir -pv lib/modules/$KERNEL/extra
-    cp $MODULEURL lib/modules/$KERNEL/extra
+    cp $MODULEURL/hello.ko lib/modules/$KERNEL/extra/hello.ko
 fi    
 }
 
@@ -95,15 +95,18 @@ mkdir -pv ../obj/busybox-$ARC
 if [ $ARCH != "x86_64" ]; then
     make O=../obj/busybox-$ARC ARCH=$ARCH CROSS_COMPILE=$COMPILER defconfig
 else
-    make O=../obj/busybox-$ARC defconfig
+    make O=../obj/busybox-$ARC defconfig 
 fi
 # do a static lib thing for busy, 
 sed -i '/# CONFIG_STATIC is not set/c\CONFIG_STATIC=y' ../obj/busybox-$ARC/.config
+#for musl we experimentaly determined these to be nececairy
+
+
 cd ../obj/busybox-$ARC
 if [ $ARCH != "x86_64" ]; then
     make -j$(nproc) ARCH=$ARCH CROSS_COMPILE=$COMPILER
 else
-    make -j$(nproc)
+    make -j$(nproc) $COMPILER
 fi
 make install
 }
@@ -324,6 +327,7 @@ case $key in
     shift; shift
     ;;-mod|-module)
     MODULE=true
+    makeInitramfs
     shift; shift
     ;;-option)
     OPTION="$2"
@@ -339,15 +343,10 @@ if [ -z $ARCH ]; then
 cd $TOP
 
 #Download if nececairy, clean an unclean build
-#if [ ! -f $TOP/linux-$KERNEL.tar.$KTYPE ]; then #Maybe now partial downloads work?
+if [ ! -f $TOP/linux-$KERNEL.tar.$KTYPE ]; then #Maybe now partial downloads work?
+        wget -c https://cdn.kernel.org/pub/linux/kernel/v$V.x/linux-$KERNEL.tar.$KTYPE
+fi
 
-     #  wget -c https://cdn.kernel.org/pub/linux/kernel/v1.x/linux-$KERNEL.tar.$KTYPE
-     #  wget -c https://cdn.kernel.org/pub/linux/kernel/v2.x/linux-$KERNEL.tar.$KTYPE
-     #  wget -c https://cdn.kernel.org/pub/linux/kernel/v3.x/linux-$KERNEL.tar.$KTYPE
-     #  wget -c https://cdn.kernel.org/pub/linux/kernel/v4.x/linux-$KERNEL.tar.$KTYPE
-        wget -c https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-$KERNEL.tar.$KTYPE
-        wget -c https://git.kernel.org/torvalds/t/linux-$KERNEL.tar.gz
-#fi
 if [ ! -f $TOP/busybox-$BUSY.tar.bz2 ]; then
         wget -c https://busybox.net/downloads/busybox-$BUSY.tar.bz2
 fi
