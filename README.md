@@ -25,10 +25,13 @@ This is never ment for production or replacing LFS for example.
 I do not recommend this documentation or scripts as a teaching tool or seen as fact. this is just me playing arround.
 You can however learn from it, or teach how not to do things.
 
+*user root, password root*
+
 # news
 Updated to the latest I know Kernel and applications
-* Linux Kernel  5.5.2   2020-02-04
-* BusyBox       1.31.1  2019-10-25
+* Linux Kernel  5.7.9   2020-07-16
+* BusyBox       1.32.0  2020-06-26
+* Drobbear      2020.80 2020-06-26
 * beta tools script, based on LFS.
 * modules support added
 
@@ -72,6 +75,17 @@ for example
 ./build.sh -net 52:55:00:d1:55:01
 ```
 Will run a VM with that specific macaddr (you need to change the ip inside or do DHCP trickery).
+
+Ive added a user called root inside the passwd file, to login, use password root 
+to build without login prompt:
+```bash
+./build.sh -nl
+```
+or
+```bash
+./build.sh -nologin
+```
+this is like the old behavior.
 
 ## Modules
 before any module can be compiled, a first run without support has to be done, or atleast the linux kernel source folder should be compiled. The sample module is a git submodule, and you should init this if you havent already by:

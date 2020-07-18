@@ -11,11 +11,14 @@ COMPILER="CC=musl-gcc"          #compiler pre. (2020 Musl fix for x86, might bre
 IP="10.0.2.15"                  #IP to be used by the virtual machine
 GATEWAY="10.0.2.2"              #default gateway to be used
 HOSTNAME="TeenyQemuBox"         #hostname
-MODULE=false                    #add modules to linux (asuming kernel already supports this)
 MODULEURL=$TOP/../teeny-linux/modules/        #modprobe url
+LOGINREQUIRED="/bin/login"      #replace with /bin/sh for no login required, /bin/login needed else 
 
 #DO NOT EDIT BELOW it should not be nececairy.
 #-----------------------------------------------------------
+MAKEINIT=false                  #we dont want to overdo a makeinit, used internaly
+MODULE=false                    #add modules to linux (asuming kernel already supports this)
+
 #first stuff happening here.
 mkdir -p $TOP
 cd $TOP
@@ -66,7 +69,7 @@ echo -e 'type poweroff -f or \n Ctrl+a C, then "quit"\n'
 cat /proc/version
 ifconfig eth0 | grep -B1 'inet addr' | grep 'inet'
 
-/usr/bin/setsid /bin/cttyhack /bin/login
+/usr/bin/setsid /bin/cttyhack $LOGINREQUIRED
 exec /bin/sh
 
 EOF
@@ -317,24 +320,26 @@ case $key in
     ARC="$2"
     shift; shift # past argument and value
     ;;-init|-makeInit|-makeinit)
-    makeInitramfs
+    MAKEINIT=true
     ARCH="x86_64"
-    DoQemu
-    exit
-    shift; shift # past argument and value
+    shift; # past argument and value
     ;;-d|-delete|-deleteall)
     delete
     shift; # past argument and value
     ;;-k|-kernel)
     KERNEL="$2"
     shift; shift
+    ;;-nologin|-nl)
+    LOGINREQUIRED="/bin/sh"
+    MAKEINIT=true
+    shift;
     ;;-net)
     NET="-netdev tap,id=mynet0,ifname=tap1,script=no,downscript=no -device e1000,netdev=mynet0,mac=$2"
     shift; shift
     ;;-mod|-module)
     MODULE=true
-    makeInitramfs
-    shift; shift
+    MAKEINIT=true
+    shift;
     ;;-option)
     OPTION="$2"
     shift; shift
@@ -364,7 +369,7 @@ else
     ARCHF=$ARCH
 fi
 
-if [ -f $TOP/obj/initramfs-busybox-$ARC.cpio.gz ]; then
+if [ -f $TOP/obj/initramfs-busybox-$ARC.cpio.gz || !MAKEINIT ]; then
     if [ ! -f $TOP/obj/linux-$ARC/arch/$ARCHF/boot/bzImage ]; then
         makeKernel
     fi
