@@ -66,8 +66,9 @@ echo -e 'type poweroff -f or \n Ctrl+a C, then "quit"\n'
 cat /proc/version
 ifconfig eth0 | grep -B1 'inet addr' | grep 'inet'
 
-/usr/bin/setsid /bin/cttyhack /bin/sh --login
+/usr/bin/setsid /bin/cttyhack /bin/login
 exec /bin/sh
+
 EOF
 }
 
@@ -81,7 +82,12 @@ cp $TOP/hello bin/
 if $MODULE ; then
     mkdir -pv lib/modules/$KERNEL/extra
     cp $MODULEURL/hello.ko lib/modules/$KERNEL/extra/hello.ko
-fi    
+fi
+
+#add user?
+cat << EOF> $TOP/initramfs/$ARC-busybox/etc/passwd
+root:LTMW6A/nz.KWI:0:0:root:/root:/bin/sh
+EOF
 }
 
 #----------------------------------------------------------------------
