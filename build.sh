@@ -370,7 +370,7 @@ else
     ARCHF=$ARCH
 fi
 
-if [ -f $TOP/obj/initramfs-busybox-$ARC.cpio.gz || !MAKEINIT ]; then
+if [ -f $TOP/obj/initramfs-busybox-$ARC.cpio.gz ] || [ ! MAKEINIT ]; then
     if [ ! -f $TOP/obj/linux-$ARC/arch/$ARCHF/boot/bzImage ]; then
         makeKernel
     fi
