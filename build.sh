@@ -14,6 +14,7 @@ GATEWAY="10.0.2.2"              #default gateway to be used
 HOSTNAME="TeenyQemuBox"         #hostname
 MODULEURL=$TOP/../teeny-linux/modules/        #modprobe url
 LOGINREQUIRED="/bin/login"      #replace with /bin/sh for no login required, /bin/login needed else 
+                                #seems one can simply Ctrl+C out of login tho
 
 #DO NOT EDIT BELOW it should not be nececairy.
 #-----------------------------------------------------------
@@ -71,8 +72,7 @@ cat /proc/version
 ifconfig eth0 | grep -B1 'inet addr' | grep 'inet'
 
 /usr/bin/setsid /bin/cttyhack $LOGINREQUIRED
-exec /bin/sh
-
+exec $LOGINREQUIRED
 EOF
 }
 
@@ -370,9 +370,12 @@ else
     ARCHF=$ARCH
 fi
 
-if [ -f $TOP/obj/initramfs-busybox-$ARC.cpio.gz ] || [ ! MAKEINIT ]; then
+if [ -f $TOP/obj/initramfs-busybox-$ARC.cpio.gz ] || [ MAKEINIT ]; then
     if [ ! -f $TOP/obj/linux-$ARC/arch/$ARCHF/boot/bzImage ]; then
         makeKernel
+    fi
+    if [ MAKEINIT ]; then
+        makeNewInitramfs
     fi
     DoQemu
     exit
