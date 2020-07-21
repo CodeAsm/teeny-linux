@@ -88,6 +88,11 @@ if $MODULE ; then
     cp $MODULEURL/hello.ko lib/modules/$KERNEL/extra/hello.ko
 fi
 
+# the extra builded files to be included into the initramfs
+if [ -d $TOP/build/ ]; then
+    cp -r $TOP/build/. $TOP/initramfs/$ARC-busybox/
+fi
+
 #add user?
 cat << EOF> $TOP/initramfs/$ARC-busybox/etc/passwd
 root:LTMW6A/nz.KWI:0:0:root:/root:/bin/sh
@@ -374,10 +379,9 @@ else
     ARCHF=$ARCH
 fi
 
-if [ MAKEINIT == true ]; then
+if [ $MAKEINIT == "true" ]; then
     makeNewInitramfs
 fi
-
     
 if [ -f "$TOP/obj/initramfs-busybox-$ARC.cpio.gz" ]; then
     if [ ! -f $TOP/obj/linux-$ARC/arch/$ARCHF/boot/bzImage ]; then
