@@ -39,6 +39,7 @@ Updated to the latest I know Kernel and applications
 
 Powerpc still fails, no other arch beside x86_64 work.
 see crosstools.sh for a ARM attempt, currently boots the kernel, and no busybox or temp init.
+Dropbear has been added as a extra one could compile. everything inside the build directory gets included
 
 # options
 The build script knows the following commands passable as arguments:
@@ -131,9 +132,10 @@ A temporarely ARM target inside crosstools is in the work. requires arm-none-eab
 fake init static compiled
 
 # Adding new programs
-TobeDone
-for now Im working on the tool scibt that will build a gcc compiler to be included with the builded kernel.
-when making a crosscompiled system, the tools should be native to the target.
+For new programs to be added, there are multiple ways to do so. The easiest I think is to either manualy or using a script to build and copy the required files into the to be made initramfs.
+
+Everything inside the ``$TOP/bin/build/``` will be copied over to the new initramfs.
+Dropbear is an example build script that will build dropbear (an SSH server/client) staticly compiled.
 
 # Network
 To get basic network working, the current buildscipt and setup of qemu will use basic networking.
