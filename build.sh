@@ -171,9 +171,14 @@ EOF
 cd $TOP/initramfs/$ARC-busybox
 
 chmod +x init
-find . -print0 \
-    | cpio --null -ov --format=newc \
-    | gzip -9 > $TOP/obj/initramfs-busybox-$ARC.cpio.gz
+if [ -f $TOP/obj/busybox-$ARC/busybox ]; then
+    find . -print0 \
+        | cpio --null -ov --format=newc \
+        | gzip -9 > $TOP/obj/initramfs-busybox-$ARC.cpio.gz
+else
+echo "[ error ] busybox is missing"
+exit 1;
+fi
 }
 
 #----------------------------------------------------------------------
@@ -353,13 +358,12 @@ if [ -z $ARCH ]; then
     ARCH="x86_64"; fi
     
 cd $TOP
-
 #Download if nececairy, clean an unclean build
 if [ ! -f $TOP/linux-$KERNEL.tar.$KTYPE ]; then #Maybe now partial downloads work?
         wget -c https://cdn.kernel.org/pub/linux/kernel/v$V.x/linux-$KERNEL.tar.$KTYPE
 fi
 
-if [ ! -f $TOP/busybox-$BUSY.tar.bz2 ]; then
+if [ ! -f "$TOP/busybox-$BUSY.tar.bz2" ]; then
         wget -c https://busybox.net/downloads/busybox-$BUSY.tar.bz2
 fi
 
@@ -370,19 +374,21 @@ else
     ARCHF=$ARCH
 fi
 
-if [ -f $TOP/obj/initramfs-busybox-$ARC.cpio.gz ] || [ MAKEINIT ]; then
+if [ MAKEINIT == true ]; then
+    makeNewInitramfs
+fi
+
+    
+if [ -f "$TOP/obj/initramfs-busybox-$ARC.cpio.gz" ]; then
     if [ ! -f $TOP/obj/linux-$ARC/arch/$ARCHF/boot/bzImage ]; then
         makeKernel
-    fi
-    if [ MAKEINIT ]; then
-        makeNewInitramfs
     fi
     DoQemu
     exit
 else
-    if [ -f $TOP/obj/busybox-$ARC/busybox ]; then
+    if [ -f "$TOP/obj/busybox-$ARC/busybox" ]; then
         makeNewInitramfs
-        if [ ! -f $TOP/obj/linux-$ARC/arch/$ARCHF/boot/bzImage ]; then
+        if [ ! -f "$TOP/obj/linux-$ARC/arch/$ARCHF/boot/bzImage" ]; then
             makeKernel
         fi
         DoQemu
@@ -390,7 +396,7 @@ else
     else
         buildBusyBox
         makeNewInitramfs
-        if [ ! -f $TOP/obj/linux-$ARC/arch/$ARCHF/boot/bzImage ]; then
+        if [ ! -f "$TOP/obj/linux-$ARC/arch/$ARCHF/boot/bzImage" ]; then
             makeKernel
         fi
         DoQemu
