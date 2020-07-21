@@ -134,7 +134,7 @@ fake init static compiled
 # Adding new programs
 For new programs to be added, there are multiple ways to do so. The easiest I think is to either manualy or using a script to build and copy the required files into the to be made initramfs.
 
-Everything inside the ``$TOP/bin/build/``` will be copied over to the new initramfs.
+Everything inside the ``$TOP/bin/build/`` will be copied over to the new initramfs.
 Dropbear is an example build script that will build dropbear (an SSH server/client) staticly compiled.
 
 # Network
