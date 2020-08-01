@@ -4,7 +4,7 @@ This awesome guy also updated his buildinstructions so expect some updates on my
 
 http://mgalgs.github.io/2015/05/16/how-to-build-a-custom-linux-kernel-for-qemu-2015-edition.html
 
-![teenylinux booting Screenshot](https://raw.githubusercontent.com/codeasm/teeny-linux/master/resources/Screenshot.png)
+![teenylinux booting Screenshot](https://raw.githubusercontent.com/codeasm/teeny-linux/main/resources/Screenshot.png)
 
 
 My goals in non particular order are: 
@@ -211,7 +211,7 @@ More details and tips can be found at:
     
 # cross compiling
 
-![Crosscompiled kernel on ARM Screenshot](https://raw.githubusercontent.com/codeasm/teeny-linux/master/resources/Screenshot2.png)
+![Crosscompiled kernel on ARM Screenshot](https://raw.githubusercontent.com/codeasm/teeny-linux/main/resources/Screenshot2.png)
 
 as seen in picture, my static linked init dint get compiled against 5.0.5 kernel headers but to 3.2.0, ill fix that someday maybe
 _this is work in progress_
