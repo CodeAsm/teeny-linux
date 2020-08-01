@@ -1,5 +1,5 @@
 #!/bin/bash 
-KERNEL="5.7.11"	                #Kernel release number. (or see cli options)
+KERNEL="5.7.12"	                #Kernel release number. (or see cli options)
 V="${KERNEL:0:1}"               #Kernel version for folder (probably breaks when 10 or larger)
 KTYPE="xz"                      #gz used by RC, xz by stable releases, but should work.
                                 #if posible, I would prever xz for its size and decompress seed
@@ -9,8 +9,8 @@ ARC="x86"                       #short arch (can I use grep for this?)
 TOP=$HOME/Projects/Emulation/Linux/bin  #location for the build, change this for your location
 
 COMPILER="CC=musl-gcc"          #compiler pre. (2020 Musl fix for x86, might break other distro if musl missing)
-IP="10.0.2.15"                  #IP to be used by the virtual machine
-GATEWAY="10.0.2.2"              #default gateway to be used
+IP="192.168.53.76"                  #IP to be used by the virtual machine
+GATEWAY="192.168.53.1"              #default gateway to be used
 HOSTNAME="TeenyQemuBox"         #hostname
 MODULEURL=$TOP/../teeny-linux/modules/        #modprobe url
 LOGINREQUIRED="/bin/login"      #replace with /bin/sh for no login required, /bin/login needed else 
@@ -345,7 +345,7 @@ case $key in
     MAKEINIT=true
     shift;
     ;;-net)
-    NET="-netdev tap,id=mynet0,ifname=tap1,script=no,downscript=no -device e1000,netdev=mynet0,mac=$2"
+    NET="-net nic,model=e1000,macaddr=$2 -net bridge,br=br0"
     shift; shift
     ;;-mod|-module)
     MODULE=true

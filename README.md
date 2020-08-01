@@ -29,7 +29,7 @@ You can however learn from it, or teach how not to do things.
 
 # news
 Updated to the latest I know Kernel and applications
-* Linux Kernel  5.7.11  2020-07-29
+* Linux Kernel  5.7.12  2020-07-31
 * BusyBox       1.32.0  2020-06-26
 * Drobbear      2020.80 2020-06-26
 * beta tools script, based on LFS.
@@ -40,6 +40,7 @@ Updated to the latest I know Kernel and applications
 Powerpc still fails, no other arch beside x86_64 work.
 see crosstools.sh for a ARM attempt, currently boots the kernel, and no busybox or temp init.
 Dropbear has been added as a extra one could compile. everything inside the build directory gets included
+network has been changed to reflect my current tap/bridge layout.
 
 # options
 The build script knows the following commands passable as arguments:
