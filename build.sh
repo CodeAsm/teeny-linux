@@ -1,5 +1,5 @@
 #!/bin/bash 
-KERNEL="5.8"	                #Kernel release number. (or see cli options)
+KERNEL="5.8.3"	                #Kernel release number. (or see cli options)
 V="${KERNEL:0:1}"               #Kernel version for folder (probably breaks when 10 or larger)
 KTYPE="xz"                      #gz used by RC, xz by stable releases, but should work.
                                 #if posible, I would prever xz for its size and decompress seed
@@ -110,7 +110,7 @@ mkdir -pv ../obj/busybox-$ARC
 if [ $ARCH != "x86_64" ]; then
     make O=../obj/busybox-$ARC ARCH=$ARCH CROSS_COMPILE=$COMPILER defconfig
 else
-    make O=../obj/busybox-$ARC defconfig 
+    make O=../obj/busybox-$ARC defconfig $COMPILER
 fi
 # do a static lib thing for busy, 
 sed -i '/# CONFIG_STATIC is not set/c\CONFIG_STATIC=y' ../obj/busybox-$ARC/.config
@@ -123,7 +123,7 @@ if [ $ARCH != "x86_64" ]; then
 else
     make -j$(nproc) $COMPILER
 fi
-make install
+make install $COMPILER
 }
 
 function makeNewInitramfs {
