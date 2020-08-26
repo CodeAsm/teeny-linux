@@ -18,6 +18,7 @@ My goals in non particular order are:
     * specify IP or DHCP (requires custom iniramfs per vm, maybe just dhcp)
 * get a update system working
 * boot from media instead of direct kernel
+* smaller compiler for inside (TCC, work has started in a branch) 
 
 Most of my research and/or playing is done on a x86_64 Arch Linux system, I asume the reader is skilled enough to translate any commands or hints to their own system or reading other resources to accomplish their own goals.
 This is never ment for production or replacing LFS for example. 
@@ -34,6 +35,8 @@ Updated to the latest I know Kernel and applications
 * Drobbear      2020.80 2020-06-26
 * beta tools script, based on LFS.
 * modules support added
+* added Musl option for basic gcc compilation inside envirement
+  Not from sources but precompiled.
 
 4.18.1 still works without altering the scipts
 
@@ -137,6 +140,17 @@ For new programs to be added, there are multiple ways to do so. The easiest I th
 
 Everything inside the ``$TOP/bin/build/`` will be copied over to the new initramfs.
 Dropbear is an example build script that will build dropbear (an SSH server/client) staticly compiled.
+
+## Musl
+Based on Dropbear, Musl precompiled installer script has been added. More information and the tarfile can be found here: <https://musl.cc/> 
+Run to install:
+```
+./musl.sh
+```
+Uninstalling, or actualy deleting. It will delete the complete /build/ contents, rerun other tools if needed to keep:
+```
+./musl.sh -d
+```
 
 # Network
 To get basic network working, the current buildscipt and setup of qemu will use basic networking.
