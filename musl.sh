@@ -29,6 +29,11 @@ function install {
     echo "[ install musl ]"
     cd $TARGET/..
     cp -r x86_64-linux-musl-native/. build/
+    cd $TARGET
+    unlink $TARGET/usr
+    mkdir -pv $TARGET/usr/include
+    ln -s /include usr/include/i386-linux-gnu
+    
 }
 
 #----------------------------------------------------------------------

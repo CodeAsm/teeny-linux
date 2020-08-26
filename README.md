@@ -147,10 +147,20 @@ Run to install:
 ```
 ./musl.sh
 ```
+Dont forget to rebuild init, with for example
+```
+./build.sh -init
+```
+Now compilation using gcc inside the envirement should be posible. the included C source should compile succesfully to hello and display hello world using:
+```
+gcc -o hello hello.c -I /include/
+./hello
+```
 Uninstalling, or actualy deleting. It will delete the complete /build/ contents, rerun other tools if needed to keep:
 ```
 ./musl.sh -d
 ```
+
 
 # Network
 To get basic network working, the current buildscipt and setup of qemu will use basic networking.
@@ -379,6 +389,8 @@ a device tree database is required for proper functioning arm targets, for my ex
 # Resources
 * <https://www.computerhope.com/unix/ucpio.htm>
 * <https://unix.stackexchange.com/questions/56614/send-file-by-xmodem-or-kermit-protocol-with-gnu-screen/65362#65362>
+## Compilers
+* <https://stackoverflow.com/questions/17939930/finding-out-what-the-gcc-include-path-is>
 ## Crosscompile
 * <https://gts3.org/2017/cross-kernel.html>
 * <https://balau82.wordpress.com/2010/02/28/hello-world-for-bare-metal-arm-using-qemu/>
