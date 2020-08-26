@@ -29,7 +29,7 @@ You can however learn from it, or teach how not to do things.
 
 # news
 Updated to the latest I know Kernel and applications
-* Linux Kernel  5.8	2020-08-02
+* Linux Kernel  5.8.4	2020-08-26
 * BusyBox       1.32.0  2020-06-26
 * Drobbear      2020.80 2020-06-26
 * beta tools script, based on LFS.
@@ -363,10 +363,14 @@ clean:
 a device tree database is required for proper functioning arm targets, for my example ive used versatile-pb.dtb that is also provided after compiling the kernel.
           
 # Resources
+* <https://www.computerhope.com/unix/ucpio.htm>
+* <https://unix.stackexchange.com/questions/56614/send-file-by-xmodem-or-kermit-protocol-with-gnu-screen/65362#65362>
+## Crosscompile
 * <https://gts3.org/2017/cross-kernel.html>
 * <https://balau82.wordpress.com/2010/02/28/hello-world-for-bare-metal-arm-using-qemu/>
 * <https://github.com/netbeast/docs/wiki/Cross-compile-test-application>
-* <https://www.computerhope.com/unix/ucpio.htm>
-* <https://unix.stackexchange.com/questions/56614/send-file-by-xmodem-or-kermit-protocol-with-gnu-screen/65362#65362>
 * <https://balau82.wordpress.com/2010/03/22/compiling-linux-kernel-for-qemu-arm-emulator/>
 * <https://designprincipia.com/compile-linux-kernel-for-arm-and-run-on-qemu/>
+## For TinyC Compiler
+* <https://stackoverflow.com/questions/11307465/destdir-and-prefix-of-make>
+* <https://www.monperrus.net/martin/compiling-c-code-with-dietlibc-and-tcc>
