@@ -5,6 +5,8 @@ ARCH="x86_64"                    #default arch
 TARGET=$HOME/Projects/Emulation/Linux/bin/build    
                                  #location for the build, change this for your location
                                  
+COMPILER="CC=musl-gcc" 
+                                 
 #-----------------------------------------------------------------------
 
 # first stuff happening here.
@@ -43,9 +45,12 @@ function build {
     --disable-wtmp          \
     --disable-wtmpx         \
     --disable-zlib          \
+    --disable-loginfunc     \
     --prefix=/usr/sbin/
+    #--disable-pututline     \
+    #--disable-pututxline    \
     
-    make -j8
+    make -j8 $COMPILER #PROGRAMS="dropbear dbclient dropbearkey dropbearconvert scp"
 }
 
 function install {
@@ -56,6 +61,9 @@ function install {
     cp dropbearkey $TARGET/usr/sbin/
     cp dropbearconvert $TARGET/usr/sbin/
     cp dbclient $TARGET/usr/sbin/
+    mkdir -pv $TARGET/etc/dropbear/
+    cp ~/.ssh/id_rsa.pub $TARGET/etc/dropbear/authorized_keys
+    cp ~/.ssh/id_rsa.pub $TARGET/root/authorized_keys
 }
 
 #----------------------------------------------------------------------
