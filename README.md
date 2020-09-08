@@ -30,7 +30,7 @@ You can however learn from it, or teach how not to do things.
 
 # news
 Updated to the latest I know Kernel and applications
-* Linux Kernel  5.8.6	2020-09-03
+* Linux Kernel  5.8.7	2020-09-05
 * BusyBox       1.32.0  2020-06-26
 * Drobbear      2020.80 2020-06-26
 * beta tools script, based on LFS.
@@ -109,11 +109,14 @@ Right after compilation, go into the modules folder, delete the old initramfs an
 after completion, rebuild initramfs and test the installed module:
 ```
 cd module
-rm ../bin/obj/initramfs-busybox-x86.cpio.gz
 make clean
 make
 cd ..
 ./build -mod
+```
+alternativly this can also be used to make a new init, for instance to add other tools from the build dir.
+```
+./build -module
 ```
 feel free to do this diferently when requirements change
 currently loads a test module and supports

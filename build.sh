@@ -78,9 +78,6 @@ EOF
 
 #----------------------------------------------------------------------
 function copytoimage {      #This function will copy nececairy files into the initramfs
-#tar -xvJpf ../../../lfs_toolchain-8.0-x86_64.tar.xz --numeric-owner
-#tar -xvJpf ../../../tools.tar.xz --numeric-owner
-cp $TOP/hello bin/
 
 # modules option
 if $MODULE ; then
