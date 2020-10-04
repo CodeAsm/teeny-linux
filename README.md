@@ -6,9 +6,9 @@ http://mgalgs.github.io/2015/05/16/how-to-build-a-custom-linux-kernel-for-qemu-2
 
 ![teenylinux booting Screenshot](https://raw.githubusercontent.com/codeasm/teeny-linux/main/resources/Screenshot.png)
 
-The kernel currently is: 8.8Mb
-The initramfs without other programs but busybox: 694K
-Added musl will grow the initramfs: 78Mb
+* The kernel currently is: 8.8Mb
+* The initramfs without other programs but busybox: 694K
+* Added musl will grow the initramfs: 78Mb
 With carefull manipulation, the kernel can be made smaller, so does initramfs
 
 My goals in non particular order are: 
@@ -34,7 +34,7 @@ You can however learn from it, or teach how not to do things.
 
 # news
 Updated to the latest I know Kernel and applications
-* Linux Kernel  5.8.12	2020-09-26
+* Linux Kernel  5.8.13	2020-10-01
 * BusyBox       1.32.0  2020-06-26
 * Drobbear      2020.80 2020-06-26
 * beta tools script, based on LFS.
