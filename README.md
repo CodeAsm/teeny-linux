@@ -34,7 +34,7 @@ You can however learn from it, or teach how not to do things.
 
 # news
 Updated to the latest I know Kernel and applications
-* Linux Kernel  5.9.3	2020-11-01
+* Linux Kernel  5.9.6	2020-11-05
 * BusyBox       1.32.0  2020-06-26
 * Drobbear      2020.80 2020-06-26
 * beta tools script, based on LFS.
