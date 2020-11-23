@@ -1,3 +1,4 @@
+#!/bin/bash 
 TARGET="powerpc64-linux" #default
 ARCH="powerpc"
 TOPC="$HOME/Linux/crosstools"
@@ -87,4 +88,3 @@ cd ..
 
 #compiler support
 #standard C
-    

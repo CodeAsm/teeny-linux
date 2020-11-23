@@ -4,6 +4,12 @@ This awesome guy also updated his buildinstructions so expect some updates on my
 
 http://mgalgs.github.io/2015/05/16/how-to-build-a-custom-linux-kernel-for-qemu-2015-edition.html
 
+![teenylinux booting Screenshot](https://raw.githubusercontent.com/codeasm/teeny-linux/main/resources/Screenshot.png)
+
+* The kernel currently is: 8.8Mb
+* The initramfs without other programs but busybox: 694K
+* Added musl will grow the initramfs: 78Mb
+With carefull manipulation, the kernel can be made smaller, so does initramfs
 
 My goals in non particular order are: 
 * Run Linux on any/most CPU (that qemu offers, and that intrests me ;) ).
@@ -11,24 +17,40 @@ My goals in non particular order are:
 * Have Firewire terminal on PowerPC. (this is part of another project)
 * Compile and run Programs from within builded system
 * Have small amount of scripts that can build and partialy test various goals
-* network support, get a update system working
+* network support (is kinda working)
+    * optionaly require mac (its mandatory atm)
+    * specify IP or DHCP (requires custom iniramfs per vm, maybe just dhcp)
+* get a update system working
 * boot from media instead of direct kernel
+* smaller compiler for inside (TCC, work has started in a branch) 
 
 Most of my research and/or playing is done on a x86_64 Arch Linux system, I asume the reader is skilled enough to translate any commands or hints to their own system or reading other resources to accomplish their own goals.
 This is never ment for production or replacing LFS for example. 
 
-I do not recommend this documentation or scripts as a learning tool or seen as fact. this is just me playing arround.
+I do not recommend this documentation or scripts as a teaching tool or seen as fact. this is just me playing arround.
+You can however learn from it, or teach how not to do things.
+
+*user root, password root*
 
 # news
 Updated to the latest I know Kernel and applications
-* Linux Kernel  4.17.14 2018-08-09
-* BusyBox       1.29.2  2018-07-31
-* added Kernel version option
+* Linux Kernel  5.9.10	2020-11-22
+* BusyBox       1.32.0  2020-06-26
+* Drobbear      2020.80 2020-06-26
+* beta tools script, based on LFS.
+* modules support added
+* added Musl option for basic gcc compilation inside envirement
+  Not from sources but precompiled.
+
+4.18.1 still works without altering the scipts
 
 Powerpc still fails, no other arch beside x86_64 work.
+see crosstools.sh for a ARM attempt, currently boots the kernel, and no busybox or temp init.
+Dropbear has been added as a extra one could compile. everything inside the build directory gets included
+network has been changed to reflect my current tap/bridge layout.
 
 # options
-The build scribt knows the following commands passable as arguments:
+The build script knows the following commands passable as arguments:
 ```bash
 ./build.sh -d
 ./build.sh -delete
@@ -53,6 +75,63 @@ other initramfs tests
 ./build.sh -k <kernel version>
 ./build.sh-kernel
 ```
+Build and start a instance with a mac adress of choice
+```bash
+./build.sh -net <macaddr>
+```
+for example
+```bash
+./build.sh -net 52:55:00:d1:55:01
+```
+Will run a VM with that specific macaddr (you need to change the ip inside or do DHCP trickery).
+
+Ive added a user called root inside the passwd file, to login, use password root 
+to build without login prompt:
+```bash
+./build.sh -nl
+```
+or
+```bash
+./build.sh -nologin
+```
+this is like the old behavior.
+
+## Modules
+before any module can be compiled, a first run without support has to be done, or atleast the linux kernel source folder should be compiled. The sample module is a git submodule, and you should init this if you havent already by:
+```
+git submodule init
+git submodule update
+```
+for more submodule details, check: [Cloning a Project with Submodules](https://git-scm.com/book/en/v2/Git-Tools-Submodules#)
+
+Then first do a dry run build without modules:
+```
+./build
+```
+After building the kernel, termination of the qemu instance is posible, a simple test to see there are no mods also posible
+Right after compilation, go into the modules folder, delete the old initramfs and compile a new module.
+after completion, rebuild initramfs and test the installed module:
+```
+cd module
+make clean
+make
+cd ..
+./build -mod
+```
+alternativly this can also be used to make a new init, for instance to add other tools from the build dir.
+```
+./build -module
+```
+feel free to do this diferently when requirements change
+currently loads a test module and supports
+```
+modprobe [module name]
+lsmod
+modprobe -r [module name]
+```
+check buildscipt where to place module or change code to load yours.
+default script copies the hello.ko to /lib/module/[arch]/
+
 
 # building
 run the buildscript :D
@@ -60,14 +139,126 @@ run the buildscript :D
 __select arch support comming__ this feature is being worked on. I want 1 scritp to do all,
 altho I might consider building the crosstools externaly. so you might need to run that first.
 
+A temporarely ARM target inside crosstools is in the work. requires arm-none-eabi- set of build tools as well as a 
+fake init static compiled
+
 # Adding new programs
-TobeDone
+For new programs to be added, there are multiple ways to do so. The easiest I think is to either manualy or using a script to build and copy the required files into the to be made initramfs.
+
+Everything inside the ``$TOP/bin/build/`` will be copied over to the new initramfs.
+Dropbear is an example build script that will build dropbear (an SSH server/client) staticly compiled.
+
+## Musl
+Based on Dropbear, Musl precompiled installer script has been added. More information and the tarfile can be found here: <https://musl.cc/> 
+Run to install:
+```
+./musl.sh
+```
+Dont forget to rebuild init, with for example
+```
+./build.sh -init
+```
+Now compilation using gcc inside the envirement should be posible. the included C source should compile succesfully to hello and display hello world using:
+```
+gcc -o hello hello.c -I /include/
+./hello
+```
+Uninstalling, or actualy deleting. It will delete the complete /build/ contents, rerun other tools if needed to keep:
+```
+./musl.sh -d
+```
 
 
+# Network
+To get basic network working, the current buildscipt and setup of qemu will use basic networking.
+The IP will be 10.0.2.15 and you can reach the internet if your host and qemu allows other virtual machines aswell.
+
+To use a bridge setup (wich I wanted to try anyway) and be able to ping another virtual machine do the following:
+Create a bridge and 2 taps (1 tap for a virual machine, either eth0/or wireless for internet, or another tap for another virtual machine).
+As root (or use sudo)
+```bash
+ip tuntap add tap0 mode tap
+ip tuntap add tap1 mode tap
+```
+
+Create the actual bridge 
+```bash 
+brctl  addbr br0
+```
+
+Add the two taps to the bridge
+```bash 
+brctl addif br0 tap0
+brctl addif br0 tap1
+```
+Bring the interfaces up, so they actualy work.
+```bash
+ifconfig tap0 up
+ifconfig tap1 up
+ifconfig br0 up
+```
+then add a network device to your qemu instance, if using my buildscript, run the following
+add  
+```bash
+./build -net 52:55:00:d1:55:01
+```
+inside one of the qemu instances, change the static ip:
+```bash
+ifconfig eth0 down
+ifconfig eth0 up 10.0.2.16 netmask 255.255.255.0 up
+```
+And now you should be able to ping eachother and do stuff. If you setup a DHCP server or add the bridge to a network with a DHCP server, you can set the instances to recieve a IP from the said DHCP server.
+
+## Removing
+To remove interfaces and shutdown stuff
+delete a tap (also for tap1 or eth0) 
+and deteling the tap
+```bash
+brctl delif br0 tap0
+tunctl -d tap0
+```
+Bring the bridge down and remove it:
+```bash
+ifconfig br0 down
+brctl delbr br0
+```
+Now you can up your eth0 or wirelless again for internets or use a VM without these bridges and use usermode networking.
+
+## Extra handy network commands and links
+To flush the ip and be able to add eth0 of your host to the bridge:
+```bash
+ip addr flush dev eth0
+```
+Checking out if the bridge has the right and all taps or interfaces you wanted:
+```bash
+brctl show
+```
+
+
+More details and tips can be found at:
+* <https://gist.github.com/extremecoders-re/e8fd8a67a515fee0c873dcafc81d811c>
+* <https://wiki.qemu.org/Documentation/Networking#Tap>
+* <https://wiki.archlinux.org/index.php/Network_bridge#With_bridge-utils>
+    
 # cross compiling
+
+![Crosscompiled kernel on ARM Screenshot](https://raw.githubusercontent.com/codeasm/teeny-linux/main/resources/Screenshot2.png)
+
+as seen in picture, my static linked init dint get compiled against 5.0.5 kernel headers but to 3.2.0, ill fix that someday maybe
 _this is work in progress_
 To do crosscompiling ive made a script called "crosstools.sh" that will add crosscompile tools if you dont have any.
 From here on the variable arch can be set to the arch you made crostools for.
+
+crosscompile.sh will build a arm based kernel and tries to boot it using qemu, for succesfull compiling, requires:
+arm-none-eabi- series.
+
+```bash
+./crosscompile.sh
+```
+or to delete the compile attempt (without removing large downloaded files)
+```bash
+./crosscompile.sh -d
+```
 
 # How to build Powerpc crosstools on Arch
 
@@ -204,25 +395,30 @@ default:
 clean:
           $(MAKE) -C $(KDIR) M=$(PWD) clean
 ```          
-          
+a device tree database is required for proper functioning arm targets, for my example ive used versatile-pb.dtb that is also provided after compiling the kernel.
           
 # Resources
-<https://gts3.org/2017/cross-kernel.html>
-<https://balau82.wordpress.com/2010/02/28/hello-world-for-bare-metal-arm-using-qemu/>
-<https://github.com/netbeast/docs/wiki/Cross-compile-test-application>
-<http://preshing.com/20141119/how-to-build-a-gcc-cross-compiler/>
-<http://www.clfs.org/view/CLFS-3.0.0-SYSTEMD/ppc64-64/materials/packages.html>
-<https://wiki.osdev.org/GCC_Cross-Compiler>
-<https://stackoverflow.com/questions/33450401/building-gcc-make-all-error-2>
-    <https://gcc.gnu.org/ml/gcc-help/2012-07/msg00018.html>
+* <https://gts3.org/2017/cross-kernel.html>
+* <https://balau82.wordpress.com/2010/02/28/hello-world-for-bare-metal-arm-using-qemu/>
+* <https://github.com/netbeast/docs/wiki/Cross-compile-test-application>
+* <http://preshing.com/20141119/how-to-build-a-gcc-cross-compiler/>
+* <http://www.clfs.org/view/CLFS-3.0.0-SYSTEMD/ppc64-64/materials/packages.html>
+* <https://wiki.osdev.org/GCC_Cross-Compiler>
+* <https://stackoverflow.com/questions/33450401/building-gcc-make-all-error-2>
+* <https://gcc.gnu.org/ml/gcc-help/2012-07/msg00018.html>
+* <https://www.computerhope.com/unix/ucpio.htm>
+* <https://unix.stackexchange.com/questions/56614/send-file-by-xmodem-or-kermit-protocol-with-gnu-screen/65362#65362>
 
+## Compilers
+* <https://stackoverflow.com/questions/17939930/finding-out-what-the-gcc-include-path-is>
 
+## Crosscompile
+* <https://gts3.org/2017/cross-kernel.html>
+* <https://balau82.wordpress.com/2010/02/28/hello-world-for-bare-metal-arm-using-qemu/>
+* <https://github.com/netbeast/docs/wiki/Cross-compile-test-application>
+* <https://balau82.wordpress.com/2010/03/22/compiling-linux-kernel-for-qemu-arm-emulator/>
+* <https://designprincipia.com/compile-linux-kernel-for-arm-and-run-on-qemu/>
 
-# SIGINT
-Signals Intelligence, to recover, detect and preserve data from unkown origin.
-
-## EVT
-Further research required, but Kernel applied to TTF based underband scanners
-
-## DVT
-RTL-SDR based hardware and up, FPGA and grid chains allignment for further study
+## For TinyC Compiler
+* <https://stackoverflow.com/questions/11307465/destdir-and-prefix-of-make>
+* <https://www.monperrus.net/martin/compiling-c-code-with-dietlibc-and-tcc>
