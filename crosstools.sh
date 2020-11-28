@@ -1,90 +1,123 @@
 #!/bin/bash 
-TARGET="powerpc64-linux" #default
+TARGET="powerpc64-linux-gnueabi" #default powerpc64-linux
 ARCH="powerpc"
-TOPC="$HOME/Linux/crosstools"
+TOPC="$HOME/Projects/Emulation/Linux/crosstools"
 CROSS="$TOPC/bin"
+PREFIX="$TOPC/opt/cross"
+PATH="$PREFIX/bin:$PATH"
+CORES=$(nproc)  #replace with 1 if multicore fails
 
 BINUTIL="2.31.1"
-KERNEL="4.17.14" #lower than 3x, change the path !
 GCC="8.2.0"
-GLIBC="2.28"
-MPFR="4.0.1" 
-GMP="6.1.2"
-MPC="1.0.3"
-ISL="0.20"
-CLOOG="0.18.4" # CLFS uses .2
 
 
 
+#Download all the files
+#----------------------------------------------------------------------
+function Download {
+echo "[ Creating folders ]"
 #first stuff happening here.
 mkdir -v ${TOPC}/sources
 cd $TOPC
-
+echo "[ Download ]"
 wget -c http://ftpmirror.gnu.org/binutils/binutils-$BINUTIL.tar.gz -P ${TOPC}/sources
 wget -c http://ftpmirror.gnu.org/gcc/gcc-$GCC/gcc-$GCC.tar.gz -P ${TOPC}/sources
-wget -c https://www.kernel.org/pub/linux/kernel/v4.x/linux-$KERNEL.tar.xz -P ${TOPC}/sources
-wget -c http://ftpmirror.gnu.org/glibc/glibc-$GLIBC.tar.xz -P ${TOPC}/sources
-wget -c http://ftpmirror.gnu.org/mpfr/mpfr-$MPFR.tar.xz -P ${TOPC}/sources
-wget -c http://ftpmirror.gnu.org/gmp/gmp-$GMP.tar.xz -P ${TOPC}/sources
-wget -c http://ftpmirror.gnu.org/mpc/mpc-$MPC.tar.gz -P ${TOPC}/sources
-wget -c http://isl.gforge.inria.fr/isl-$ISL.tar.xz -P ${TOPC}/sources
-wget -c https://www.bastoul.net/cloog/pages/download/cloog-$CLOOG.tar.gz -P ${TOPC}/sources
+}
 
-for f in *.tar*; do tar xf $f; done
+#----------------------------------------------------------------------
+function Binutils {
+echo "[ Binutils ]"
+echo "  [ Extracting ]"
+pv ${TOPC}/sources/binutils-$BINUTIL.tar.gz | tar xzf - -C ${TOPC}/sources
+cd ${TOPC}/sources/binutils-$BINUTIL/
+echo "  [ Configuring ]"
+mkdir build
+cd build
+echo $PWD
+../configure --target=$TARGET --prefix="$PREFIX" --with-sysroot --disable-nls --disable-werror
+echo "  [ Compiling ]"
+make -j$CORES
+echo "  [ Installing ]"
+make install
+echo "  [ Cleaning ]"
+cd ${TOPC}/sources/
+rm -rf binutils-$BINUTIL/
+}
 
-cd gcc-$GCC
-ln -s ../mpfr-$MPFR mpfr
-ln -s ../gmp-$GMP gmp
-ln -s ../mpc-$MPC mpc
-ln -s ../isl-$ISL isl
-ln -s ../cloog-$CLOOG cloog
-cd ..
+#----------------------------------------------------------------------
 
-sudo mkdir -p $CROSS
-sudo chown $USER $CROSS
+function GCC {
+echo "[ GCC ]"
+echo "  [ Extracting ]"
+pv ${TOPC}/sources/gcc-$GCC.tar.gz | tar xzf - -C ${TOPC}/sources
+cd ${TOPC}/sources/gcc-$GCC/
 
-export PATH=$CROSS:$PATH
-
-#binutil
-#rm -rf build-binutils # save for rebuilds
-#mkdir build-binutils
-#cd build-binutils
-#../binutils-$BINUTIL/configure --prefix=$CROSS --target=$TARGET --disable-multilib --disable-nls
-#make -j$(nproc) #CFLAGS='-Wno-implicit-fallthrough' #added weird new gcc error I dont care bout
-#make install
-#cd ..
-
-#linux headers
-#cd linux-$KERNEL
-#make ARCH=$ARCH INSTALL_HDR_PATH=$CROSS/$ARCH-linux headers_install
-#cd ..
-
-#gcc compilers
 
 # The $PREFIX/bin dir _must_ be in the PATH. We did that above.
 which -- $TARGET-as || echo $TARGET-as is not in the PATH
+echo "  [ Configuring ]"
+mkdir build
+cd build
+echo $PWD
 
-rm -rf build-gcc #just save for rebuilds
-mkdir -p build-gcc
-cd build-gcc
-../gcc-$GCC/configure --prefix=$CROSS --target=$TARGET --enable-languages=c,c++ --disable-multilib CFLAGS=-mlong-double-128 --without-headers --disable-nls
-make -j$(nproc) all-gcc
-make all-target-libgcc
+../configure --target=$TARGET --prefix="$PREFIX" --disable-nls --enable-languages=c,c++ --without-headers
+echo "  [ Compiling ]"
+make all-gcc -j$CORES
+#make all-target-libgcc -j$CORES
+
+echo "  [ Installing ]"
 make install-gcc
-make install-target-libgcc
-cd ..
+#make install-target-libgcc
 
-#standard libs and joy
-#rm -rf build-glibc #saver for rebuilds
-#mkdir -p build-glibc
-#cd build-glibc
-#../glibc-$GLIBC/configure --prefix=$CROSS/$TARGET --build=$MACHTYPE --host=$TARGET --target=$TARGET --with-headers=$CROSS/$TARGET/include --disable-multilib  #libc_cv_forced_unwind=yes
-#make install-bootstrap-headers=yes install-headers
-#make -j4 csu/subdir_lib
-#install csu/crt1.o csu/crti.o csu/crtn.o $CROSS/$TARGET/lib
-#$TARGET-gcc -nostdlib -nostartfiles -shared -x c /dev/null -o $CROSS/$TARGET/lib/libc.so
-#touch $CROSS/$TARGET/include/gnu/stubs.h
-#cd ..
+echo "  [ Cleaning ]"
+cd ${TOPC}/sources/
+rm -rf gcc-$GCC/
+}
 
-#compiler support
-#standard C
+#----------------------------------------------------------------------
+function Test {
+echo "[ Test ]"
+${PREFIX}/bin/$TARGET-gcc --version
+
+cd ${TOPC}
+cat << EOF> "${TOPC}"/hello.c
+#include <stdio.h>
+int main()
+{
+	printf("Hello world!\n");
+	return 0;	
+}
+EOF
+
+${PREFIX}/bin/$TARGET-gcc -g -o hello ${TOPC}/hello.c -static
+rm ${TOPC}/hello.c
+}
+#----------------------------------------------------------------------
+function delete {
+cd ${TOPC}
+rm -rf opt/
+echo "Removed all files except the sources directory"
+exit 1
+}
+
+#----------------------------------------------------------------------
+#process commandline arguments
+while [[ $# -gt 0 ]]
+do
+key="$1"
+case $key in
+    -d|-delete|-deleteall)
+    delete
+    shift; # past argument and value
+    ;;-t|-test)
+    Test 
+    exit 1
+    shift;
+    ;;
+esac
+done
+
+Download
+Binutils
+GCC
+Test

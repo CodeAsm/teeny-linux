@@ -244,13 +244,12 @@ More details and tips can be found at:
 
 ![Crosscompiled kernel on ARM Screenshot](https://raw.githubusercontent.com/codeasm/teeny-linux/main/resources/Screenshot2.png)
 
+UPDATE, changed a few things arround. Crosstools would now only make the tools (test it) and then youd use build with a arch command.
+
 as seen in picture, my static linked init dint get compiled against 5.0.5 kernel headers but to 3.2.0, ill fix that someday maybe
 _this is work in progress_
 To do crosscompiling ive made a script called "crosstools.sh" that will add crosscompile tools if you dont have any.
 From here on the variable arch can be set to the arch you made crostools for.
-
-crosscompile.sh will build a arm based kernel and tries to boot it using qemu, for succesfull compiling, requires:
-arm-none-eabi- series.
 
 ```bash
 ./crosscompile.sh
@@ -403,7 +402,6 @@ a device tree database is required for proper functioning arm targets, for my ex
 * <https://github.com/netbeast/docs/wiki/Cross-compile-test-application>
 * <http://preshing.com/20141119/how-to-build-a-gcc-cross-compiler/>
 * <http://www.clfs.org/view/CLFS-3.0.0-SYSTEMD/ppc64-64/materials/packages.html>
-* <https://wiki.osdev.org/GCC_Cross-Compiler>
 * <https://stackoverflow.com/questions/33450401/building-gcc-make-all-error-2>
 * <https://gcc.gnu.org/ml/gcc-help/2012-07/msg00018.html>
 * <https://www.computerhope.com/unix/ucpio.htm>
@@ -413,6 +411,7 @@ a device tree database is required for proper functioning arm targets, for my ex
 * <https://stackoverflow.com/questions/17939930/finding-out-what-the-gcc-include-path-is>
 
 ## Crosscompile
+* <https://wiki.osdev.org/GCC_Cross-Compiler>
 * <https://gts3.org/2017/cross-kernel.html>
 * <https://balau82.wordpress.com/2010/02/28/hello-world-for-bare-metal-arm-using-qemu/>
 * <https://github.com/netbeast/docs/wiki/Cross-compile-test-application>
