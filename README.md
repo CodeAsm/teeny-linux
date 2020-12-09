@@ -12,7 +12,7 @@ This awesome guy also updated his buildinstructions so expect some updates on my
 * Added musl will grow the initramfs: 78Mb
 With carefull manipulation, the kernel can be made smaller, so does initramfs
 
-My goals in non particular order are: 
+My goals in non particular order are:
 
 * Run Linux on any/most CPU (that qemu offers, and that intrests me ;) ).
 * Crosscompile Linux (probably x86_64 as a base).
@@ -24,10 +24,10 @@ My goals in non particular order are:
   * specify IP or DHCP (requires custom iniramfs per vm, maybe just dhcp)
 * get a update system working
 * boot from media instead of direct kernel
-* smaller compiler for inside (TCC, work has started in a branch) 
+* smaller compiler for inside (TCC, work has started in a branch)
 
 Most of my research and/or playing is done on a x86_64 Arch Linux system, I asume the reader is skilled enough to translate any commands or hints to their own system or reading other resources to accomplish their own goals.
-This is never ment for production or replacing LFS for example. 
+This is never ment for production or replacing LFS for example.
 
 I do not recommend this documentation or scripts as a teaching tool or seen as fact. this is just me playing arround.
 You can however learn from it, or teach how not to do things.
@@ -36,7 +36,8 @@ You can however learn from it, or teach how not to do things.
 ## news
 
 Updated to the latest I know Kernel and applications
-* Linux Kernel  5.9.12	2020-12-02
+
+* Linux Kernel  5.9.13  2020-12-08
 * BusyBox       1.32.0  2020-06-26
 * Drobbear      2020.80 2020-06-26
 * beta tools script, based on LFS.
@@ -52,18 +53,22 @@ Dropbear has been added as a extra one could compile. everything inside the buil
 network has been changed to reflect my current tap/bridge layout.
 
 ## options
+
 The build script knows the following commands passable as arguments:
+
 ```bash
 ./build.sh -d
 ./build.sh -delete
 ./build.sh -deleteall
 ```
+
 deletes all but the tarbal files (handy to restart building without downloading the tarbals
 
 ```bash
 ./build.sh -arch [ppc|x86_64]
 ./build.sh -cpu [ppc|x86_64]
 ```
+
 builds for the selected arch, x86_64 is default tho, x86 isnt tested(yet)
 
 ```bash
@@ -71,44 +76,61 @@ builds for the selected arch, x86_64 is default tho, x86 isnt tested(yet)
 ./build.sh -makeInit
 ./build.sh -makeinit
 ```
+
 Builds or rebuilds only the initramfs and then tries to run qemu, handy when trying new init programs or 
 other initramfs tests
+
 ```bash
 ./build.sh -k <kernel version>
 ./build.sh-kernel
 ```
+
 Build and start a instance with a mac adress of choice
+
 ```bash
 ./build.sh -net <macaddr>
 ```
+
 for example
+
 ```bash
 ./build.sh -net 52:55:00:d1:55:01
 ```
+
 Will run a VM with that specific macaddr (you need to change the ip inside or do DHCP trickery).
 
 Ive added a user called root inside the passwd file, to login, use password root 
 to build without login prompt:
+
 ```bash
 ./build.sh -nl
 ```
+
 or
+
 ```bash
 ./build.sh -nologin
 ```
+
 this is like the old behavior.
 
 ### Modules
+
 before any module can be compiled, a first run without support has to be done, or atleast the linux kernel source folder should be compiled. The sample module is a git submodule, and you should init this if you havent already by:
+
 ```
+
 git submodule init
 git submodule update
+
 ```
 for more submodule details, check: [Cloning a Project with Submodules](https://git-scm.com/book/en/v2/Git-Tools-Submodules#)
 
 Then first do a dry run build without modules:
+
 ```
 ./build
+
 ```
 After building the kernel, termination of the qemu instance is posible, a simple test to see there are no mods also posible
 Right after compilation, go into the modules folder, delete the old initramfs and compile a new module.
