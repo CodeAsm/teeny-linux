@@ -9,7 +9,8 @@ CORES=$(nproc)  #replace with 1 if multicore fails
 
 BINUTIL="2.31.1"
 GCC="8.2.0"
-
+KERNEL="5.10.2"
+MUSL="1.2.1"
 
 
 #Download all the files
@@ -22,6 +23,8 @@ cd $TOPC
 echo "[ Download ]"
 wget -c http://ftpmirror.gnu.org/binutils/binutils-$BINUTIL.tar.gz -P ${TOPC}/sources
 wget -c http://ftpmirror.gnu.org/gcc/gcc-$GCC/gcc-$GCC.tar.gz -P ${TOPC}/sources
+wget -c https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-$KERNEL.tar.xz -P ${TOPC}/sources
+wget -c https://musl.libc.org/releases/musl-$MUSL.tar.gz -P ${TOPC}/sources
 }
 
 #----------------------------------------------------------------------
@@ -73,6 +76,42 @@ echo "  [ Cleaning ]"
 cd ${TOPC}/sources/
 rm -rf gcc-$GCC/
 }
+#----------------------------------------------------------------------
+
+function LinuxHeaders {
+echo "[ Linux Headers ]"
+echo "  [ Extracting ]"
+pv ${TOPC}/sources/linux-$KERNEL.tar.xz | tar xJf - -C ${TOPC}/sources
+cd ${TOPC}/sources/linux-$KERNEL/
+
+
+echo "  [ Make proper ]"
+make mrproper
+
+echo "  [ Installing ]"
+make ARCH=${ARCH} headers_check
+make ARCH=${ARCH} INSTALL_HDR_PATH=${TOPC} headers_install
+
+echo "  [ Cleaning ]"
+cd ${TOPC}/sources/
+rm -rf linux-$KERNEL/
+}
+#----------------------------------------------------------------------
+
+function Musl {
+echo "[ Musl ]"
+echo "  [ Extracting ]"
+pv ${TOPC}/sources/musl-$MUSL.tar.gz | tar xzf - -C ${TOPC}/sources
+cd ${TOPC}/sources/musl-$MUSL/
+
+echo "  [ configure ]"
+echo "  [ Make ]"
+echo "  [ Install ]"
+
+echo "  [ Cleaning ]"
+cd ${TOPC}/sources/
+rm -rf linux-$KERNEL/
+}
 
 #----------------------------------------------------------------------
 function Test {
@@ -89,8 +128,8 @@ int main()
 }
 EOF
 
-${PREFIX}/bin/$TARGET-gcc -g -o hello ${TOPC}/hello.c -static
-rm ${TOPC}/hello.c
+${PREFIX}/bin/$TARGET-gcc -g -o hello ${TOPC}/hello.c -static -L${TOPC} -I${TOPC}
+#rm ${TOPC}/hello.c
 }
 #----------------------------------------------------------------------
 function delete {
@@ -113,6 +152,11 @@ case $key in
     Test 
     exit 1
     shift;
+    ;;-musl )
+    Download
+    Musl 
+    exit 1
+    shift;
     ;;
 esac
 done
@@ -120,4 +164,6 @@ done
 Download
 Binutils
 GCC
+LinuxHeaders
+Musl
 Test
