@@ -37,9 +37,9 @@ You can however learn from it, or teach how not to do things.
 
 Updated to the latest I know Kernel and applications
 
-* Linux Kernel  5.10.2  2020-12-21
-* BusyBox       1.32.0  2020-06-26
-* Drobbear      2020.80 2020-06-26
+* Linux Kernel  5.10.4  2020-12-30
+* BusyBox       1.32.1  2021-01-01
+* Drobbear      2020.81 2020-09-29
 * beta tools script, based on LFS.
 * modules support added
 * added Musl option for basic gcc compilation inside envirement
