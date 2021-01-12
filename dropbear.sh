@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/bin/sh
 
 DROP="2020.81"                   #Dropbear release number
 ARCH="x86_64"                    #default arch

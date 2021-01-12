@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 KERNEL="5.0.5"                  #Kernel release number.
 ARCH="arm"                   #default arch
 TOP=$HOME/Linux/$ARCH-linux     #location for the build
