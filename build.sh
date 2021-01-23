@@ -1,5 +1,5 @@
 #!/bin/sh
-KERNEL="5.10.6"	                #Kernel release number. (or see cli options)
+KERNEL="5.10.10"	                #Kernel release number. (or see cli options)
 V="${KERNEL:0:1}"               #Kernel version for folder (probably breaks when 10 or larger)
 KTYPE="xz"                      #gz used by RC, xz by stable releases, but should work.
                                 #if posible, I would prever xz for its size and decompress seed
@@ -129,7 +129,8 @@ rm -rf $TOP/initramfs
 mkdir -pv $TOP/initramfs/$ARC-busybox
 cd $TOP/initramfs/$ARC-busybox
 mkdir -pv {bin,sbin,root,etc,proc,sys,usr/{bin,sbin,local/{bin,lib}}}
-mkdir -pv {var/run/,etc/network/{if-down.d,if-up.d,if-down.d,if-post-down.d,if-post-up.d,if-pre-down.d,if-pre-up.d}}
+mkdir -pv {var/{run,lib/dpkg},etc/network/{if-down.d,if-up.d,if-down.d,if-post-down.d,if-post-up.d,if-pre-down.d,if-pre-up.d}}
+touch var/lib/dpkg/status
  
 makeInitramfs
 }
