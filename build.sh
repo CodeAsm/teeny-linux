@@ -4,6 +4,8 @@ V="${KERNEL:0:1}"               #Kernel version for folder (probably breaks when
 KTYPE="xz"                      #gz used by RC, xz by stable releases, but should work.
                                 #if posible, I would prever xz for its size and decompress seed
 BUSY="1.32.1"                   #busybox release number
+TOYBOX="0.8.4"                  #toybox
+
 ARCH="x86_64"                   #default arch
 ARC="x86"                       #short arch (can I use grep for this?)
 TOP=$HOME/Projects/Emulation/Linux/bin  #location for the build, change this for your location
@@ -94,6 +96,17 @@ fi
 cat << EOF> $TOP/initramfs/$ARC-busybox/etc/passwd
 root:LTMW6A/nz.KWI:0:0:root:/root:/bin/sh
 EOF
+}
+
+#----------------------------------------------------------------------
+function buildToybox {
+cd $TOP
+wget -c https://www.landley.net/toybox/downloads/toybox-$TOYBOX.tar.gz
+tar -xvf toybox-$TOYBOX.tar.gz
+cd toybox-$TOYBOX
+CC="musl-gcc" LDFLAGS="--static" make distclean defconfig toybox
+PREFIX=$TOP/build/bin/ make -j8 install_flat
+TODO: $TOP/obj/busybox-$ARC/busybox
 }
 
 #----------------------------------------------------------------------
@@ -352,7 +365,12 @@ case $key in
     ;;-option)
     OPTION="$2"
     shift; shift
-    ;;
+    ;;-t|-toybox|-toy|-tb)
+    buildToybox
+    makeNewInitramfs
+    makeKernel
+    DoQemu
+    shift;
 esac
 done
 
