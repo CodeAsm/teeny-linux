@@ -7,6 +7,8 @@ This awesome guy also updated his buildinstructions so expect some updates on my
 
 ![teenylinux booting Screenshot](https://raw.githubusercontent.com/codeasm/teeny-linux/main/resources/Screenshot.png)
 
+This project probably wont be ever as cool or good as <https://github.com/landley/mkroot> and highly suggest one to look there before. It uses toybox.
+
 * The kernel currently is: 8.8Mb
 * The initramfs without other programs but busybox: 694K
 * Added musl will grow the initramfs: 78Mb
@@ -25,6 +27,7 @@ My goals in non particular order are:
 * get a update system working
 * boot from media instead of direct kernel
 * smaller compiler for inside (TCC, work has started in a branch)
+* ToyBox replacing BusyBox
 
 Most of my research and/or playing is done on a x86_64 Arch Linux system, I asume the reader is skilled enough to translate any commands or hints to their own system or reading other resources to accomplish their own goals.
 This is never ment for production or replacing LFS for example.
@@ -39,18 +42,31 @@ Updated to the latest I know Kernel and applications
 
 * Linux Kernel  5.10.14  2021-02-07
 * BusyBox       1.32.1  2021-01-01
+* ToyBox        0.8.4   2020-08-24
 * Drobbear      2020.81 2020-09-29
 * beta tools script, based on LFS.
 * modules support added
 * added Musl option for basic gcc compilation inside envirement
   Not from sources but precompiled.
 
-4.18.1 still works without altering the scipts
-
 Powerpc still fails, no other arch beside x86_64 work.
 see crosstools.sh for a ARM attempt, currently boots the kernel, and no busybox or temp init.
 Dropbear has been added as a extra one could compile. everything inside the build directory gets included
 network has been changed to reflect my current tap/bridge layout.
+
+### ToyBox
+
+As of today, ive added Toybox as an build option. When you are reading this, your on the toybox branch.
+To build toybox and run, a temporarely build command ``-tb`` has been made. it will not do the usual checks and just build. be carefull, always read the build scripts.
+
+TODO, Fix:
+sh: syslogd: No such file or directory
+sh: /sbin/mdev: No such file or directory
+sh: /sbin/route: No such file or directory
+sh: ifconfig: No such file or directory
+setsid: exec /bin/cttyhack: No such file or directory
+
+She will boot tho
 
 ## options
 

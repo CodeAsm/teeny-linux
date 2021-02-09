@@ -52,7 +52,7 @@ exit 1
 
 #----------------------------------------------------------------------
 function writeInit {
-cat << EOF> init 
+cat << EOF> init
 #!/bin/sh
 syslogd 
 mount -t devtmpfs devtmpfs /dev
@@ -104,9 +104,11 @@ cd $TOP
 wget -c https://www.landley.net/toybox/downloads/toybox-$TOYBOX.tar.gz
 tar -xvf toybox-$TOYBOX.tar.gz
 cd toybox-$TOYBOX
-CC="musl-gcc" LDFLAGS="--static" make distclean defconfig toybox
-PREFIX=$TOP/build/bin/ make -j8 install_flat
-TODO: $TOP/obj/busybox-$ARC/busybox
+CC="musl-gcc" LDFLAGS="--static" make distclean defconfig
+sed -i '/# CONFIG_SH is not set/c\CONFIG_SH=y' .config
+CC="musl-gcc" LDFLAGS="--static" make toybox
+PREFIX=$TOP/build/ make -j8 install
+mkdir -pv $TOP/obj/
 }
 
 #----------------------------------------------------------------------
@@ -187,12 +189,12 @@ EOF
 cd $TOP/initramfs/$ARC-busybox
 
 chmod +x init
-if [ -f $TOP/obj/busybox-$ARC/busybox ]; then
+if [ -f $TOP/obj/busybox-$ARC/busybox ]||[ -f $TOP/build/bin/toybox ]; then
     find . -print0 \
         | cpio --null -ov --format=newc \
         | gzip -9 > $TOP/obj/initramfs-busybox-$ARC.cpio.gz
 else
-echo "[ error ] busybox is missing"
+echo "[ error ] busybox/toybox is missing"
 exit 1;
 fi
 }
@@ -370,6 +372,7 @@ case $key in
     makeNewInitramfs
     makeKernel
     DoQemu
+    exit 1;
     shift;
 esac
 done
