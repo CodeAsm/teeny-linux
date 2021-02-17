@@ -17,6 +17,7 @@ HOSTNAME="TeenyQemuBox"         #hostname
 MODULEURL=$TOP/../teeny-linux/modules/        #modprobe url
 LOGINREQUIRED="/bin/login"      #replace with /bin/sh for no login required, /bin/login needed else 
                                 #seems one can simply Ctrl+C out of login tho
+KERNELCMD="console=ttyS0 LFS=/bin/top"       #the kernel commmand to be run, toybox uses an altered version
 
 #DO NOT EDIT BELOW it should not be nececairy.
 #-----------------------------------------------------------
@@ -32,10 +33,10 @@ cd $TOP
 function DoQemu {
 cd $TOP
 qemu-system-$ARCH \
-    -m 2048\
+    -m 2G\
     -kernel obj/linux-$ARC/arch/$ARCH/boot/bzImage \
     -initrd obj/initramfs-busybox-$ARC.cpio.gz \
-    -nographic -append "console=ttyS0" -enable-kvm \
+    -nographic -append "$KERNELCMD" -enable-kvm \
     $NET $OPTION
 }
 
@@ -52,7 +53,7 @@ exit 1
 
 #----------------------------------------------------------------------
 function writeInit {
-cat << EOF> init
+cat << EOF > init
 #!/bin/sh
 syslogd 
 mount -t devtmpfs devtmpfs /dev
@@ -93,7 +94,7 @@ if [ -d $TOP/build/ ]; then
 fi
 
 #add user?
-cat << EOF> $TOP/initramfs/$ARC-busybox/etc/passwd
+cat << EOF > $TOP/initramfs/$ARC-busybox/etc/passwd
 root:LTMW6A/nz.KWI:0:0:root:/root:/bin/sh
 EOF
 }
@@ -157,7 +158,7 @@ cp -av $TOP/obj/busybox-$ARC/_install/* .
 writeInit
 copytoimage
 cd $TOP/initramfs/$ARC-busybox/root
-cat << EOF> .bashrc
+cat << EOF > .bashrc
 #
 # ~/.bashrc
 #
@@ -173,11 +174,11 @@ alias todaytime='date +"%d-%m-%Y %H:%M"'
   PS1="\[\033[35m\]\t\[\033[m\] [\[\033[1;31m\]\u\[\033[0m\]@\[\e[1;34m\]\h\[\e[0m\]:\[\e[94m\]\w\[\e[0m\]]\\$ \[\e[m\]" 
   
 EOF
-cat << EOF> .bash_profile
+cat << EOF > .bash_profile
 PATH=/bin:/usr/bin:/sbin:/usr/sbin:/tools/bin:tools
 EOF
 
-cat << EOF> hello.c
+cat << EOF > hello.c
 #include <stdio.h>
 int main()
 {
@@ -219,7 +220,7 @@ if [ $ARCH == "ppc" ]; then
 # Write out Linux kernel .config file
 mkdir "${TOP}"/obj/linux-$ARC/
 #touch "${TOP}"/obj/linux-$ARC/.config
-cat << EOF> "${TOP}"/obj/linux-$ARC/.config
+cat << EOF > "${TOP}"/obj/linux-$ARC/.config
 CONFIG_EXPERIMENTAL=y
 CONFIG_SWAP=y
 CONFIG_SYSVIPC=y
@@ -368,9 +369,10 @@ case $key in
     OPTION="$2"
     shift; shift
     ;;-t|-toybox|-toy|-tb)
-    buildToybox
-    makeNewInitramfs
-    makeKernel
+    #buildToybox
+    #makeNewInitramfs
+    #makeKernel
+    KERNELCMD="console=ttyS0 LFS=test" 
     DoQemu
     exit 1;
     shift;
