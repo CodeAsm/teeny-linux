@@ -40,7 +40,7 @@ You can however learn from it, or teach how not to do things.
 
 Updated to the latest I know Kernel and applications
 
-* Linux Kernel  5.10.14  2021-02-07
+* Linux Kernel  5.11  2021-02-14
 * BusyBox       1.32.1  2021-01-01
 * ToyBox        0.8.4   2020-08-24
 * Drobbear      2020.81 2020-09-29
