@@ -2,7 +2,7 @@
 TOP=$HOME/Projects/Emulation/Linux/bin  #location for the build, change this for your location
 ARCH="x86_64"                   #default arch
 ARC="x86"                       #short arch (can I use grep for this?)
-KERNEL="5.11.2"
+KERNEL="5.11.6"
 ## The following worked almost, just I dint use the right format for this
 #while read line; do
 #    [[ $line =~ KERNEL= ]] && declare "$line" && break
@@ -60,4 +60,4 @@ cd $TOP
 cp obj/linux-x86/arch/x86/boot/bzImage iso/boot/vmlinuz
 cp obj/initramfs-busybox-x86.cpio.gz iso/boot/initramfs.cpio.gz
 grub-mkrescue --xorriso=/bin/xorriso -o boot.iso iso/ 
-qemu-system-x86_64 -cdrom boot.iso
+qemu-system-x86_64 -cdrom boot.iso -m 2G
