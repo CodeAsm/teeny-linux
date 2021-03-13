@@ -37,7 +37,7 @@ You can however learn from it, or teach how not to do things.
 
 Updated to the latest I know Kernel and applications
 
-* Linux Kernel  5.11.4  2021-03-07
+* Linux Kernel  5.11.6  2021-03-11
 * BusyBox       1.32.1  2021-01-01
 * Drobbear      2020.81 2020-09-29
 * beta tools script, based on LFS.
@@ -47,6 +47,7 @@ Updated to the latest I know Kernel and applications
 
 4.18.1 still works without altering the scipts
 
+KVM config changed after Kernel 5.10, changed accordingly.
 Powerpc still fails, no other arch beside x86_64 work.
 see crosstools.sh for a ARM attempt, currently boots the kernel, and no busybox or temp init.
 Dropbear has been added as a extra one could compile. everything inside the build directory gets included
