@@ -1,57 +1,169 @@
-#!/bin/sh
-KERNEL="5.0.5"                  #Kernel release number.
-ARCH="arm"                   #default arch
-TOP=$HOME/Linux/$ARCH-linux     #location for the build
-COMPILER="arm-none-eabi-"   #compiler pre.
+#!/bin/bash 
+TARGET="powerpc64-linux-gnueabi" #default powerpc64-linux
+ARCH="powerpc"
+TOPC="$HOME/Projects/Emulation/Linux/crosstools"
+CROSS="$TOPC/bin"
+PREFIX="$TOPC/opt/cross"
+PATH="$PREFIX/bin:$PATH"
+CORES=$(nproc)  #replace with 1 if multicore fails
 
-mkdir -p $TOP
-cd $TOP
-#need :
-#arm-none-eabi-gcc
+BINUTIL="2.31.1"
+GCC="8.2.0"
+KERNEL="5.10.2"
+MUSL="1.2.1"
+
+
+#Download all the files
+#----------------------------------------------------------------------
+function Download {
+echo "[ Creating folders ]"
+#first stuff happening here.
+mkdir -v ${TOPC}/sources
+cd $TOPC
+echo "[ Download ]"
+wget -c http://ftpmirror.gnu.org/binutils/binutils-$BINUTIL.tar.gz -P ${TOPC}/sources
+wget -c http://ftpmirror.gnu.org/gcc/gcc-$GCC/gcc-$GCC.tar.gz -P ${TOPC}/sources
+wget -c https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-$KERNEL.tar.xz -P ${TOPC}/sources
+wget -c https://musl.libc.org/releases/musl-$MUSL.tar.gz -P ${TOPC}/sources
+}
+
+#----------------------------------------------------------------------
+function Binutils {
+echo "[ Binutils ]"
+echo "  [ Extracting ]"
+pv ${TOPC}/sources/binutils-$BINUTIL.tar.gz | tar xzf - -C ${TOPC}/sources
+cd ${TOPC}/sources/binutils-$BINUTIL/
+echo "  [ Configuring ]"
+mkdir build
+cd build
+echo $PWD
+../configure --target=$TARGET --prefix="$PREFIX" --with-sysroot --disable-nls --disable-werror
+echo "  [ Compiling ]"
+make -j$CORES
+echo "  [ Installing ]"
+make install
+echo "  [ Cleaning ]"
+cd ${TOPC}/sources/
+rm -rf binutils-$BINUTIL/
+}
+
+#----------------------------------------------------------------------
+
+function GCC {
+echo "[ GCC ]"
+echo "  [ Extracting ]"
+pv ${TOPC}/sources/gcc-$GCC.tar.gz | tar xzf - -C ${TOPC}/sources
+cd ${TOPC}/sources/gcc-$GCC/
+
+
+# The $PREFIX/bin dir _must_ be in the PATH. We did that above.
+which -- $TARGET-as || echo $TARGET-as is not in the PATH
+echo "  [ Configuring ]"
+mkdir build
+cd build
+echo $PWD
+
+../configure --target=$TARGET --prefix="$PREFIX" --disable-nls --enable-languages=c,c++ --without-headers
+echo "  [ Compiling ]"
+make all-gcc -j$CORES
+#make all-target-libgcc -j$CORES
+
+echo "  [ Installing ]"
+make install-gcc
+#make install-target-libgcc
+
+echo "  [ Cleaning ]"
+cd ${TOPC}/sources/
+rm -rf gcc-$GCC/
+}
+#----------------------------------------------------------------------
+
+function LinuxHeaders {
+echo "[ Linux Headers ]"
+echo "  [ Extracting ]"
+pv ${TOPC}/sources/linux-$KERNEL.tar.xz | tar xJf - -C ${TOPC}/sources
+cd ${TOPC}/sources/linux-$KERNEL/
+
+
+echo "  [ Make proper ]"
+make mrproper
+
+echo "  [ Installing ]"
+make ARCH=${ARCH} headers_check
+make ARCH=${ARCH} INSTALL_HDR_PATH=${TOPC} headers_install
+
+echo "  [ Cleaning ]"
+cd ${TOPC}/sources/
+rm -rf linux-$KERNEL/
+}
+#----------------------------------------------------------------------
+
+function Musl {
+echo "[ Musl ]"
+echo "  [ Extracting ]"
+pv ${TOPC}/sources/musl-$MUSL.tar.gz | tar xzf - -C ${TOPC}/sources
+cd ${TOPC}/sources/musl-$MUSL/
+
+echo "  [ configure ]"
+echo "  [ Make ]"
+echo "  [ Install ]"
+
+echo "  [ Cleaning ]"
+cd ${TOPC}/sources/
+rm -rf linux-$KERNEL/
+}
+
+#----------------------------------------------------------------------
+function Test {
+echo "[ Test ]"
+${PREFIX}/bin/$TARGET-gcc --version
+
+cd ${TOPC}
+cat << EOF> "${TOPC}"/hello.c
+#include <stdio.h>
+int main()
+{
+	printf("Hello world!\n");
+	return 0;	
+}
+EOF
+
+${PREFIX}/bin/$TARGET-gcc -g -o hello ${TOPC}/hello.c -static -L${TOPC} -I${TOPC}
+#rm ${TOPC}/hello.c
+}
+#----------------------------------------------------------------------
+function delete {
+cd ${TOPC}
+rm -rf opt/
+echo "Removed all files except the sources directory"
+exit 1
+}
+
+#----------------------------------------------------------------------
 #process commandline arguments
 while [[ $# -gt 0 ]]
 do
 key="$1"
 case $key in
-    -d|-delete)
-    rm -rf linux-$KERNEL/   
-    rm -rf $TOP/obj/
-    exit
-    shift; shift
-    
+    -d|-delete|-deleteall)
+    delete
+    shift; # past argument and value
+    ;;-t|-test)
+    Test 
+    exit 1
+    shift;
+    ;;-musl )
+    Download
+    Musl 
+    exit 1
+    shift;
     ;;
 esac
 done
 
-function makeKernel {
-tar xJf linux-$KERNEL.tar.xz
-
-#Make our Kernel
-cd $TOP/linux-$KERNEL
-
-# Write out Linux kernel .config file
-mkdir "${TOP}"/obj/linux-$ARCH/
-
-make O=../obj/linux-$ARCH ARCH=$ARCH versatile_defconfig
-
-# this compiles the kernel, add "-j <number_of_cpus>" to it to use multiple CPUs to reduce build time
-make O=../obj/linux-$ARCH ARCH=$ARCH CROSS_COMPILE=$COMPILER -j$(nproc) 
-}
-
-function makeTempRootFS {
-
-#${COMPILER}gcc -static ${TOP}/obj/init.c -o init
-cd $TOP/obj
-cp ../../test test
-rm rootfs
-echo  test | cpio -o --format=newc > rootfs
-
-}
-
-
-wget -c https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-$KERNEL.tar.xz
-if [ ! -f $TOP/obj/linux-$ARCH/vmlinux ]; then
-    makeKernel
-fi
-makeTempRootFS
-qemu-system-arm -M versatilepb -kernel $TOP/obj/linux-$ARCH/arch/$ARCH/boot/zImage -dtb $TOP/obj/linux-$ARCH/arch/$ARCH/boot/dts/versatile-pb.dtb -initrd $TOP/obj/rootfs -append "ignore_loglevel log_buf_len=10M print_fatal_signals=1 LOGLEVEL=8 earlyprintk=vga,keep sched_debug append root=/dev/ram rdinit=/test"
+Download
+Binutils
+GCC
+LinuxHeaders
+Musl
+Test
