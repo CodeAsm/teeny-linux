@@ -16,14 +16,10 @@ My goals in non particular order are:
 
 * Run Linux on any/most CPU (that qemu offers, and that intrests me ;) ).
 * Crosscompile Linux (probably x86_64 as a base).
+  * Partial functional
 * Have Firewire terminal on PowerPC. (this is part of another project)
-* Compile and run Programs from within builded system
 * Have small amount of scripts that can build and partialy test various goals
-* network support (is kinda working)
-  * optionaly require mac (its mandatory atm)
-  * specify IP or DHCP (requires custom iniramfs per vm, maybe just dhcp)
 * get a update system working
-* boot from media instead of direct kernel
 * smaller compiler for inside (TCC, work has started in a branch)
 
 Most of my research and/or playing is done on a x86_64 Arch Linux system, I asume the reader is skilled enough to translate any commands or hints to their own system or reading other resources to accomplish their own goals.
@@ -37,13 +33,17 @@ You can however learn from it, or teach how not to do things.
 
 Updated to the latest I know Kernel and applications
 
-* Linux Kernel  5.12.5 	2021-05-19
-* BusyBox       1.32.1  2021-01-01
-* Drobbear      2020.81 2020-09-29
+| :------------- | :--------- | ----------: |
+| Linux kernel   | 5.12.5     | 2021-05-19  |
+| BusyBox        | 1.32.1     | 2021-01-01  |
+| Drobbear       | 2020.81    | 2020-09-29  |
+
 * beta tools script, based on LFS.
 * modules support added
 * added Musl option for basic gcc compilation inside envirement
   Not from sources but precompiled.
+* crosscompiler support minimal
+* networking works if using bridge or user
 
 4.18.1 still works without altering the scipts
 
