@@ -1,12 +1,12 @@
 #!/bin/bash 
-TARGET="powerpc64-elf" #default powerpc64-linux
+TARGET="powerpc64-linux" #default powerpc64-linux
 ARCH="powerpc"
 TOPC="$HOME/Projects/Emulation/Linux/crosstools"
 CROSS="$TOPC/bin"
 PREFIX="$TOPC/opt/cross"
 PATH="$PREFIX/bin:$PATH"
 CORES=$(nproc)  #replace with 1 if multicore fails
-MUSLDO=false
+CLIB=
 
 BINUTIL="2.36.1"
 GCC="11.1.0"
@@ -217,20 +217,38 @@ case $key in
     Test 
     exit 1
     shift;
-    ;;
+    ;;-glibc|-c)
+    CLIB=glibc
+    shift; # past argument and valu
 esac
 done
 
-Download
-Binutils
-GCC_step1
-LinuxHeaders
-if [ "$MUSLDO" = true  ]; then
- #   Musl
- Musl
-else
- #   newlib
- Newlib
-fi
-GCC_step2
-Test
+#Download
+#Binutils
+#GCC_step1
+#LinuxHeaders
+
+
+case $CLIB in
+    newlib)
+        Newlib
+        ;;
+    musl)
+        Musl
+        ;;
+    glibc)
+        Glibc
+        ;;
+    libc)
+        Libc
+        ;;
+    picolibc)
+        Picolibc
+        ;;
+    *)
+        echo "no libc set or chosen" 
+        exit 1
+        ;;
+esac
+#GCC_step2
+#Test
