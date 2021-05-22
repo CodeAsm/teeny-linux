@@ -434,6 +434,8 @@ a device tree database is required for proper functioning arm targets, for my ex
 * <https://github.com/netbeast/docs/wiki/Cross-compile-test-application>
 * <https://balau82.wordpress.com/2010/03/22/compiling-linux-kernel-for-qemu-arm-emulator/>
 * <https://designprincipia.com/compile-linux-kernel-for-arm-and-run-on-qemu/>
+* <https://stackoverflow.com/questions/49391116/build-newlib-with-existing-cross-compiler>
+* <https://wiki.osdev.org/Porting_Newlib>
 
 ### For TinyC Compiler
 

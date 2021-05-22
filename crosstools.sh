@@ -1,16 +1,18 @@
 #!/bin/bash 
-TARGET="powerpc64-linux-gnueabi" #default powerpc64-linux
+TARGET="powerpc64-elf" #default powerpc64-linux
 ARCH="powerpc"
 TOPC="$HOME/Projects/Emulation/Linux/crosstools"
 CROSS="$TOPC/bin"
 PREFIX="$TOPC/opt/cross"
 PATH="$PREFIX/bin:$PATH"
 CORES=$(nproc)  #replace with 1 if multicore fails
+MUSLDO=false
 
-BINUTIL="2.31.1"
-GCC="8.2.0"
-KERNEL="5.10.2"
+BINUTIL="2.36.1"
+GCC="11.1.0"
+KERNEL="5.12.5"
 MUSL="1.2.1"
+NEWLIB="4.1.0"
 
 
 #Download all the files
@@ -24,7 +26,11 @@ echo "[ Download ]"
 wget -c http://ftpmirror.gnu.org/binutils/binutils-$BINUTIL.tar.gz -P ${TOPC}/sources
 wget -c http://ftpmirror.gnu.org/gcc/gcc-$GCC/gcc-$GCC.tar.gz -P ${TOPC}/sources
 wget -c https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-$KERNEL.tar.xz -P ${TOPC}/sources
-wget -c https://musl.libc.org/releases/musl-$MUSL.tar.gz -P ${TOPC}/sources
+if [ "$MUSLDO" = true ]; then
+    wget -c https://musl.libc.org/releases/musl-$MUSL.tar.gz -P ${TOPC}/sources
+else
+    wget -c https://sourceware.org/pub/newlib/newlib-$NEWLIB.tar.gz -P ${TOPC}/sources
+fi
 }
 
 #----------------------------------------------------------------------
@@ -37,9 +43,9 @@ echo "  [ Configuring ]"
 mkdir build
 cd build
 echo $PWD
-../configure --target=$TARGET --prefix="$PREFIX" --with-sysroot --disable-nls --disable-werror
+../configure --target=$TARGET --prefix="$PREFIX" --with-sysroot --disable-nls --disable-werror --enable-shared --enable-64-bit-bfd
 echo "  [ Compiling ]"
-make -j$CORES
+make all -j$CORES
 echo "  [ Installing ]"
 make install
 echo "  [ Cleaning ]"
@@ -49,7 +55,7 @@ rm -rf binutils-$BINUTIL/
 
 #----------------------------------------------------------------------
 
-function GCC {
+function GCC_step1 {
 echo "[ GCC ]"
 echo "  [ Extracting ]"
 pv ${TOPC}/sources/gcc-$GCC.tar.gz | tar xzf - -C ${TOPC}/sources
@@ -57,24 +63,60 @@ cd ${TOPC}/sources/gcc-$GCC/
 
 
 # The $PREFIX/bin dir _must_ be in the PATH. We did that above.
-which -- $TARGET-as || echo $TARGET-as is not in the PATH
+which -- $TARGET-as || echo $TARGET-as is not in the PATH exit 1
 echo "  [ Configuring ]"
 mkdir build
 cd build
 echo $PWD
 
-../configure --target=$TARGET --prefix="$PREFIX" --disable-nls --enable-languages=c,c++ --without-headers
+if [ "$MUSLDO" = true  ]; then
+ #   Musl
+ ../configure --target=$TARGET --prefix="$PREFIX" --disable-nls \
+             --enable-languages=c,c++ \
+             --without-headers  \
+             --with-gnu-as --with-gnu-ld
+else
+#newlib
+../configure --target=$TARGET --prefix="$PREFIX" \
+             --without-headers --with-newlib \
+             --with-gnu-as --with-gnu-ld
+fi
+
 echo "  [ Compiling ]"
 make all-gcc -j$CORES
-#make all-target-libgcc -j$CORES
 
 echo "  [ Installing ]"
 make install-gcc
 #make install-target-libgcc
 
 echo "  [ Cleaning ]"
-cd ${TOPC}/sources/
-rm -rf gcc-$GCC/
+#cd ${TOPC}/sources/
+#rm -rf gcc-$GCC/
+}
+#----------------------------------------------------------------------
+
+function GCC_step2 {
+echo "[ GCC step 2]"
+cd ${TOPC}/sources/gcc-$GCC/
+
+echo "  [ Compiling second time ]"
+cd build
+echo $PWD
+
+../configure --target=$TARGET --prefix=$PREFIX \
+                --with-newlib --with-gnu-as --with-gnu-ld \
+                --disable-shared --disable-libssp
+
+echo "  [ Compiling ]"
+make all -j$CORES
+
+echo "  [ Installing ]"
+make install
+#make install-target-libgcc
+
+echo "  [ Cleaning ]"
+#cd ${TOPC}/sources/
+#rm -rf gcc-$GCC/
 }
 #----------------------------------------------------------------------
 
@@ -105,9 +147,32 @@ pv ${TOPC}/sources/musl-$MUSL.tar.gz | tar xzf - -C ${TOPC}/sources
 cd ${TOPC}/sources/musl-$MUSL/
 
 echo "  [ configure ]"
+./configure --prefix=$PREFIX --target=$TARGET 
 echo "  [ Make ]"
 echo "  [ Install ]"
 
+echo "  [ Cleaning ]"
+cd ${TOPC}/sources/
+rm -rf linux-$KERNEL/
+}
+
+#----------------------------------------------------------------------
+
+function Newlib {
+echo "[ Newlib ]"
+echo "  [ Extracting ]"
+pv ${TOPC}/sources/newlib-$NEWLIB.tar.gz | tar xzf - -C ${TOPC}/sources
+cd ${TOPC}/sources/newlib-$NEWLIB/
+
+echo "  [ configure ]"
+#rm -rf build
+mkdir build
+cd build
+../configure --target=$TARGET --prefix=$PREFIX
+echo "  [ Make ]"
+make all
+echo "  [ Install ]"
+make install
 echo "  [ Cleaning ]"
 cd ${TOPC}/sources/
 rm -rf linux-$KERNEL/
@@ -119,7 +184,7 @@ echo "[ Test ]"
 ${PREFIX}/bin/$TARGET-gcc --version
 
 cd ${TOPC}
-cat << EOF> "${TOPC}"/hello.c
+cat << EOF > "${TOPC}"/hello.c
 #include <stdio.h>
 int main()
 {
@@ -152,18 +217,20 @@ case $key in
     Test 
     exit 1
     shift;
-    ;;-musl )
-    Download
-    Musl 
-    exit 1
-    shift;
     ;;
 esac
 done
 
 Download
 Binutils
-GCC
+GCC_step1
 LinuxHeaders
-Musl
+if [ "$MUSLDO" = true  ]; then
+ #   Musl
+ Musl
+else
+ #   newlib
+ Newlib
+fi
+GCC_step2
 Test
