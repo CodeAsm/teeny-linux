@@ -78,7 +78,7 @@ builds for the selected arch, x86_64 is default tho, x86 isnt tested(yet)
 ./build.sh -makeinit
 ```
 
-Builds or rebuilds only the initramfs and then tries to run qemu, handy when trying new init programs or 
+Builds or rebuilds only the initramfs and then tries to run qemu, handy when trying new init programs or
 other initramfs tests
 
 ```bash
@@ -100,7 +100,7 @@ for example
 
 Will run a VM with that specific macaddr (you need to change the ip inside or do DHCP trickery).
 
-Ive added a user called root inside the passwd file, to login, use password root 
+Ive added a user called root inside the passwd file, to login, use password root
 to build without login prompt:
 
 ```bash
@@ -119,152 +119,186 @@ this is like the old behavior.
 
 before any module can be compiled, a first run without support has to be done, or atleast the linux kernel source folder should be compiled. The sample module is a git submodule, and you should init this if you havent already by:
 
-```
+```sh
 
 git submodule init
 git submodule update
 
 ```
+
 for more submodule details, check: [Cloning a Project with Submodules](https://git-scm.com/book/en/v2/Git-Tools-Submodules#)
 
 Then first do a dry run build without modules:
 
-```
+```sh
 ./build
 
 ```
+
 After building the kernel, termination of the qemu instance is posible, a simple test to see there are no mods also posible
 Right after compilation, go into the modules folder, delete the old initramfs and compile a new module.
 after completion, rebuild initramfs and test the installed module:
-```
+
+```sh
 cd module
 make clean
 make
 cd ..
 ./build -mod
 ```
+
 alternativly this can also be used to make a new init, for instance to add other tools from the build dir.
-```
+
+```sh
 ./build -module
 ```
+
 feel free to do this diferently when requirements change
 currently loads a test module and supports
-```
+
+```sh
 modprobe [module name]
 lsmod
 modprobe -r [module name]
 ```
+
 check buildscipt where to place module or change code to load yours.
 default script copies the hello.ko to /lib/module/[arch]/
 
-
 ## building
+
 run the buildscript :D
 
 __select arch support comming__ this feature is being worked on. I want 1 scritp to do all,
 altho I might consider building the crosstools externaly. so you might need to run that first.
 
-A temporarely ARM target inside crosstools is in the work. requires arm-none-eabi- set of build tools as well as a 
+A temporarely ARM target inside crosstools is in the work. requires arm-none-eabi- set of build tools as well as a
 fake init static compiled
 
 ## Adding new programs
+
 For new programs to be added, there are multiple ways to do so. The easiest I think is to either manualy or using a script to build and copy the required files into the to be made initramfs.
 
 Everything inside the ``$TOP/bin/build/`` will be copied over to the new initramfs.
 Dropbear is an example build script that will build dropbear (an SSH server/client) staticly compiled.
 
 ### Musl
-Based on Dropbear, Musl precompiled installer script has been added. More information and the tarfile can be found here: <https://musl.cc/> 
+
+Based on Dropbear, Musl precompiled installer script has been added. More information and the tarfile can be found here: <https://musl.cc/>
 Run to install:
-```
+
+```sh
 ./musl.sh
 ```
+
 Dont forget to rebuild init, with for example
-```
+
+```sh
 ./build.sh -init
 ```
+
 Now compilation using gcc inside the envirement should be posible. the included C source should compile succesfully to hello and display hello world using:
-```
+
+```sh
 gcc -o hello hello.c -I /include/
 ./hello
 ```
+
 Uninstalling, or actualy deleting. It will delete the complete /build/ contents, rerun other tools if needed to keep:
-```
+
+```sh
 ./musl.sh -d
 ```
 
-
 ## Network
+
 To get basic network working, the current buildscipt and setup of qemu will use basic networking.
 The IP will be 10.0.2.15 and you can reach the internet if your host and qemu allows other virtual machines aswell.
 
 To use a bridge setup (wich I wanted to try anyway) and be able to ping another virtual machine do the following:
 Create a bridge and 2 taps (1 tap for a virual machine, either eth0/or wireless for internet, or another tap for another virtual machine).
 As root (or use sudo)
-```bash
+
+```sh
 ip tuntap add tap0 mode tap
 ip tuntap add tap1 mode tap
 ```
 
-Create the actual bridge 
-```bash 
+Create the actual bridge
+
+```sh
 brctl  addbr br0
 ```
 
 Add the two taps to the bridge
-```bash 
+
+```sh
 brctl addif br0 tap0
 brctl addif br0 tap1
 ```
+
 Bring the interfaces up, so they actualy work.
-```bash
+
+```sh
 ifconfig tap0 up
 ifconfig tap1 up
 ifconfig br0 up
 ```
+
 then add a network device to your qemu instance, if using my buildscript, run the following
-add  
-```bash
+
+```sh
 ./build -net 52:55:00:d1:55:01
 ```
+
 inside one of the qemu instances, change the static ip:
-```bash
+
+```sh
 ifconfig eth0 down
 ifconfig eth0 up 10.0.2.16 netmask 255.255.255.0 up
 ```
+
 And now you should be able to ping eachother and do stuff. If you setup a DHCP server or add the bridge to a network with a DHCP server, you can set the instances to recieve a IP from the said DHCP server.
 
 ### Removing
+
 To remove interfaces and shutdown stuff
-delete a tap (also for tap1 or eth0) 
-and deteling the tap
-```bash
+delete a tap (also for tap1 or eth0) and deteling the tap
+
+```sh
 brctl delif br0 tap0
 tunctl -d tap0
 ```
+
 Bring the bridge down and remove it:
-```bash
+
+```sh
 ifconfig br0 down
 brctl delbr br0
 ```
+
 Now you can up your eth0 or wirelless again for internets or use a VM without these bridges and use usermode networking.
 
 ### Extra handy network commands and links
+
 To flush the ip and be able to add eth0 of your host to the bridge:
-```bash
+
+```sh
 ip addr flush dev eth0
 ```
+
 Checking out if the bridge has the right and all taps or interfaces you wanted:
-```bash
+
+```sh
 brctl show
 ```
 
-
 More details and tips can be found at:
+
 * <https://gist.github.com/extremecoders-re/e8fd8a67a515fee0c873dcafc81d811c>
 * <https://wiki.qemu.org/Documentation/Networking#Tap>
 * <https://wiki.archlinux.org/index.php/Network_bridge#With_bridge-utils>
-    
+
 ## cross compiling
 
 ![Crosscompiled kernel on ARM Screenshot](https://raw.githubusercontent.com/codeasm/teeny-linux/main/resources/Screenshot2.png)
@@ -277,10 +311,12 @@ From here on the variable arch can be set to the arch you made crostools for.
 crosscompile.sh will build a arm based kernel and tries to boot it using qemu, for succesfull compiling, requires:
 arm-none-eabi- series.
 
-```bash
+```sh
 ./crosscompile.sh
 ```
+
 or to delete the compile attempt (without removing large downloaded files)
+
 ```bash
 ./crosscompile.sh -d
 ```
@@ -293,14 +329,15 @@ needed GPG keys for linux, patch and glibc headers:
 16792B4EA25340F8
 gpg --keyserver hkps://pgp.mit.edu --recv-keys 79BE3E4300411886 38DBBDC86092693E 16792B4EA25340F8
 
-
 These tools are 32bit, and for Powerpc G5 we need 64bits.
 And browsing the Arch forums... yeah, general public intrests.... they go with the dodo.
 Lets make our own Distro, with Doom and Anime... I mean documentries on space and sciense.
+
 ### 64bit
+
 ### powerpc64-linux-gnu-binutils
 
-```
+```sh
 git clone https://aur.archlinux.org/powerpc64-linux-gnu-binutils.git
 cd powerpc64-linux-gnu-binutils/
 makepkg -si
@@ -308,58 +345,74 @@ cd ..
 ```
 
 ### 32bit
+
 ### powerpc-linux-gnu-binutils
-```
+
+```sh
 git clone https://aur.archlinux.org/powerpc-linux-gnu-binutils.git
 cd powerpc-linux-gnu-binutils/
 makepkg -si
 cd ..
 ```
+
 ### powerpc-linux-gnu-linux-api-headers
-```
+
+```sh
 git clone https://aur.archlinux.org/powerpc-linux-gnu-linux-api-headers.git
 cd powerpc-linux-gnu-linux-api-headers/
 makepkg -si
 cd ..
 ```
+
 ### powerpc-linux-gnu-gcc-stage1
-```
+
+```sh
 git clone https://aur.archlinux.org/powerpc-linux-gnu-gcc-stage1.git
 cd powerpc-linux-gnu-gcc-stage1/
 makepkg -si
 cd ..
 ```
+
 ### powerpc-linux-gnu-glibc-headers
-```
+
+```sh
 git clone https://aur.archlinux.org/powerpc-linux-gnu-glibc-headers.git
 cd powerpc-linux-gnu-glibc-headers/
 makepkg -si
 cd ..
 ```
+
 ### powerpc-linux-gnu-gcc-stage2
-```
+
+```sh
 git clone https://aur.archlinux.org/powerpc-linux-gnu-gcc-stage2.git
 cd powerpc-linux-gnu-gcc-stage2/
 makepkg -si
 cd ..
 ```
+
 ### powerpc-linux-gnu-glibc
-```
+
+```sh
 git clone https://aur.archlinux.org/powerpc-linux-gnu-glibc.git
 cd powerpc-linux-gnu-glibc/
 makepkg -si
 cd ..
 ```
+
 ### powerpc-linux-gnu-gcc
-```
+
+```sh
 git clone https://aur.archlinux.org/powerpc-linux-gnu-gcc.git
 cd powerpc-linux-gnu-gcc/
 makepkg -si
 cd ..
 ```
+
 ### Testing the compiler
+
 Write a file containing:
--------------------------
+
 ```c
 #include<stdio.h>
 
@@ -368,14 +421,17 @@ int main () {
         return 0;
 }
 ```
--------------------------
-```powerpc-linux-gnu-gcc -static -g hello.cpp -o hello 
+
+```sh
+powerpc-linux-gnu-gcc -static -g hello.cpp -o hello 
 qemu-ppc hello
 ```
 
 ### Building bare kernel
-_this is work in progress_
-```
+
+_this is work in progress_.
+
+```sh
 git clone https://github.com/raspberrypi/linux raspberrypi-linux
 cd raspberrypi-linux
 cp arch/arm/configs/bcmrpi_cutdown_defconfig .config
@@ -383,12 +439,15 @@ make ARCH=arm CROSS_COMPILE=/usr/bin/arm-linux-gnueabi- oldconfig
 make ARCH=arm CROSS_COMPILE=/usr/bin/arm-linux-gnueabi- menuconfig
 make ARCH=arm CROSS_COMPILE=/usr/bin/arm-linux-gnueabi- -k
 ```
+
 or do some defconfig for ppc
-```
+
+```sh
 make -j 4 [u|z]Image dtbs modules
 make ARCH=arm CROSS_COMPILE=arm-none-linux-gnueabi-
 ```
-```bash
+
+```sh
 export ARCH:=arm
 export CROSS_COMPILE:=arm-none-linux-gnueabi-
 
@@ -415,9 +474,10 @@ default:
           $(MAKE) -C $(KDIR) M=$(PWD) modules
 clean:
           $(MAKE) -C $(KDIR) M=$(PWD) clean
-```          
+```
+
 a device tree database is required for proper functioning arm targets, for my example ive used versatile-pb.dtb that is also provided after compiling the kernel.
-          
+
 ## Resources
 
 * <https://www.computerhope.com/unix/ucpio.htm>
