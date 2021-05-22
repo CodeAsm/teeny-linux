@@ -1,5 +1,5 @@
 #!/bin/sh
-KERNEL="5.12.5"	                #Kernel release number. (or see cli options)
+KERNEL="5.12.6"	                #Kernel release number. (or see cli options)
 V="${KERNEL:0:1}"               #Kernel version for folder (probably breaks when 10 or larger)
 KTYPE="xz"                      #gz used by RC, xz by stable releases, but should work.
                                 #if posible, I would prever xz for its size and decompress seed
@@ -50,7 +50,7 @@ exit 1
 
 #----------------------------------------------------------------------
 function writeInit {
-cat << EOF> init 
+cat << EOF > init 
 #!/bin/sh
 syslogd 
 mount -t devtmpfs devtmpfs /dev
@@ -91,7 +91,7 @@ if [ -d $TOP/build/ ]; then
 fi
 
 #add user?
-cat << EOF> $TOP/initramfs/$ARC-busybox/etc/passwd
+cat << EOF > $TOP/initramfs/$ARC-busybox/etc/passwd
 root:LTMW6A/nz.KWI:0:0:root:/root:/bin/sh
 EOF
 }
@@ -142,7 +142,7 @@ cp -av $TOP/obj/busybox-$ARC/_install/* .
 writeInit
 copytoimage
 cd $TOP/initramfs/$ARC-busybox/root
-cat << EOF> .bashrc
+cat << EOF > .bashrc
 #
 # ~/.bashrc
 #
@@ -158,11 +158,11 @@ alias todaytime='date +"%d-%m-%Y %H:%M"'
   PS1="\[\033[35m\]\t\[\033[m\] [\[\033[1;31m\]\u\[\033[0m\]@\[\e[1;34m\]\h\[\e[0m\]:\[\e[94m\]\w\[\e[0m\]]\\$ \[\e[m\]" 
   
 EOF
-cat << EOF> .bash_profile
+cat << EOF > .bash_profile
 PATH=/bin:/usr/bin:/sbin:/usr/sbin:/tools/bin:tools
 EOF
 
-cat << EOF> hello.c
+cat << EOF > hello.c
 #include <stdio.h>
 int main()
 {
