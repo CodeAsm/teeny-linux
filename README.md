@@ -33,6 +33,7 @@ You can however learn from it, or teach how not to do things.
 
 Updated to the latest I know Kernel and applications
 
+| Package        | Version    | Date        |
 | :------------- | :--------- | ----------: |
 | Linux kernel   | 5.12.6     | 2021-05-22  |
 | BusyBox        | 1.32.1     | 2021-01-01  |
