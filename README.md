@@ -39,6 +39,7 @@ Updated to the latest I know Kernel and applications
 | BusyBox        | 1.32.1     | 2021-01-01  |
 | Drobbear       | 2020.81    | 2020-09-29  |
 
+* extracted the user variables to vars.sh, nomore main build.sh updates too often
 * beta tools script, based on LFS.
 * modules support added
 * added Musl option for basic gcc compilation inside envirement
@@ -497,6 +498,7 @@ a device tree database is required for proper functioning arm targets, for my ex
 * <https://designprincipia.com/compile-linux-kernel-for-arm-and-run-on-qemu/>
 * <https://stackoverflow.com/questions/49391116/build-newlib-with-existing-cross-compiler>
 * <https://wiki.osdev.org/Porting_Newlib>
+* <https://github.com/john-tipper/Cross-compile-toolchain-for-linux-on-OSX/>
 
 ### For TinyC Compiler
 
