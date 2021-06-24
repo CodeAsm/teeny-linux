@@ -1,5 +1,5 @@
 #!/bin/sh
-source ./vars.sh
+. ./vars.sh
 
 
 #DO NOT EDIT BELOW it should not be nececairy.
@@ -13,7 +13,7 @@ cd $TOP
 
 #a bunch of helpfull functions
 #----------------------------------------------------------------------
-function DoQemu {
+function DoQemu() {
 cd $TOP
 qemu-system-$ARCH \
     -m 2G \
@@ -23,7 +23,7 @@ qemu-system-$ARCH \
 }
 
 #----------------------------------------------------------------------
-function delete {
+function delete() {
 cd $TOP
 mv linux-$KERNEL.tar.$KTYPE ../
 mv busybox-$BUSY.tar.bz2 ../
@@ -34,7 +34,7 @@ exit 1
 }
 
 #----------------------------------------------------------------------
-function writeInit {
+function writeInit() {
 cat << EOF > init 
 #!/bin/sh
 syslogd 
@@ -62,7 +62,7 @@ EOF
 }
 
 #----------------------------------------------------------------------
-function copytoimage {      #This function will copy nececairy files into the initramfs
+function copytoimage() {      #This function will copy nececairy files into the initramfs
 
 # modules option
 if $MODULE ; then
@@ -108,7 +108,7 @@ fi
 make install $COMPILER
 }
 
-function makeNewInitramfs {
+function makeNewInitramfs() {
 #Make the initramfs (first clean ofcourse)
 rm -rf $TOP/initramfs
 mkdir -pv $TOP/initramfs/$ARC-busybox
@@ -120,7 +120,7 @@ touch var/lib/dpkg/status
 makeInitramfs
 }
 
-function makeInitramfs {
+function makeInitramfs() {
 cd $TOP/initramfs/$ARC-busybox
 cp -av $TOP/obj/busybox-$ARC/_install/* .
 #add new files to copy here?
@@ -173,7 +173,7 @@ fi
 
 #----------------------------------------------------------------------
 
-function makeKernel {
+function makeKernel() {
 cd $TOP
 rm -rf linux-$KERNEL/
 rm -rf obj/linux-$ARC
