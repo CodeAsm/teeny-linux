@@ -1,8 +1,8 @@
 #!/bin/sh
 . ./vars.sh
+. ./ReqCheck.sh
 
-
-#DO NOT EDIT BELOW it should not be nececairy.
+#DO NOT EDIT BELOW it should not be necessary.
 #-----------------------------------------------------------
 MAKEINIT=false                  #we dont want to overdo a makeinit, used internaly
 MODULE=false                    #add modules to linux (asuming kernel already supports this)

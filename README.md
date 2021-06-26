@@ -39,6 +39,7 @@ Updated to the latest I know Kernel and applications
 | BusyBox        | 1.32.1     | 2021-01-01  |
 | Drobbear       | 2020.81    | 2020-09-29  |
 
+* Added a ReqCheck.sh to check for basic program requirements and permisions.
 * extracted the user variables to vars.sh, nomore main build.sh updates too often
 * beta tools script, based on LFS.
 * modules support added
@@ -484,6 +485,7 @@ a device tree database is required for proper functioning arm targets, for my ex
 
 * <https://www.computerhope.com/unix/ucpio.htm>
 * <https://unix.stackexchange.com/questions/56614/send-file-by-xmodem-or-kermit-protocol-with-gnu-screen/65362#65362>
+* <https://www.lifewire.com/bash-for-loop-examples-2200575>
 
 ### Compilers
 
@@ -504,3 +506,8 @@ a device tree database is required for proper functioning arm targets, for my ex
 
 * <https://stackoverflow.com/questions/11307465/destdir-and-prefix-of-make>
 * <https://www.monperrus.net/martin/compiling-c-code-with-dietlibc-and-tcc>
+
+### Bash tricks
+
+* <https://linuxhandbook.com/bash-arrays/>
+* <https://www.cyberciti.biz/faq/finding-bash-shell-array-length-elements/>
