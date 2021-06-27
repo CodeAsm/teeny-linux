@@ -1,8 +1,8 @@
 #!/bin/sh
-. teeny-linux/vars.sh
+. ./vars.sh
 
 #The next programs will be test to exist
-programs=(tar gcc touch make sed wget qemu-system-$ARCH cpio gzip cat)
+programs=(tar ${COMPILER:3} touch make sed wget qemu-system-$ARCH cpio gzip cat)
 
 echo "======================================"
 echo "||  Teeny Linux  Build script       ||"
@@ -22,11 +22,15 @@ if [ -d $TOP ]; then
             exit 1;
         fi
     else
-        echo "\$TOP not writable"
+        echo "\$TOP: $TOP not writable"
+        echo "One requirement is to change variables inside vars.sh"
+        echo " as needed for your particular system."
         exit 1;
     fi
 else
-    echo "\$TOP does not exist"
+    echo "\$TOP: $TOP does not exist"
+    echo "One requirement is to change variables inside vars.sh "
+    echo "as needed for your particular system."
     exit 1;
 fi
 
@@ -61,7 +65,7 @@ int main()
 }
 EOF
 
-gcc -o $TOP/hello $TOP/hello.c
+${COMPILER:3} -o $TOP/hello $TOP/hello.c
 
 if ! command $TOP/hello
 then
