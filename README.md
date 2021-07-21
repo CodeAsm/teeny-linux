@@ -511,3 +511,6 @@ a device tree database is required for proper functioning arm targets, for my ex
 
 * <https://linuxhandbook.com/bash-arrays/>
 * <https://www.cyberciti.biz/faq/finding-bash-shell-array-length-elements/>
+
+Resolved a init kernel problem:
+<https://stackoverflow.com/questions/15277570/simple-replacement-of-init-to-just-start-console>
