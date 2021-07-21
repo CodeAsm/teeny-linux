@@ -55,9 +55,9 @@ echo -e 'To shutdown and return to your CLI'
 echo -e 'type poweroff -f or \n Ctrl+a C, then "quit"\n'
 cat /proc/version
 ifconfig eth0 | grep -B1 'inet addr' | grep 'inet'
-
-/usr/bin/setsid /bin/cttyhack $LOGINREQUIRED
-exec $LOGINREQUIRED
+while [ 1 ]; do
+    /usr/bin/setsid /bin/cttyhack $LOGINREQUIRED
+done
 EOF
 }
 
