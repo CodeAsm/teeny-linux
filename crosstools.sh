@@ -46,7 +46,11 @@ ${MPFR}
 ${ISL}
 
 wget -c https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-$KERNEL.tar.xz -P ${TOPC}/sources
-wget -c https://musl.libc.org/releases/musl-$MUSL.tar.gz -P ${TOPC}/sources
+if [ "$MUSLDO" = true ]; then
+    wget -c https://musl.libc.org/releases/musl-$MUSL.tar.gz -P ${TOPC}/sources
+else
+    wget -c https://sourceware.org/pub/newlib/newlib-$NEWLIB.tar.gz -P ${TOPC}/sources
+fi
 wget -c https://ftp.gnu.org/gnu/libc/glibc-$GLIBC.tar.gz -P ${TOPC}/sources
 }
 
@@ -75,14 +79,6 @@ cd ${TOPC}/sources/
 rm -rf binutils-$BINUTIL/
 }
 
-
-#----------------------------------------------------------------------
-function delete {
-cd ${TOPC}
-rm -rf opt/
-echo "Removed all files except the sources directory"
-exit 1
-=======
 #----------------------------------------------------------------------
 
 function GCC_step1 {
@@ -131,7 +127,9 @@ make install-target-libgcc  2>&1 | tee $TOPC/gcc-step1_install-libgcc_log.txt
 
 echo "  [ Cleaning ]"
 cd ${TOPC}/sources/gcc-$GCC/
-rm -rf build\
+rm -rf build
+}
+#----------------------------------------------------------------------
 
 function GCC_step2 {
 echo "[ GCC step 2]"
@@ -213,7 +211,6 @@ echo "  [ Cleaning ]"
 cd ${TOPC}/sources/
 #rm -rf linux-$KERNEL/
 }
-
 #----------------------------------------------------------------------
 function Test {
 echo "[ Test ]"
@@ -232,7 +229,6 @@ EOF
 ${PREFIX}/bin/$TARGET-gcc -g -o hello ${TOPC}/hello.c -static -L${TOPC} -I${TOPC} 2>&1 | tee $TOPC/sampletest.txt
 #rm ${TOPC}/hello.c
 }
-
 #----------------------------------------------------------------------
 function delete {
 cd ${TOPC}
