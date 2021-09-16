@@ -39,6 +39,8 @@ cat << EOF > init
 #!/bin/sh
 syslogd 
 mount -t devtmpfs devtmpfs /dev
+mkdir /dev/pts
+mount -t devpts devpts /dev/pts
 mount -t proc none /proc
 mount -t sysfs none /sys
  

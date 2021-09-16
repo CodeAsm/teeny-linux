@@ -185,6 +185,23 @@ For new programs to be added, there are multiple ways to do so. The easiest I th
 Everything inside the ``$TOP/bin/build/`` will be copied over to the new initramfs.
 Dropbear is an example build script that will build dropbear (an SSH server/client) staticly compiled.
 
+In case of dropbear, if the right keys are in place, starting with network support:
+
+```sh
+./build.sh -net 52:55:00:d1:55:01
+```
+
+then inside the system:
+
+```sh
+dropbear -R
+```
+You should now be able to ssh into this (maybe remove the old known host ip and key from your hosts .ssh/known_hosts)
+
+```sh
+ssh root@192.168.66.6
+```
+
 ### Musl
 
 Based on Dropbear, Musl precompiled installer script has been added. More information and the tarfile can be found here: <https://musl.cc/>
@@ -254,14 +271,17 @@ then add a network device to your qemu instance, if using my buildscript, run th
 ./build -net 52:55:00:d1:55:01
 ```
 
-inside one of the qemu instances, change the static ip:
+The system should get an IP from your dhcp server (you can also add one using dnsmasq)
+
+sometimes you need to change the ip of an instance, then
+inside one of the qemu instances, change to static ip for example:
 
 ```sh
 ifconfig eth0 down
 ifconfig eth0 up 10.0.2.16 netmask 255.255.255.0 up
 ```
 
-And now you should be able to ping eachother and do stuff. If you setup a DHCP server or add the bridge to a network with a DHCP server, you can set the instances to recieve a IP from the said DHCP server.
+And now you should be able to ping eachother and do stuff. If you setup a DHCP server or add the bridge to a network with a DHCP server, you can set the instances to recieve a IP from the said DHCP server, which in the current version is the case.
 
 ### Removing
 
