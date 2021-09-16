@@ -202,6 +202,13 @@ You should now be able to ssh into this (maybe remove the old known host ip and 
 ssh root@192.168.66.6
 ```
 
+__tip__
+add the following to prevent a bloating knownhosts file.
+
+```sh
+-o "UserKnownHostsFile /dev/null"
+```
+
 ### Musl
 
 Based on Dropbear, Musl precompiled installer script has been added. More information and the tarfile can be found here: <https://musl.cc/>
@@ -502,6 +509,8 @@ clean:
 a device tree database is required for proper functioning arm targets, for my example ive used versatile-pb.dtb that is also provided after compiling the kernel.
 
 ## Resources
+ 
+The following resources where used making this project or helped solve problems. "Attribution" as per stackoverflow. as some code might have evolved away from the "answers", I choose to put the links here under headings of general meaning. The link titles are describtive enough.
 
 * <https://www.computerhope.com/unix/ucpio.htm>
 * <https://unix.stackexchange.com/questions/56614/send-file-by-xmodem-or-kermit-protocol-with-gnu-screen/65362#65362>
@@ -534,3 +543,9 @@ a device tree database is required for proper functioning arm targets, for my ex
 
 Resolved a init kernel problem:
 <https://stackoverflow.com/questions/15277570/simple-replacement-of-init-to-just-start-console>
+
+### Dropbear
+
+* http://wiki.andreas-duffner.de/index.php/Ssh%2C_error:_openpty:_No_such_file_or_directory
+* https://serverfault.com/questions/963994/how-to-manually-setup-network-connection-from-busybox-shell-ash
+* https://superuser.com/questions/141344/dont-add-hostkey-to-known-hosts-for-ssh
