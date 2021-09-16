@@ -115,8 +115,13 @@ mkdir -pv $TOP/initramfs/$ARC-busybox
 cd $TOP/initramfs/$ARC-busybox
 mkdir -pv {bin,sbin,root,etc,proc,sys,usr/{bin,sbin,local/{bin,lib}}}
 mkdir -pv {var/{run,lib/dpkg},etc/network/{if-down.d,if-up.d,if-down.d,if-post-down.d,if-post-up.d,if-pre-down.d,if-pre-up.d}}
-touch var/lib/dpkg/status
- 
+cat << EOF > var/lib/dpkg/status
+Package: busybox
+Status: hold ok installed
+Priority: optional
+Section: base
+Version: $BUSY
+EOF
 makeInitramfs
 }
 
