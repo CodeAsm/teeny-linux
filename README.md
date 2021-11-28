@@ -35,8 +35,8 @@ Updated to the latest I know Kernel and applications
 
 | Package        | Version    | Date        |
 | :------------- | :--------- | ----------: |
-| Linux kernel   | 5.13.10    | 2021-08-12  |
-| BusyBox        | 1.33.1     | 2021-05-03  |
+| Linux kernel   | 5.15.5     | 2021-11-25  |
+| BusyBox        | 1.34.1     | 2021-09-30  |
 | Drobbear       | 2020.81    | 2020-09-29  |
 
 * Added a ReqCheck.sh to check for basic program requirements and permisions.
@@ -185,6 +185,30 @@ For new programs to be added, there are multiple ways to do so. The easiest I th
 Everything inside the ``$TOP/bin/build/`` will be copied over to the new initramfs.
 Dropbear is an example build script that will build dropbear (an SSH server/client) staticly compiled.
 
+In case of dropbear, if the right keys are in place, starting with network support:
+
+```sh
+./build.sh -net 52:55:00:d1:55:01
+```
+
+then inside the system:
+
+```sh
+dropbear -R
+```
+You should now be able to ssh into this (maybe remove the old known host ip and key from your hosts .ssh/known_hosts)
+
+```sh
+ssh root@192.168.66.6
+```
+
+__tip__
+add the following to prevent a bloating knownhosts file.
+
+```sh
+-o "UserKnownHostsFile /dev/null"
+```
+
 ### Musl
 
 Based on Dropbear, Musl precompiled installer script has been added. More information and the tarfile can be found here: <https://musl.cc/>
@@ -254,14 +278,17 @@ then add a network device to your qemu instance, if using my buildscript, run th
 ./build -net 52:55:00:d1:55:01
 ```
 
-inside one of the qemu instances, change the static ip:
+The system should get an IP from your dhcp server (you can also add one using dnsmasq)
+
+sometimes you need to change the ip of an instance, then
+inside one of the qemu instances, change to static ip for example:
 
 ```sh
 ifconfig eth0 down
 ifconfig eth0 up 10.0.2.16 netmask 255.255.255.0 up
 ```
 
-And now you should be able to ping eachother and do stuff. If you setup a DHCP server or add the bridge to a network with a DHCP server, you can set the instances to recieve a IP from the said DHCP server.
+And now you should be able to ping eachother and do stuff. If you setup a DHCP server or add the bridge to a network with a DHCP server, you can set the instances to recieve a IP from the said DHCP server, which in the current version is the case.
 
 ### Removing
 
@@ -511,6 +538,8 @@ a device tree database is required for proper functioning arm targets, for my ex
 =======
 
 ## Resources
+ 
+The following resources where used making this project or helped solve problems. "Attribution" as per stackoverflow. as some code might have evolved away from the "answers", I choose to put the links here under headings of general meaning. The link titles are describtive enough.
 
 * <https://www.computerhope.com/unix/ucpio.htm>
 * <https://unix.stackexchange.com/questions/56614/send-file-by-xmodem-or-kermit-protocol-with-gnu-screen/65362#65362>
@@ -549,3 +578,9 @@ a device tree database is required for proper functioning arm targets, for my ex
 
 Resolved a init kernel problem:
 <https://stackoverflow.com/questions/15277570/simple-replacement-of-init-to-just-start-console>
+
+### Dropbear
+
+* http://wiki.andreas-duffner.de/index.php/Ssh%2C_error:_openpty:_No_such_file_or_directory
+* https://serverfault.com/questions/963994/how-to-manually-setup-network-connection-from-busybox-shell-ash
+* https://superuser.com/questions/141344/dont-add-hostkey-to-known-hosts-for-ssh
