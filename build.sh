@@ -192,8 +192,6 @@ fi
 #Make our Kernel
 cd $TOP/linux-$KERNEL
 
-# Former PPC config was here.
-
 make mrproper
 make O=../obj/linux-$ARC x86_64_defconfig
 make O=../obj/linux-$ARC kvm_guest.config
