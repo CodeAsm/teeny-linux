@@ -91,22 +91,16 @@ tar xjf busybox-$BUSY.tar.bz2
 rm -rf obj/busybox-$ARC
 cd $TOP/busybox-$BUSY
 mkdir -pv ../obj/busybox-$ARC
-if [ $ARCH != "x86_64" ]; then
-    make O=../obj/busybox-$ARC ARCH=$ARCH CROSS_COMPILE=$COMPILER defconfig
-else
-    make O=../obj/busybox-$ARC defconfig $COMPILER
-fi
+
+make O=../obj/busybox-$ARC defconfig $COMPILER
+
 # do a static lib thing for busy, 
 sed -i '/# CONFIG_STATIC is not set/c\CONFIG_STATIC=y' ../obj/busybox-$ARC/.config
 #for musl we experimentaly determined these to be nececairy
 
 
 cd ../obj/busybox-$ARC
-if [ $ARCH != "x86_64" ]; then
-    make -j$(nproc) ARCH=$ARCH CROSS_COMPILE=$COMPILER
-else
-    make -j$(nproc) $COMPILER
-fi
+make -j$(nproc) $COMPILER
 make install $COMPILER
 }
 
@@ -191,8 +185,6 @@ else
 fi
 #Make our Kernel
 cd $TOP/linux-$KERNEL
-
-# Former PPC config was here.
 
 make mrproper
 make O=../obj/linux-$ARC x86_64_defconfig

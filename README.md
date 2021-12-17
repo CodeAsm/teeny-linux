@@ -35,7 +35,7 @@ Updated to the latest I know Kernel and applications
 
 | Package        | Version    | Date        |
 | :------------- | :--------- | ----------: |
-| Linux kernel   | 5.15.6     | 2021-12-01  |
+| Linux kernel   | 5.15.10    | 2021-12-17  |
 | BusyBox        | 1.34.1     | 2021-09-30  |
 | Drobbear       | 2020.81    | 2020-09-29  |
 
@@ -333,15 +333,21 @@ More details and tips can be found at:
 
 ![Crosscompiled kernel on ARM Screenshot](https://raw.githubusercontent.com/codeasm/teeny-linux/main/resources/Screenshot2.png)
 
+UPDATE, changed a few things arround. Crosstools would now only make the tools (test it) and then youd use build with a arch command.
+
 as seen in picture, my static linked init dint get compiled against 5.0.5 kernel headers but to 3.2.0, ill fix that someday maybe
 _this is work in progress_
 To do crosscompiling ive made a script called "crosstools.sh" that will add crosscompile tools if you dont have any.
 From here on the variable arch can be set to the arch you made crostools for.
 
+<<<<<<< HEAD
+```bash
+=======
 crosscompile.sh will build a arm based kernel and tries to boot it using qemu, for succesfull compiling, requires:
 arm-none-eabi- series.
 
 ```sh
+>>>>>>> temp-cross
 ./crosscompile.sh
 ```
 
@@ -354,10 +360,14 @@ or to delete the compile attempt (without removing large downloaded files)
 ## How to build Powerpc crosstools on Arch
 
 needed GPG keys for linux, patch and glibc headers:
+```
 79BE3E4300411886
 38DBBDC86092693E
 16792B4EA25340F8
+```
+```bash
 gpg --keyserver hkps://pgp.mit.edu --recv-keys 79BE3E4300411886 38DBBDC86092693E 16792B4EA25340F8
+```
 
 These tools are 32bit, and for Powerpc G5 we need 64bits.
 And browsing the Arch forums... yeah, general public intrests.... they go with the dodo.
@@ -507,6 +517,25 @@ clean:
 ```
 
 a device tree database is required for proper functioning arm targets, for my example ive used versatile-pb.dtb that is also provided after compiling the kernel.
+<<<<<<< HEAD
+          
+# Resources
+* <https://gts3.org/2017/cross-kernel.html>
+* <https://balau82.wordpress.com/2010/02/28/hello-world-for-bare-metal-arm-using-qemu/>
+* <https://github.com/netbeast/docs/wiki/Cross-compile-test-application>
+* <http://preshing.com/20141119/how-to-build-a-gcc-cross-compiler/>
+* <http://www.clfs.org/view/CLFS-3.0.0-SYSTEMD/ppc64-64/materials/packages.html>
+* <https://stackoverflow.com/questions/33450401/building-gcc-make-all-error-2>
+* <https://gcc.gnu.org/ml/gcc-help/2012-07/msg00018.html>
+* <https://www.computerhope.com/unix/ucpio.htm>
+* <https://unix.stackexchange.com/questions/56614/send-file-by-xmodem-or-kermit-protocol-with-gnu-screen/65362#65362>
+
+## Compilers
+* <https://stackoverflow.com/questions/17939930/finding-out-what-the-gcc-include-path-is>
+
+## Crosscompile
+* <https://wiki.osdev.org/GCC_Cross-Compiler>
+=======
 
 ## Resources
  
@@ -522,17 +551,23 @@ The following resources where used making this project or helped solve problems.
 
 ### Crosscompile
 
+>>>>>>> temp-cross
 * <https://gts3.org/2017/cross-kernel.html>
 * <https://balau82.wordpress.com/2010/02/28/hello-world-for-bare-metal-arm-using-qemu/>
 * <https://github.com/netbeast/docs/wiki/Cross-compile-test-application>
 * <https://balau82.wordpress.com/2010/03/22/compiling-linux-kernel-for-qemu-arm-emulator/>
 * <https://designprincipia.com/compile-linux-kernel-for-arm-and-run-on-qemu/>
+<<<<<<< HEAD
+
+## For TinyC Compiler
+=======
 * <https://stackoverflow.com/questions/49391116/build-newlib-with-existing-cross-compiler>
 * <https://wiki.osdev.org/Porting_Newlib>
 * <https://github.com/john-tipper/Cross-compile-toolchain-for-linux-on-OSX/>
 
 ### For TinyC Compiler
 
+>>>>>>> temp-cross
 * <https://stackoverflow.com/questions/11307465/destdir-and-prefix-of-make>
 * <https://www.monperrus.net/martin/compiling-c-code-with-dietlibc-and-tcc>
 
