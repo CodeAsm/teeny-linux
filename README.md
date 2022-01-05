@@ -35,8 +35,8 @@ Updated to the latest I know Kernel and applications
 
 | Package        | Version    | Date        |
 | :------------- | :--------- | ----------: |
-| Linux kernel   | 5.15.11    | 2021-12-22  |
-| BusyBox        | 1.34.1     | 2021-09-30  |
+| Linux kernel   | 5.15.13    | 2022-01-05  |
+| BusyBox        | 1.35.0     | 2021-12-26  |
 | Drobbear       | 2020.81    | 2020-09-29  |
 
 * Added a ReqCheck.sh to check for basic program requirements and permisions.
