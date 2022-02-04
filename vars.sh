@@ -1,7 +1,7 @@
 #!/bin/sh
 
 TOP=$HOME/Linux/bin             #location for the build, change this for your location
-KERNEL="5.16.4"                #Kernel release number. (or see cli options)
+KERNEL="5.16.5"                #Kernel release number. (or see cli options)
 V="${KERNEL:0:1}"               #Kernel version for folder (probably breaks when 10 or larger)
 KTYPE="xz"                      #gz used by RC, xz by stable releases, but should work.
                                 #if posible, I would prever xz for its size and decompress seed
