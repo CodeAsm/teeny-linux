@@ -2,7 +2,7 @@
 . ./vars.sh
 
 #The next programs will be test to exist
-programs=(tar ${COMPILER:3} touch make sed wget qemu-system-$ARCH cpio gzip cat)
+programs=(tar ${COMPILER:3} touch make sed wget qemu-system-$ARCH cpio gzip cat bc)
 
 echo "======================================"
 echo "||  Teeny Linux  Build script       ||"
@@ -43,6 +43,11 @@ for program in ${programs[@]}
             exit 1;
         fi
 done
+
+if ! ls /usr/lib/musl/ > /dev/null ; then
+    echo "Please install musl linux headers, arch knows a package called: kernel-headers-musl"
+    exit 1;
+fi
 
 if ! command touch $TOP/test4449 &> /dev/null
 then

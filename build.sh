@@ -100,7 +100,7 @@ sed -i '/# CONFIG_STATIC is not set/c\CONFIG_STATIC=y' ../obj/busybox-$ARC/.conf
 
 
 cd ../obj/busybox-$ARC
-make -j$(nproc) $COMPILER
+make -j$CORECOUNT $COMPILER
 make install $COMPILER
 }
 
@@ -189,7 +189,7 @@ cd $TOP/linux-$KERNEL
 make mrproper
 make O=../obj/linux-$ARC x86_64_defconfig
 make O=../obj/linux-$ARC kvm_guest.config
-make O=../obj/linux-$ARC -j$(nproc)
+make O=../obj/linux-$ARC -j$CORECOUNT
 
 }
 
