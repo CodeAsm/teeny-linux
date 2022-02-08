@@ -336,18 +336,16 @@ More details and tips can be found at:
 UPDATE, changed a few things arround. Crosstools would now only make the tools (test it) and then youd use build with a arch command.
 
 as seen in picture, my static linked init dint get compiled against 5.0.5 kernel headers but to 3.2.0, ill fix that someday maybe
+
 _this is work in progress_
+
 To do crosscompiling ive made a script called "crosstools.sh" that will add crosscompile tools if you dont have any.
 From here on the variable arch can be set to the arch you made crostools for.
 
-<<<<<<< HEAD
-```bash
-=======
 crosscompile.sh will build a arm based kernel and tries to boot it using qemu, for succesfull compiling, requires:
 arm-none-eabi- series.
 
 ```sh
->>>>>>> temp-cross
 ./crosscompile.sh
 ```
 
@@ -517,9 +515,11 @@ clean:
 ```
 
 a device tree database is required for proper functioning arm targets, for my example ive used versatile-pb.dtb that is also provided after compiling the kernel.
-<<<<<<< HEAD
           
-# Resources
+## Resources
+
+The following resources where used making this project or helped solve problems. "Attribution" as per stackoverflow. as some code might have evolved away from the "answers", I choose to put the links here under headings of general meaning. The link titles are describtive enough.
+
 * <https://gts3.org/2017/cross-kernel.html>
 * <https://balau82.wordpress.com/2010/02/28/hello-world-for-bare-metal-arm-using-qemu/>
 * <https://github.com/netbeast/docs/wiki/Cross-compile-test-application>
@@ -529,21 +529,21 @@ a device tree database is required for proper functioning arm targets, for my ex
 * <https://gcc.gnu.org/ml/gcc-help/2012-07/msg00018.html>
 * <https://www.computerhope.com/unix/ucpio.htm>
 * <https://unix.stackexchange.com/questions/56614/send-file-by-xmodem-or-kermit-protocol-with-gnu-screen/65362#65362>
-
-## Compilers
-* <https://stackoverflow.com/questions/17939930/finding-out-what-the-gcc-include-path-is>
-
-## Crosscompile
-* <https://wiki.osdev.org/GCC_Cross-Compiler>
-=======
-
-## Resources
- 
-The following resources where used making this project or helped solve problems. "Attribution" as per stackoverflow. as some code might have evolved away from the "answers", I choose to put the links here under headings of general meaning. The link titles are describtive enough.
-
 * <https://www.computerhope.com/unix/ucpio.htm>
 * <https://unix.stackexchange.com/questions/56614/send-file-by-xmodem-or-kermit-protocol-with-gnu-screen/65362#65362>
 * <https://www.lifewire.com/bash-for-loop-examples-2200575>
+* <https://landley.net/aboriginal/bin/>
+* <https://stackoverflow.com/questions/46695403/how-to-add-a-carriage-return-with-sed>
+
+### Kernel compiling in general
+
+* <https://stackoverflow.com/questions/58924424/why-does-gdb-does-not-show-debug-symbols-of-kernel-with-debug-info>
+* <https://github.com/amezin/vscode-linux-kernel>
+* <https://www.kernel.org/doc/html/v4.10/dev-tools/gdb-kernel-debugging.html>
+* <https://elinux.org/Debugging_The_Linux_Kernel_Using_Gdb>
+* <https://www.starlab.io/blog/using-gdb-to-debug-the-linux-kernel>
+* <https://sourceware.org/gdb/onlinedocs/gdb/Auto_002dloading-safe-path.html>
+* <https://www.kernel.org/doc/Documentation/dev-tools/gdb-kernel-debugging.rst>
 
 ### Compilers
 
@@ -551,23 +551,16 @@ The following resources where used making this project or helped solve problems.
 
 ### Crosscompile
 
->>>>>>> temp-cross
 * <https://gts3.org/2017/cross-kernel.html>
 * <https://balau82.wordpress.com/2010/02/28/hello-world-for-bare-metal-arm-using-qemu/>
 * <https://github.com/netbeast/docs/wiki/Cross-compile-test-application>
 * <https://balau82.wordpress.com/2010/03/22/compiling-linux-kernel-for-qemu-arm-emulator/>
 * <https://designprincipia.com/compile-linux-kernel-for-arm-and-run-on-qemu/>
-<<<<<<< HEAD
 
-## For TinyC Compiler
-=======
+### For TinyC Compiler
 * <https://stackoverflow.com/questions/49391116/build-newlib-with-existing-cross-compiler>
 * <https://wiki.osdev.org/Porting_Newlib>
 * <https://github.com/john-tipper/Cross-compile-toolchain-for-linux-on-OSX/>
-
-### For TinyC Compiler
-
->>>>>>> temp-cross
 * <https://stackoverflow.com/questions/11307465/destdir-and-prefix-of-make>
 * <https://www.monperrus.net/martin/compiling-c-code-with-dietlibc-and-tcc>
 
