@@ -422,6 +422,18 @@ a device tree database is required for proper functioning arm targets, for my ex
 
 * <https://www.computerhope.com/unix/ucpio.htm>
 * <https://unix.stackexchange.com/questions/56614/send-file-by-xmodem-or-kermit-protocol-with-gnu-screen/65362#65362>
+* <https://landley.net/aboriginal/bin/>
+* <https://stackoverflow.com/questions/46695403/how-to-add-a-carriage-return-with-sed>
+
+### Kernel compiling in general
+
+* <https://stackoverflow.com/questions/58924424/why-does-gdb-does-not-show-debug-symbols-of-kernel-with-debug-info>
+* <https://github.com/amezin/vscode-linux-kernel>
+* <https://www.kernel.org/doc/html/v4.10/dev-tools/gdb-kernel-debugging.html>
+* <https://elinux.org/Debugging_The_Linux_Kernel_Using_Gdb>
+* <https://www.starlab.io/blog/using-gdb-to-debug-the-linux-kernel>
+* <https://sourceware.org/gdb/onlinedocs/gdb/Auto_002dloading-safe-path.html>
+* <https://www.kernel.org/doc/Documentation/dev-tools/gdb-kernel-debugging.rst>
 
 ### Compilers
 
