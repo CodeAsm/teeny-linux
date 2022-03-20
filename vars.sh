@@ -17,4 +17,7 @@ HOSTNAME="TeenyQemuBox"         #hostname
 MODULEURL=$TOP/../teeny-linux/modules/        #modprobe url
 LOGINREQUIRED="/bin/login"      #replace with /bin/sh for no login required, /bin/login needed else 
                                 #seems one can simply Ctrl+C out of login tho
+#Host specific variables, change if poormans host                               
 CORECOUNT=$(nproc)              #$(nproc) or change to a number like 1 or 8 depending on the core count to use
+RAM="1G"                        #1G minimal for qemu , 2G or more recommended. (used only for qemu invocation)
+

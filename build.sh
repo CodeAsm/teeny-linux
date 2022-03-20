@@ -16,7 +16,7 @@ cd $TOP
 function DoQemu() {
 cd $TOP
 qemu-system-$ARCH \
-    -m 2G \
+    -m $RAM \
     -kernel obj/linux-$ARC/arch/$ARCH/boot/bzImage \
     -initrd obj/initramfs-busybox-$ARC.cpio.gz \
     -nographic -append "console=ttyS0" $NET $OPTION
