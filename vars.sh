@@ -1,6 +1,6 @@
 #!/bin/sh
 
-TOP=$HOME/Linux/bin             #location for the build, change this for your location
+TOP=$HOME/Projects/Emulation/Linux/bin             #location for the build, change this for your location
 KERNEL="5.17.1"                #Kernel release number. (or see cli options)
 V="${KERNEL:0:1}"               #Kernel version for folder (probably breaks when 10 or larger)
 KTYPE="xz"                      #gz used by RC, xz by stable releases, but should work.
