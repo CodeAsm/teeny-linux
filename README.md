@@ -535,6 +535,10 @@ The following resources where used making this project or helped solve problems.
 * <https://landley.net/aboriginal/bin/>
 * <https://stackoverflow.com/questions/46695403/how-to-add-a-carriage-return-with-sed>
 
+### VSCode tricks and tips
+
+* <https://stackoverflow.com/questions/50569100/vscode-how-to-make-ctrlk-kill-till-the-end-of-line-in-the-terminal>
+
 ### Kernel compiling in general
 
 * <https://stackoverflow.com/questions/58924424/why-does-gdb-does-not-show-debug-symbols-of-kernel-with-debug-info>
