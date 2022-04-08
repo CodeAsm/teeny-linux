@@ -1,6 +1,6 @@
 #!/bin/sh
 
-DROP="2020.81"                   #Dropbear release number
+DROP="2022.82"                   #Dropbear release number
 ARCH="x86_64"                    #default arch
 TARGET=$HOME/Projects/Emulation/Linux/bin/build    
                                  #location for the build, change this for your location

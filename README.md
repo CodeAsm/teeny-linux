@@ -37,7 +37,7 @@ Updated to the latest I know Kernel and applications
 | :------------- | :--------- | ----------: |
 | Linux kernel   | 5.17.2     | 2022-04-08  |
 | BusyBox        | 1.35.0     | 2021-12-26  |
-| Drobbear       | 2020.81    | 2020-09-29  |
+| Drobbear       | 2022.82    | 2022-04-01  |
 
 * Added a ReqCheck.sh to check for basic program requirements and permisions.
 * extracted the user variables to vars.sh, nomore main build.sh updates too often
