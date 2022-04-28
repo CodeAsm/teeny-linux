@@ -37,7 +37,7 @@ Updated to the latest I know Kernel and applications
 | :------------- | :--------- | ----------: |
 | Linux kernel   | 5.17.5     | 2022-04-27  |
 | BusyBox        | 1.35.0     | 2021-12-26  |
-| Drobbear       | 2020.81    | 2020-09-29  |
+| Drobbear       | 2022.82    | 2022-04-01  |
 
 * Added a ReqCheck.sh to check for basic program requirements and permisions.
 * extracted the user variables to vars.sh, nomore main build.sh updates too often
@@ -534,6 +534,10 @@ The following resources where used making this project or helped solve problems.
 * <https://www.lifewire.com/bash-for-loop-examples-2200575>
 * <https://landley.net/aboriginal/bin/>
 * <https://stackoverflow.com/questions/46695403/how-to-add-a-carriage-return-with-sed>
+
+### VSCode tricks and tips
+
+* <https://stackoverflow.com/questions/50569100/vscode-how-to-make-ctrlk-kill-till-the-end-of-line-in-the-terminal>
 
 ### Kernel compiling in general
 
