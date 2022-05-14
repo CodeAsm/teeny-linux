@@ -196,6 +196,7 @@ then inside the system:
 ```sh
 dropbear -R
 ```
+
 You should now be able to ssh into this (maybe remove the old known host ip and key from your hosts .ssh/known_hosts)
 
 ```sh
@@ -358,12 +359,14 @@ or to delete the compile attempt (without removing large downloaded files)
 ## How to build Powerpc crosstools on Arch
 
 needed GPG keys for linux, patch and glibc headers:
-```
+
+```sh
 79BE3E4300411886
 38DBBDC86092693E
 16792B4EA25340F8
 ```
-```bash
+
+```sh
 gpg --keyserver hkps://pgp.mit.edu --recv-keys 79BE3E4300411886 38DBBDC86092693E 16792B4EA25340F8
 ```
 
@@ -467,7 +470,7 @@ qemu-ppc hello
 
 ### Building bare kernel
 
-_this is work in progress_.
+_this is work in progress_
 
 ```sh
 git clone https://github.com/raspberrypi/linux raspberrypi-linux
@@ -515,7 +518,7 @@ clean:
 ```
 
 a device tree database is required for proper functioning arm targets, for my example ive used versatile-pb.dtb that is also provided after compiling the kernel.
-          
+
 ## Resources
 
 The following resources where used making this project or helped solve problems. "Attribution" as per stackoverflow. as some code might have evolved away from the "answers", I choose to put the links here under headings of general meaning. The link titles are describtive enough.
@@ -562,6 +565,7 @@ The following resources where used making this project or helped solve problems.
 * <https://designprincipia.com/compile-linux-kernel-for-arm-and-run-on-qemu/>
 
 ### For TinyC Compiler
+
 * <https://stackoverflow.com/questions/49391116/build-newlib-with-existing-cross-compiler>
 * <https://wiki.osdev.org/Porting_Newlib>
 * <https://github.com/john-tipper/Cross-compile-toolchain-for-linux-on-OSX/>
@@ -578,6 +582,6 @@ Resolved a init kernel problem:
 
 ### Dropbear
 
-* http://wiki.andreas-duffner.de/index.php/Ssh%2C_error:_openpty:_No_such_file_or_directory
-* https://serverfault.com/questions/963994/how-to-manually-setup-network-connection-from-busybox-shell-ash
-* https://superuser.com/questions/141344/dont-add-hostkey-to-known-hosts-for-ssh
+* <http://wiki.andreas-duffner.de/index.php/Ssh%2C_error:_openpty:_No_such_file_or_directory>
+* <https://serverfault.com/questions/963994/how-to-manually-setup-network-connection-from-busybox-shell-ash>
+* <https://superuser.com/questions/141344/dont-add-hostkey-to-known-hosts-for-ssh>
