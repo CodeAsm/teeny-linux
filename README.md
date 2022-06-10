@@ -35,10 +35,11 @@ Updated to the latest I know Kernel and applications
 
 | Package        | Version    | Date        |
 | :------------- | :--------- | ----------: |
-| Linux kernel   | 5.17.9     | 2022-05-18  |
+| Linux kernel   | 5.18       | 2022-05-23  |
 | BusyBox        | 1.35.0     | 2021-12-26  |
 | Drobbear       | 2022.82    | 2022-04-01  |
 
+* Since 5.18, Symbol CONFIG_WERROR is causing me trouble, added "fix" in config
 * Added a ReqCheck.sh to check for basic program requirements and permisions.
 * extracted the user variables to vars.sh, nomore main build.sh updates too often
 * beta tools script, based on LFS.

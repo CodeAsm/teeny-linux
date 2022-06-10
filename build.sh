@@ -189,6 +189,7 @@ cd $TOP/linux-$KERNEL
 make mrproper
 make O=../obj/linux-$ARC x86_64_defconfig
 make O=../obj/linux-$ARC kvm_guest.config
+sed -i 's/CONFIG_WERROR=y/# CONFIG_WERROR is not set/' ../obj/linux-x86/.config
 make O=../obj/linux-$ARC -j$CORECOUNT
 
 }
