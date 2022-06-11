@@ -540,6 +540,15 @@ The following resources where used making this project or helped solve problems.
 * <https://stackoverflow.com/questions/46695403/how-to-add-a-carriage-return-with-sed>
 * <https://blog.christophersmart.com/2016/08/31/configuring-qemu-bridge-helper-after-access-denied-by-acl-file-error/>
 
+### Bash vs Sh
+
+Some people dislike bash, and set their default shell to something else then bash. 
+This leads to incompatibilities between "scripts" and thus require minor and sometimes mayor code changes to support these different shells.
+I cannot test them all, but I try to make them compatible. for now, bash is the default.
+I might consider zsh.
+
+* <https://stackoverflow.com/questions/50832481/busybox-sh-wont-exhttps://stackoverflow.com/questions/50832481/busybox-sh-wont-execute-the-bash-scriptecute-the-bash-script>
+
 ### VSCode tricks and tips
 
 * <https://stackoverflow.com/questions/50569100/vscode-how-to-make-ctrlk-kill-till-the-end-of-line-in-the-terminal>
