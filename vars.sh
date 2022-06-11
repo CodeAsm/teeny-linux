@@ -9,7 +9,8 @@ BUSY="1.35.0"                   #busybox release number
 ARCH="x86_64"                   #default arch
 ARC="x86"                       #short arch (can I use grep for this?)
 
-COMPILER="CC=musl-gcc"          #compiler pre. (2020 Musl fix for x86, might break other distro if musl missing)
+COMPILER="CC=gcc"               #compiler pre. other options: musl-gcc
+                                #(2020 Musl fix for x86, might break other distro if musl missing)
 IP="192.168.66.6"               #IP to be used by the virtual machine
 GATEWAY="192.168.66.1"          #default gateway to be used
 DNS="1.1.1.1"                   #default DNS, use 8.8.8.8 if you want silly google
