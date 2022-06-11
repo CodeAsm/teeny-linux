@@ -538,6 +538,7 @@ The following resources where used making this project or helped solve problems.
 * <https://www.lifewire.com/bash-for-loop-examples-2200575>
 * <https://landley.net/aboriginal/bin/>
 * <https://stackoverflow.com/questions/46695403/how-to-add-a-carriage-return-with-sed>
+* <https://blog.christophersmart.com/2016/08/31/configuring-qemu-bridge-helper-after-access-denied-by-acl-file-error/>
 
 ### VSCode tricks and tips
 
