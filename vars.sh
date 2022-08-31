@@ -1,7 +1,7 @@
 #!/bin/sh
 
 TOP=$HOME/Projects/Emulation/Linux/bin             #location for the build, change this for your location
-KERNEL="6.0-rc1"                 #Kernel release number. (or see cli options)
+KERNEL="6.0-rc2"                 #Kernel release number. (or see cli options)
 V="${KERNEL:0:1}"               #Kernel version for folder (probably breaks when 10 or larger)
 KTYPE="gz"                      #gz used by RC, xz by stable releases, but should work.
                                 #if posible, I would prever xz for its size and decompress seed
