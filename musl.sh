@@ -34,6 +34,17 @@ function install {
     mkdir -pv $TARGET/usr/include
     ln -s /include usr/include/i386-linux-gnu
     
+    mkdir -pv $TARGET/var/lib/dpkg
+    touch $TARGET/var/lib/dpkg/status
+    cat << EOF > $TARGET/var/lib/dpkg/status
+Package: musl
+Status: install ok installed
+Priority: optional
+Section: dev
+Version: 1.2.3
+
+EOF
+    
 }
 
 #----------------------------------------------------------------------

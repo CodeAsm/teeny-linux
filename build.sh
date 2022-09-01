@@ -74,7 +74,13 @@ fi
 
 # the extra builded files to be included into the initramfs
 if [ -d $TOP/build/ ]; then
+    #add packages (non overwrite, add)
+    cat $TOP/build/var/lib/dpkg/status >> $TOP/initramfs/$ARC-busybox/var/lib/dpkg/status
+    mv $TOP/build/var/lib/dpkg/status $TOP/status
+    #copy files, overwrite if nececairy
     cp -r $TOP/build/. $TOP/initramfs/$ARC-busybox/
+    #restore build dir
+    mv  $TOP/status $TOP/build/var/lib/dpkg/status
 fi
 
 #add user?
@@ -117,6 +123,7 @@ Status: hold ok installed
 Priority: optional
 Section: base
 Version: $BUSY
+
 EOF
 makeInitramfs
 }
