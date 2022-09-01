@@ -39,6 +39,7 @@ Updated to the latest I know Kernel and applications
 | BusyBox        | 1.35.0     | 2021-12-26  |
 | Drobbear       | 2022.82    | 2022-04-01  |
 
+* Made ((d)a)sh now default, including the profile, so no bash_profile/rc
 * Since 5.18, Symbol CONFIG_WERROR is causing me trouble, added "fix" in config
 * Added a ReqCheck.sh to check for basic program requirements and permisions.
 * extracted the user variables to vars.sh, nomore main build.sh updates too often
@@ -46,12 +47,7 @@ Updated to the latest I know Kernel and applications
 * modules support added
 * added Musl option for basic gcc compilation inside envirement
   Not from sources but precompiled.
-* crosscompiler support minimal
-* networking works if using bridge or user
 
-4.18.1 still works without altering the scipts
-
-KVM config changed after Kernel 5.10, changed accordingly.
 Powerpc still fails, no other arch beside x86_64 work.
 see crosstools.sh for a ARM attempt, currently boots the kernel, and no busybox or temp init.
 Dropbear has been added as a extra one could compile. everything inside the build directory gets included
@@ -548,6 +544,12 @@ I cannot test them all, but I try to make them compatible. for now, bash is the 
 I might consider zsh.
 
 * <https://stackoverflow.com/questions/50832481/busybox-sh-wont-exhttps://stackoverflow.com/questions/50832481/busybox-sh-wont-execute-the-bash-scriptecute-the-bash-script>
+
+For teenylinux ive swapped to (d)ash (sh like) and this also required profile change: 
+
+* <https://linux.die.net/man/1/ash>
+* <https://unix.stackexchange.com/questions/176027/ash-profile-configuration-file>
+* <https://www.in-ulm.de/%7Emascheck/various/ash/>
 
 ### VSCode tricks and tips
 

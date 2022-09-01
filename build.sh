@@ -135,24 +135,14 @@ cp -av $TOP/obj/busybox-$ARC/_install/* .
 writeInit
 copytoimage
 cd $TOP/initramfs/$ARC-busybox/root
-cat << EOF > .bashrc
-#
-# ~/.bashrc
-#
-
-# If not running interactively, don't do anything
-[[ $- != *i* ]] && return
+cat << EOF > .profile
 alias ls='ls --color=auto'
+alias today='date +"%Y-%m-%d"'
+alias todaytime='date +"%Y-%m-%d %H:%M"'
 
-
-alias today='date +"%d-%m-%Y"'
-alias todaytime='date +"%d-%m-%Y %H:%M"'
-
-  PS1="\[\033[35m\]\t\[\033[m\] [\[\033[1;31m\]\u\[\033[0m\]@\[\e[1;34m\]\h\[\e[0m\]:\[\e[94m\]\w\[\e[0m\]]\\$ \[\e[m\]" 
-  
-EOF
-cat << EOF > .bash_profile
 PATH=/bin:/usr/bin:/sbin:/usr/sbin:/tools/bin:tools
+
+PS1="\[\033[35m\]\t\[\033[m\][\[\033[1;31m\]\u\[\033[0m\]@\[\e[1;34m\]\h\[\e[0m\]:\[\e[94m\]\w\[\e[0m\]]\\$ \[\e[m\]" 
 EOF
 
 cat << EOF > hello.c
