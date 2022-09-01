@@ -33,7 +33,9 @@ function install {
     unlink $TARGET/usr
     mkdir -pv $TARGET/usr/include
     ln -s /include usr/include/i386-linux-gnu
-    
+    mkdir -pv $TARGET/usr/local
+    ln -s /include usr/local/include
+	    
     mkdir -pv $TARGET/var/lib/dpkg
     touch $TARGET/var/lib/dpkg/status
     cat << EOF > $TARGET/var/lib/dpkg/status
