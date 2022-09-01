@@ -39,6 +39,9 @@ Updated to the latest I know Kernel and applications
 | BusyBox        | 1.35.0     | 2021-12-26  |
 | Drobbear       | 2022.82    | 2022-04-01  |
 
+![teenylinux booting musl and networking Screenshot](https://raw.githubusercontent.com/codeasm/teeny-linux/main/resources/Screenshot3.png)
+Latest TeenyLinux with (optional) Musl and networking turned on (slower startup due to 270mb extra musl compiler)
+
 * Made ((d)a)sh now default, including the profile, so no bash_profile/rc
 * Since 5.18, Symbol CONFIG_WERROR is causing me trouble, added "fix" in config
 * Added a ReqCheck.sh to check for basic program requirements and permisions.
