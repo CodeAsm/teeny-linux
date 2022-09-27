@@ -1,7 +1,7 @@
 #!/bin/sh
-TARGET=$HOME/Projects/Emulation/Linux/bin/build    
+TARGET=$HOME/emulation/linux/bin/build
                                  #location for the build, change this for your location
-                               
+
 # a bunch of helpfull functions
 #----------------------------------------------------------------------
 function delete {
