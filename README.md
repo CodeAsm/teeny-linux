@@ -35,7 +35,7 @@ Updated to the latest I know Kernel and applications
 
 | Package        | Version    | Date        |
 | :------------- | :--------- | ----------: |
-| Linux kernel   | 5.19.10    | 2022-09-20  |
+| Linux kernel   | 5.19.11    | 2022-09-23  |
 | BusyBox        | 1.35.0     | 2021-12-26  |
 | Drobbear       | 2022.82    | 2022-04-01  |
 
