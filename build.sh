@@ -142,7 +142,7 @@ alias todaytime='date +"%Y-%m-%d %H:%M"'
 
 PATH=/bin:/usr/bin:/sbin:/usr/sbin:/tools/bin:tools
 
-PS1="\[\033[35m\]\t\[\033[m\][\[\033[1;31m\]\u\[\033[0m\]@\[\e[1;34m\]\h\[\e[0m\]:\[\e[94m\]\w\[\e[0m\]]\\$ \[\e[m\]" 
+PS1='\[\033[35m\]\t\[\033[m\][\[\033[1;31m\]\u\[\033[0m\]@\[\e[1;34m\]\h\[\e[0m\]:\[\e[94m\]\w\[\e[0m\]]\\$ \[\e[m\]' 
 EOF
 
 cat << EOF > hello.c
