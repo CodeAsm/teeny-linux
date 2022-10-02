@@ -42,6 +42,7 @@ Updated to the latest I know Kernel and applications
 ![teenylinux booting musl and networking Screenshot](https://raw.githubusercontent.com/codeasm/teeny-linux/main/resources/Screenshot3.png)
 Latest TeenyLinux with (optional) Musl and networking turned on (slower startup due to 270mb extra musl compiler)
 
+* Added time function, to measure compile time (no qemu)
 * Made ((d)a)sh now default, including the profile, so no bash_profile/rc
 * Since 5.18, Symbol CONFIG_WERROR is causing me trouble, added "fix" in config
 * Added a ReqCheck.sh to check for basic program requirements and permisions.
@@ -117,6 +118,14 @@ or
 ```
 
 this is like the old behavior.
+
+```bash
+./build.sh -t 
+or
+./build.sh -time
+```
+The above function has been added to measure the compilation time for the whole project and seperate parts. already figured out the kernel compiles faster?!? by cleaning the sources.
+Busybox can use a precompiled sourcetree just fine. overall not much different. There will be no qemu running at the end. this oprion might change in the future.
 
 ### Modules
 
@@ -595,6 +604,9 @@ For teenylinux ive swapped to (d)ash (sh like) and this also required profile ch
 
 Resolved a init kernel problem:
 <https://stackoverflow.com/questions/15277570/simple-replacement-of-init-to-just-start-console>
+
+timing:
+* <https://linuxconfig.org/time-your-bash-scripts-and-procedures-from-inside-the-code>
 
 ### Dropbear
 

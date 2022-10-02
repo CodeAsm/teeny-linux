@@ -225,6 +225,21 @@ case $key in
     ;;-option)
     OPTION="$2"
     shift; shift
+    ;;-t|-time)
+    echo "Timed compilation"
+    OVERALL_START="$(date +%s)"
+    buildBusyBox
+    INIT_START="$(date +%s)"
+    makeNewInitramfs
+    INIT_END="$(date +%s)"
+    makeKernel
+    OVERALL_END="$(date +%s)"
+    echo "Busybox took: $[ ${INIT_START} - ${OVERALL_START} ] seconds to compile"
+    echo "Initram took: $[ ${INIT_END} - ${INIT_START} ] seconds to build"
+    echo "Kernel took: $[ ${OVERALL_END} - ${INIT_END} ] seconds to compile"
+    echo "The overall code took: $[ ${OVERALL_END} - ${OVERALL_START} ] seconds to run"
+    exit 1
+    shift; # past argument and value
     ;;
 esac
 done
