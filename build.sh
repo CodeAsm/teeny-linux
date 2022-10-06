@@ -30,7 +30,7 @@ mv busybox-$BUSY.tar.bz2 ../
 rm -rf *
 mv ../linux-$KERNEL.tar.$KTYPE linux-$KERNEL.tar.$KTYPE
 mv ../busybox-$BUSY.tar.bz2 busybox-$BUSY.tar.bz2
-exit 1
+exit 0
 }
 
 #----------------------------------------------------------------------
@@ -238,7 +238,7 @@ case $key in
     echo "Initram took: $[ ${INIT_END} - ${INIT_START} ] seconds to build"
     echo "Kernel took: $[ ${OVERALL_END} - ${INIT_END} ] seconds to compile"
     echo "The overall code took: $[ ${OVERALL_END} - ${OVERALL_START} ] seconds to run"
-    exit 1
+    exit 0
     shift; # past argument and value
     ;;
 esac
