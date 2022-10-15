@@ -1,7 +1,7 @@
 #!/bin/bash 
-TARGET="powerpc64-linux" #default powerpc64-linux
-ARCH="powerpc"
-TOPC="$HOME/Projects/Emulation/Linux/crosstools"
+TARGET="arm-linux-gnueabihf"
+ARCH="arm"
+TOPC="$HOME/emulation/linux/crosstools"
 CROSS="$TOPC/bin"
 PREFIX="$TOPC/opt/cross"
 PATH="$PREFIX/bin:$PATH"
@@ -149,11 +149,12 @@ cd ${TOPC}/sources/musl-$MUSL/
 echo "  [ configure ]"
 ./configure --prefix=$PREFIX --target=$TARGET 
 echo "  [ Make ]"
+make
 echo "  [ Install ]"
-
+make install
 echo "  [ Cleaning ]"
 cd ${TOPC}/sources/
-rm -rf linux-$KERNEL/
+rm -rf musl-$MUSL/
 }
 
 #----------------------------------------------------------------------
@@ -193,7 +194,8 @@ int main()
 }
 EOF
 
-${PREFIX}/bin/$TARGET-gcc -g -o hello ${TOPC}/hello.c -static -L${TOPC} -I${TOPC}
+${PREFIX}/bin/$TARGET-gcc -v
+${PREFIX}/bin/$TARGET-gcc -g -o hello ${TOPC}/hello.c -static -L${TOPC}/include -I${TOPC}/include
 #rm ${TOPC}/hello.c
 }
 #----------------------------------------------------------------------
@@ -220,6 +222,10 @@ case $key in
     ;;-glibc|-c)
     CLIB=glibc
     shift; # past argument and valu
+    ;;-musl|-m)
+    CLIB=musl
+    MUSLDO=true
+    shift; # past argument and valu
 esac
 done
 
@@ -231,19 +237,19 @@ done
 
 case $CLIB in
     newlib)
-        Newlib
+#        Newlib
         ;;
     musl)
         Musl
         ;;
     glibc)
-        Glibc
+#        Glibc
         ;;
     libc)
-        Libc
+#        Libc
         ;;
     picolibc)
-        Picolibc
+#        Picolibc
         ;;
     *)
         echo "no libc set or chosen" 
@@ -251,4 +257,4 @@ case $CLIB in
         ;;
 esac
 #GCC_step2
-#Test
+Test
