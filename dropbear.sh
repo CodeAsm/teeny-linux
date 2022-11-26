@@ -1,8 +1,8 @@
 #!/bin/sh
-
-DROP="2022.82"                   #Dropbear release number
+. ./vars.sh
+DROP="2022.83"                   #Dropbear release number
 ARCH="x86_64"                    #default arch
-TARGET=$HOME/Projects/Emulation/Linux/bin/build    
+TARGET=$TOP/build    
                                  #location for the build, change this for your location
                                  
 COMPILER="CC=musl-gcc" 
