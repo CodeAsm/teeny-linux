@@ -256,6 +256,10 @@ mkiso.sh
 this will produce a boot.iso in the ../obj/ folder ($TOP). and try to boot it in qemu aswell.
 The mkiso file will check if mkrescue and xorriso are installed on your system, reqcheck will not check for this.
 
+If you want Musl and or dropbear to be included or any other tool in the iniramfs, please add them to the build folder as described in chapter *Adding new programs*
+.
+the ../bin/iso/ folder isnt removed, one could add files there aswell to be included with the iso file (grub modules maybe?). checking mkiso.sh and making appropiate modifications is probably best.
+
 ## Network
 
 To get basic network working, the current buildscipt and setup of qemu will use basic networking.
