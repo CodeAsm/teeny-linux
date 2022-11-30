@@ -1,8 +1,7 @@
 #!/bin/sh
-TOP=$HOME/Projects/Emulation/Linux/bin  #location for the build, change this for your location
-ARCH="x86_64"                   #default arch
-ARC="x86"                       #short arch (can I use grep for this?)
-KERNEL="5.11.6"
+. ./vars.sh
+. ./ReqCheck.sh
+
 ## The following worked almost, just I dint use the right format for this
 #while read line; do
 #    [[ $line =~ KERNEL= ]] && declare "$line" && break
