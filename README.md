@@ -42,15 +42,13 @@ Updated to the latest I know Kernel and applications
 ![teenylinux booting musl and networking Screenshot](https://raw.githubusercontent.com/codeasm/teeny-linux/main/resources/Screenshot3.png)
 Latest TeenyLinux with (optional) Musl and networking turned on (slower startup due to 270mb extra musl compiler)
 
+* fixed undocumented make iso script, added documentation
 * Added time function, to measure compile time (no qemu)
 * Made ((d)a)sh now default, including the profile, so no bash_profile/rc
 * Since 5.18, Symbol CONFIG_WERROR is causing me trouble, added "fix" in config
 * Added a ReqCheck.sh to check for basic program requirements and permisions.
 * extracted the user variables to vars.sh, nomore main build.sh updates too often
 * beta tools script, based on LFS.
-* modules support added
-* added Musl option for basic gcc compilation inside envirement
-  Not from sources but precompiled.
 
 Powerpc still fails, no other arch beside x86_64 work.
 see crosstools.sh for a ARM attempt, currently boots the kernel, and no busybox or temp init.
@@ -246,6 +244,17 @@ Uninstalling, or actualy deleting. It will delete the complete /build/ contents,
 ```sh
 ./musl.sh -d
 ```
+
+## Iso creation
+
+For a while it was possible to generate an bootable iso, it should now work with the latest kernel.
+After succesfull building of teenylinux, one can run:
+
+```sh
+mkiso.sh
+```
+this will produce a boot.iso in the ../obj/ folder ($TOP). and try to boot it in qemu aswell.
+The mkiso file will check if mkrescue and xorriso are installed on your system, reqcheck will not check for this.
 
 ## Network
 
