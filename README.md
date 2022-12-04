@@ -35,9 +35,9 @@ Updated to the latest I know Kernel and applications
 
 | Package        | Version    | Date        |
 | :------------- | :--------- | ----------: |
-| Linux kernel   | 6.0.10     | 2022-11-26  |
+| Linux kernel   | 6.0.11     | 2022-12-02  |
 | BusyBox        | 1.35.0     | 2021-12-26  |
-| Drobbear       | 2022.82    | 2022-04-01  |
+| Drobbear       | 2022.83    | 2022-11-14  |
 
 ![teenylinux booting musl and networking Screenshot](https://raw.githubusercontent.com/codeasm/teeny-linux/main/resources/Screenshot3.png)
 Latest TeenyLinux with (optional) Musl and networking turned on (slower startup due to 270mb extra musl compiler)
