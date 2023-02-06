@@ -1,11 +1,11 @@
 #!/bin/sh
 
 TOP=$HOME/emulation/linux/bin   #location for the build, change this for your location
-KERNEL="6.1.7"                    #Kernel release number. (or see cli options)
+KERNEL="6.1.8"                    #Kernel release number. (or see cli options)
 V="${KERNEL:0:1}"               #Kernel version for folder (probably breaks when 10 or larger)
 KTYPE="xz"                      #gz used by RC, xz by stable releases, but should work.
                                 #if posible, I would prever xz for its size and decompress seed
-BUSY="1.35.0"                   #busybox release number
+BUSY="1.36.0"                   #busybox release number
 ARCH="x86_64"                   #default arch
 ARC="x86"                       #short arch (can I use grep for this?)
 
