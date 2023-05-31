@@ -36,7 +36,7 @@ Updated to the latest I know Kernel and applications
 | Package        | Version    | Date        |
 | :------------- | :--------- | ----------: |
 | Linux kernel   | 6.3.5      | 2023-05-30  |
-| BusyBox        | 1.36.0     | 2023-01-03  |
+| BusyBox        | 1.36.1     | 2023-05-19  |
 | Drobbear       | 2022.83    | 2022-11-14  |
 
 ![teenylinux booting musl and networking Screenshot](https://raw.githubusercontent.com/codeasm/teeny-linux/main/resources/Screenshot3.png)
