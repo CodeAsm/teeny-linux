@@ -68,8 +68,8 @@ function copytoimage() {      #This function will copy nececairy files into the 
 
 # modules option
 if $MODULE ; then
-    mkdir -pv lib/modules/$KERNEL/extra
-    cp $MODULEURL/hello.ko lib/modules/$KERNEL/extra/hello.ko
+    mkdir -pv $MODULEURL
+    cp $TOP/hello.ko $MODULEURL/.
 fi
 
 # the extra builded files to be included into the initramfs

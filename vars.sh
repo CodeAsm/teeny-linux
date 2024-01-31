@@ -15,7 +15,7 @@ IP="192.168.66.6"               #IP to be used by the virtual machine
 GATEWAY="192.168.66.1"          #default gateway to be used
 DNS="1.1.1.1"                   #default DNS, use 8.8.8.8 if you want silly google
 HOSTNAME="TeenyQemuBox"         #hostname
-MODULEURL=$TOP/../teeny-linux/modules/        #modprobe url
+MODULEURL=$TOP/build/lib/modules/linux-$ARC/        #modprobe url
 LOGINREQUIRED="/bin/login"      #replace with /bin/sh for no login required, /bin/login needed else
                                 #seems one can simply Ctrl+C out of login tho
 				#Host specific variables, change if poormans host
