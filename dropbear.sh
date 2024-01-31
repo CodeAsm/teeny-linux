@@ -62,8 +62,8 @@ function install {
     cp dropbearconvert $TARGET/usr/sbin/
     cp dbclient $TARGET/usr/sbin/
     mkdir -pv $TARGET/etc/dropbear/
-    cp ~/.ssh/id_rsa.pub $TARGET/etc/dropbear/authorized_keys
-    cp ~/.ssh/id_rsa.pub $TARGET/root/authorized_keys
+    #cp ~/.ssh/id_rsa.pub $TARGET/etc/dropbear/authorized_keys
+    #cp ~/.ssh/id_rsa.pub $TARGET/root/authorized_keys
 }
 
 #----------------------------------------------------------------------
