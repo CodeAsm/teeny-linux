@@ -8,7 +8,7 @@ function delete {
 cd $TARGET
 mv ../x86_64-linux-musl-native.tgz ../../
 #This so much, lets dell all. (dropbear doesnt, this one does, dirty)
-rm -rf *
+rm -rf $TARGET/
 
 cp ../../x86_64-linux-musl-native.tgz ../x86_64-linux-musl-native.tgz
 exit 1
