@@ -313,6 +313,16 @@ ifconfig eth0 up 10.0.2.16 netmask 255.255.255.0 up
 
 And now you should be able to ping eachother and do stuff. If you setup a DHCP server or add the bridge to a network with a DHCP server, you can set the instances to recieve a IP from the said DHCP server, which in the current version is the case.
 
+## SSH
+
+To ssh into your freshly build TeenyLinux, you simply type:
+
+```sh
+$ ssh root@192.168.66.6 -o "UserKnownHostsFile=/dev/null"
+```
+
+The added -o option redirects the known host key to /dev/null, because each rerun of dropbear generates a new hostkey. These steps are not nececairy when reusing the hostkey (by supplying it during the init build fase etc.)
+
 ### Removing
 
 To remove interfaces and shutdown stuff
