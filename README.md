@@ -235,7 +235,7 @@ Dont forget to rebuild init, with for example
 Now compilation using gcc inside the envirement should be posible. the included C source should compile succesfully to hello and display hello world using:
 
 ```sh
-gcc -o hello hello.c -I /include/
+g++ -o hello hello.cpp
 ./hello
 ```
 

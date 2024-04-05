@@ -145,12 +145,15 @@ PATH=/bin:/usr/bin:/sbin:/usr/sbin:/tools/bin:tools
 PS1='\[\033[35m\]\t\[\033[m\][\[\033[1;31m\]\u\[\033[0m\]@\[\e[1;34m\]\h\[\e[0m\]:\[\e[94m\]\w\[\e[0m\]]\\$ \[\e[m\]' 
 EOF
 
-cat << EOF > hello.c
-#include <stdio.h>
+cat << EOF > hello.cpp
+#include <iostream>
+
+using namespace std;
+
 int main()
 {
-	printf("Hello world.\n");
-	return 0;	
+        cout << "Hello world.\n";
+        return 0;
 }
 EOF
 
