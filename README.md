@@ -603,6 +603,7 @@ For teenylinux ive swapped to (d)ash (sh like) and this also required profile ch
 ### Compilers
 
 * <https://stackoverflow.com/questions/17939930/finding-out-what-the-gcc-include-path-is>
+* <https://stackoverflow.com/questions/2188751/linking-iostream-h-in-linux-using-gcc/2188765#2188765>
 
 ### Crosscompile
 
