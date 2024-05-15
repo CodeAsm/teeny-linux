@@ -35,7 +35,7 @@ Updated to the latest I know Kernel and applications
 
 | Package        | Version    | Date        |
 | :------------- | :--------- | ----------: |
-| Linux kernel   | 6.8.9      | 2024-05-02  |
+| Linux kernel   | 6.9        | 2024-05-12  |
 | BusyBox        | 1.36.1     | 2023-05-19  |
 | Drobbear       | 2024.85    | 2024-04-25  |
 
@@ -184,6 +184,12 @@ altho I might consider building the crosstools externaly. so you might need to r
 
 A temporarely ARM target inside crosstools is in the work. requires arm-none-eabi- set of build tools as well as a
 fake init static compiled
+
+### busybox TC
+Linux kernel 6.8 removed a number of traffic control related symbols.
+a easy fix has been applied: <https://bugs.busybox.net/show_bug.cgi?id=15934>
+but more elegant untill Busybox fixes the TC command would be:
+<https://bugs.gentoo.org/926872>
 
 ## Adding new programs
 
