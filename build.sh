@@ -105,7 +105,7 @@ sed -i '/# CONFIG_STATIC is not set/c\CONFIG_STATIC=y' ../obj/busybox-$ARC/.conf
 #for musl we experimentaly determined these to be nececairy
 
 #There are traffic control related symbols removed in Kernel 6.8
-sed -i '/CONFIG_TC=y/c\# CONFIG_TC is not defined\rset# CONFIG_FEATURE_TC_INGRESS is not set' ../obj/busybox-$ARC/.config
+sed -i '/CONFIG_TC=y/c\# CONFIG_TC is not set\r\n# CONFIG_FEATURE_TC_INGRESS is not set' ../obj/busybox-$ARC/.config
 # Gentoo has some patches availeble but disableing this command seems to fix it for me.
 # https://bugs.gentoo.org/926872
 
