@@ -88,6 +88,8 @@ other initramfs tests
 ./build.sh-kernel
 ```
 
+### Network
+
 Build and start a instance with a mac adress of choice
 
 ```bash
@@ -101,6 +103,9 @@ for example
 ```
 
 Will run a VM with that specific macaddr (you need to change the ip inside or do DHCP trickery).
+
+
+### Useraccounts
 
 Ive added a user called root inside the passwd file, to login, use password root
 to build without login prompt:
@@ -117,13 +122,15 @@ or
 
 this is like the old behavior.
 
+### Timed compilation
+
 ```bash
 ./build.sh -t 
 or
 ./build.sh -time
 ```
 The above function has been added to measure the compilation time for the whole project and seperate parts. already figured out the kernel compiles faster?!? by cleaning the sources.
-Busybox can use a precompiled sourcetree just fine. overall not much different. There will be no qemu running at the end. this oprion might change in the future.
+Busybox can use a precompiled sourcetree just fine. overall not much different. There will be no qemu running at the end. this option might change in the future.
 
 ### Modules
 
