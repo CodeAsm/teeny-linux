@@ -21,6 +21,20 @@ qemu-system-$ARCH \
     -initrd obj/initramfs-busybox-$ARC.cpio.gz \
     -nographic -append "console=ttyS0" $NET $OPTION
 }
+#----------------------------------------------------------------------
+#Download if necessary, clean an unclean build
+function download() {
+
+cd $TOP
+if [ ! -f $TOP/linux-$KERNEL.tar.$KTYPE ]; then #Maybe now partial downloads work?
+        wget -c https://cdn.kernel.org/pub/linux/kernel/v$V.x/linux-$KERNEL.tar.$KTYPE
+fi
+
+if [ ! -f "$TOP/busybox-$BUSY.tar.bz2" ]; then
+        wget -c https://busybox.net/downloads/busybox-$BUSY.tar.bz2
+fi
+
+}
 
 #----------------------------------------------------------------------
 function delete() {
@@ -194,7 +208,7 @@ make mrproper
 make O=../obj/linux-$ARC x86_64_defconfig
 make O=../obj/linux-$ARC kvm_guest.config
 sed -i 's/CONFIG_WERROR=y/# CONFIG_WERROR is not set/' ../obj/linux-x86/.config
-make O=../obj/linux-$ARC -j$CORECOUNT
+make O=../obj/linux-$ARC EXTRA_CFLAGS="-Wno-use-after-free" -j$CORECOUNT
 
 }
 
@@ -233,6 +247,8 @@ case $key in
     OPTION="$2"
     shift; shift
     ;;-t|-time)
+    # To be sure we have the files, we try download. will not be counted in the time value
+    download
     echo "Timed compilation"
     OVERALL_START="$(date +%s)"
     buildBusyBox
@@ -254,17 +270,8 @@ done
 #sets defaults if arguments are empty or incorrect
 if [ -z $ARCH ]; then
     ARCH="x86_64"; fi
-    
-cd $TOP
-#Download if nececairy, clean an unclean build
-if [ ! -f $TOP/linux-$KERNEL.tar.$KTYPE ]; then #Maybe now partial downloads work?
-        wget -c https://cdn.kernel.org/pub/linux/kernel/v$V.x/linux-$KERNEL.tar.$KTYPE
-fi
 
-if [ ! -f "$TOP/busybox-$BUSY.tar.bz2" ]; then
-        wget -c https://busybox.net/downloads/busybox-$BUSY.tar.bz2
-fi
-
+download
 
 if [ $ARCH == "ppc" ]; then #this is to have a full arch name, but working functions
     ARCHF="powerpc"
