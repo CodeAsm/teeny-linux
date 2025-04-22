@@ -1,6 +1,6 @@
 #!/bin/sh
 . ./vars.sh
-DROP="2024.86"                   #Dropbear release number
+DROP="2025.87"                   #Dropbear release number
 ARCH="x86_64"                    #default arch
 TARGET=$TOP/build    
                                  #location for the build, change this for your location
@@ -81,8 +81,17 @@ done
 
 #Download if nececairy, clean an unclean build
 #wget doesnt download if its already there, so no if
-#if [ ! -f $TARGET/../dropbear-$DROP.tar.bz2 ]; then
-        wget -c https://matt.ucc.asn.au/dropbear/releases/dropbear-$DROP.tar.bz2 -P $TARGET/..
+if ! curl --output /dev/null --silent --head --fail "https://matt.ucc.asn.au/dropbear/releases/dropbear-$DROP.tar.bz2"; then
+    echo "Primary server unavailable, trying mirror..."
+    if ! curl --output /dev/null --silent --head --fail "https://dropbear.nl/mirror/releases/dropbear-$DROP.tar.bz2"; then
+        echo "Both servers are unavailable. Exiting."
+        exit 1
+    else
+        wget -c https://dropbear.nl/mirror/releases/dropbear-$DROP.tar.bz2 -P $TARGET/..
+    fi
+else
+    wget -c https://matt.ucc.asn.au/dropbear/releases/dropbear-$DROP.tar.bz2 -P $TARGET/..
+fi
 #fi
 if [ ! -f $TARGET/../dropbear-$DROP/README ]; then
         extract
