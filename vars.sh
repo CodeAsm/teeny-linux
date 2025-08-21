@@ -1,7 +1,7 @@
 #!/bin/sh
 
 TOP=$HOME/emulation/linux/bin   #location for the build, change this for your location
-KERNEL="6.16.1"                 #Kernel release number. (or see cli options)
+KERNEL="6.16.2"                 #Kernel release number. (or see cli options)
 V="${KERNEL:0:1}"               #Kernel version for folder (probably breaks when 10 or larger)
 KTYPE="xz"                      #gz used by RC, xz by stable releases, but should work.
                                 #if posible, I would prever xz for its size and decompress seed
@@ -19,6 +19,6 @@ MODULEURL=$TOP/build/lib/modules/linux-$ARC/        #modprobe url
 LOGINREQUIRED="/bin/login"      #replace with /bin/sh for no login required, /bin/login needed else
                                 #seems one can simply Ctrl+C out of login tho
 				#Host specific variables, change if poormans host
-CORECOUNT=$(nproc)              #$(nproc) or change to a number like 1 or 8 depending on the core count to use
+CORECOUNT=$(( $(nproc) - 1))    #$(nproc) or change to a number like 1 or 8 depending on the core count to use
 RAM="1G"                        #1G minimal for qemu , 2G or more recommended. (used only for qemu invocation)
 
