@@ -1,6 +1,6 @@
 #!/bin/sh
 . ./vars.sh
-DROP="2025.88"                   #Dropbear release number
+DROP="2025.89"                   #Dropbear release number
 ARCH="x86_64"                    #default arch
 TARGET=$TOP/build    
                                  #location for the build, change this for your location
