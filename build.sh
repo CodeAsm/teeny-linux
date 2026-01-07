@@ -17,6 +17,8 @@ function DoQemu() {
 	if [ "$ARCH" == "i686" ]; then
 		L_ARCH="i386"
 		OPTION="$OPTION -cpu pentium3"
+	else
+		L_ARCH="$ARCH"
 	fi
 	cd $TOP
 	qemu-system-$L_ARCH \
