@@ -2,7 +2,12 @@
 . ./vars.sh
 
 #The next programs will be test to exist
-programs=(tar ${COMPILER:3} touch make sed wget qemu-system-$ARCH cpio gzip cat bc)
+if [ $ARCH == "i686" ]; then
+	Q_ARCH="i386"
+else
+	Q_ARCH=$ARCH
+fi
+programs=(tar ${COMPILER:3} touch make sed wget qemu-system-$Q_ARCH cpio gzip cat bc)
 
 echo "======================================"
 echo "||  Teeny Linux  Build script       ||"
