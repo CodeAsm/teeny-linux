@@ -14,12 +14,16 @@ cd $TOP
 #a bunch of helpfull functions
 #----------------------------------------------------------------------
 function DoQemu() {
-cd $TOP
-qemu-system-$ARCH \
-    -m $RAM \
-    -kernel obj/linux-$ARC/arch/$ARCH/boot/bzImage \
-    -initrd obj/initramfs-busybox-$ARC.cpio.gz \
-    -nographic -append "console=ttyS0" $NET $OPTION
+	if [ "$ARCH" == "i686" ]; then
+		L_ARCH="i386"
+		OPTION="$OPTION -cpu pentium3"
+	fi
+	cd $TOP
+	qemu-system-$L_ARCH \
+		-m $RAM \
+		-kernel obj/linux-$ARC/arch/$L_ARCH/boot/bzImage \
+		-initrd obj/initramfs-busybox-$ARC.cpio.gz \
+		-nographic -append "console=ttyS0" $NET $OPTION
 }
 #----------------------------------------------------------------------
 #Download if necessary, clean an unclean build
@@ -112,14 +116,26 @@ rm -rf obj/busybox-$ARC
 cd $TOP/busybox-$BUSY
 mkdir -pv ../obj/busybox-$ARC
 
+if [ "$ARCH" == "i686" ]; then
+	export CFLAGS="-march=pentium -m32 -mno-sse -mno-sse2"
+	export CXXFLAGS="$CFLAGS"
+fi
 make O=../obj/busybox-$ARC defconfig $COMPILER
+
+if [ "$ARCH" == "i686" ]; then
+	# Set flags for 32-bit architecture
+	export CFLAGS="-march=pentium3 -m32"
+	export CXXFLAGS="$CFLAGS"
+	export LDFLAGS="-m32"
+fi
 
 # do a static lib thing for busy, 
 sed -i '/# CONFIG_STATIC is not set/c\CONFIG_STATIC=y' ../obj/busybox-$ARC/.config
 #for musl we experimentaly determined these to be nececairy
 
 #There are traffic control related symbols removed in Kernel 6.8
-sed -i '/CONFIG_TC=y/c\# CONFIG_TC is not set\r\n# CONFIG_FEATURE_TC_INGRESS is not set' ../obj/busybox-$ARC/.config
+#sed -i '/CONFIG_TC=y/c\# CONFIG_TC is not set\r\n# CONFIG_FEATURE_TC_INGRESS is not set' ../obj/busybox-$ARC/.config
+sed -i '/CONFIG_TC=y/c\# CONFIG_TC is not set\n# CONFIG_FEATURE_TC_INGRESS is not set' ../obj/busybox-$ARC/.config
 # Gentoo has some patches availeble but disableing this command seems to fix it for me.
 # https://bugs.gentoo.org/926872
 
@@ -205,8 +221,25 @@ fi
 cd $TOP/linux-$KERNEL
 
 make mrproper
-make O=../obj/linux-$ARC x86_64_defconfig
-make O=../obj/linux-$ARC kvm_guest.config
+if [ "$ARCH" == "x86_64" ]; then
+	make O=../obj/linux-$ARC x86_64_defconfig
+	make O=../obj/linux-$ARC kvm_guest.config
+elif [ "$ARCH" == "i686" ]; then
+	make O=../obj/linux-$ARC ARCH=x86 i386_defconfig
+
+	scripts/config --file ../obj/linux-$ARC/.config \
+		-e CONFIG_X86_32 \
+		-d CONFIG_X86_64 \
+		-e CONFIG_M486 \
+		-d CONFIG_M686
+elif [ "$ARCH" == "powerpc" ]; then
+	make O=../obj/linux-$ARC ppc_defconfig
+elif [ "$ARCH" == "aarch64" ]; then
+	make O=../obj/linux-$ARC defconfig
+else
+	echo "[ error ] Unsupported architecture: $ARCH"
+	exit 1
+fi
 sed -i 's/CONFIG_WERROR=y/# CONFIG_WERROR is not set/' ../obj/linux-x86/.config
 make O=../obj/linux-$ARC EXTRA_CFLAGS="-Wno-use-after-free" -j$CORECOUNT
 
@@ -275,6 +308,9 @@ download
 
 if [ $ARCH == "ppc" ]; then #this is to have a full arch name, but working functions
     ARCHF="powerpc"
+elif [ $ARCH == "i686" ]; then
+	ARCHF="i386"	# not arch full, but what the actual kernel folder is called
+					# when compiling for pentium3
 else
     ARCHF=$ARCH
 fi
