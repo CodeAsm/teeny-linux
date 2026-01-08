@@ -15,15 +15,15 @@ cd $TOP
 #----------------------------------------------------------------------
 function DoQemu() {
 	if [ "$ARCH" == "i686" ]; then
-		L_ARCH="i386"
+		Q_ARCH="i386"
 		OPTION="$OPTION -cpu pentium3"
 	else
-		L_ARCH="$ARCH"
+		Q_ARCH="$ARCH"
 	fi
 	cd $TOP
-	qemu-system-$L_ARCH \
+	qemu-system-$Q_ARCH \
 		-m $RAM \
-		-kernel obj/linux-$ARC/arch/$L_ARCH/boot/bzImage \
+		-kernel obj/linux-$ARC/arch/$Q_ARCH/boot/bzImage \
 		-initrd obj/initramfs-busybox-$ARC.cpio.gz \
 		-nographic -append "console=ttyS0" $NET $OPTION
 }
@@ -255,11 +255,22 @@ key="$1"
 case $key in
     -arch|-cpu)
     ARCH="$2"
-    ARC="$2"
+    case "$ARCH" in
+        x86_64)
+            ARC="x86"
+            ;;
+        i686)
+            ARC="pentium3"
+            ;;
+        *)
+            echo "Unknown architecture: $ARCH"
+            exit 1
+            ;;
+    esac
     shift; shift # past argument and value
     ;;-init|-makeInit|-makeinit)
     MAKEINIT=true
-    ARCH="x86_64"
+    #ARCH="x86_64"
     shift; # past argument and value
     ;;-d|-delete|-deleteall)
     delete
