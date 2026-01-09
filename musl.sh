@@ -1,4 +1,6 @@
 #!/bin/sh
+# SPDX-License-Identifier: GPL-2.0-or-later
+
 TARGET=$HOME/emulation/linux/bin/build
                                  #location for the build, change this for your location
 

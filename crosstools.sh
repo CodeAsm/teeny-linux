@@ -1,4 +1,7 @@
 #!/bin/bash
+# SPDX-License-Identifier: GPL-2.0-or-later
+
+set -e
 
 TARGET="arm-linux-gnueabihf"
 ARCH="arm"

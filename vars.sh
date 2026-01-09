@@ -1,4 +1,5 @@
 #!/bin/sh
+# SPDX-License-Identifier: GPL-2.0-or-later
 
 TOP=$HOME/emulation/linux/bin   #location for the build, change this for your location
 KERNEL="6.18.4"                 #Kernel release number. (or see cli options)

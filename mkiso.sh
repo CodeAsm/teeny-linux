@@ -1,4 +1,6 @@
 #!/bin/sh
+# SPDX-License-Identifier: GPL-2.0-or-later
+
 . ./vars.sh
 . ./ReqCheck.sh
 

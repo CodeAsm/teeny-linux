@@ -564,6 +564,37 @@ clean:
 
 a device tree database is required for proper functioning arm targets, for my example ive used versatile-pb.dtb that is also provided after compiling the kernel.
 
+## Licensing
+
+This project contains multiple components, each licensed separately.
+
+### Project-authored files
+
+All scripts, build files, and original content in this repository (unless otherwise noted) are licensed under:
+
+```
+GNU General Public License v2 or (at your option) any later version
+SPDX-License-Identifier: GPL-2.0-or-later
+```
+
+For the full license text, see the `COPYING` file at the top level of this repository.
+
+If you modify and redistribute these files, you must provide the corresponding source under the same license terms.
+
+### Third-party components
+
+This project uses third-party software, including:
+
+* **Linux kernel** — licensed under **GNU GPL v2 only**
+* **BusyBox** — licensed under GNU GPL
+* Other tools — licensed under their respective upstream licenses
+
+These components remain under their original licenses; this project does not modify or override those terms.
+
+### Scope
+
+Licensing obligations apply on a per-component basis. Use of this project does not impose additional requirements beyond those of the applicable upstream licenses.
+
 ## Resources
 
 The following resources where used making this project or helped solve problems. "Attribution" as per stackoverflow. as some code might have evolved away from the "answers", I choose to put the links here under headings of general meaning. The link titles are describtive enough.

@@ -1,4 +1,6 @@
 #!/bin/sh
+# SPDX-License-Identifier: GPL-2.0-or-later
+
 . ./vars.sh
 DROP="2025.89"                   #Dropbear release number
 ARCH="x86_64"                    #default arch

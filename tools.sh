@@ -1,4 +1,6 @@
 ﻿#!/bin/sh
+# SPDX-License-Identifier: GPL-2.0-or-later
+
 KERNEL="4.20.12"                              #matches tested LFS tree, should later match with Kernel for
                                               # proper headers.
 ARCH="x86_64-teeny-linux-gnu"                   #slightly diferent from build, this matches LFS

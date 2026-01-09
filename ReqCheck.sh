@@ -1,4 +1,6 @@
 #!/bin/sh
+# SPDX-License-Identifier: GPL-2.0-or-later
+
 . ./vars.sh
 
 #The next programs will be test to exist
