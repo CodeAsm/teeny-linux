@@ -50,7 +50,7 @@ Latest TeenyLinux with (optional) Musl and networking turned on (slower startup 
 * extracted the user variables to vars.sh, nomore main build.sh updates too often
 * beta tools script, based on LFS.
 
-Powerpc still fails, no other arch beside x86_64 work.
+Powerpc still fails, no other arch beside x86_64 and i686 (pentium III) work.
 see crosstools.sh for a ARM attempt, currently boots the kernel, and no busybox or temp init.
 Dropbear has been added as a extra one could compile. everything inside the build directory gets included
 network has been changed to reflect my current tap/bridge layout.
@@ -68,11 +68,11 @@ The build script knows the following commands passable as arguments:
 deletes all but the tarbal files (handy to restart building without downloading the tarbals
 
 ```bash
-./build.sh -arch [ppc|x86_64]
-./build.sh -cpu [ppc|x86_64]
+./build.sh -arch [ppc|x86_64|i686]
+./build.sh -cpu [ppc|x86_64|i686]
 ```
 
-builds for the selected arch, x86_64 is default tho, x86 isnt tested(yet)
+builds for the selected arch, x86_64 is default tho, for x86, specify i686.
 
 ```bash
 ./build.sh -init
