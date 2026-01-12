@@ -4,6 +4,8 @@
 . ./vars.sh
 . ./ReqCheck.sh
 
+ARCHF=$ARCH
+
 ## The following worked almost, just I dint use the right format for this
 #while read line; do
 #    [[ $line =~ KERNEL= ]] && declare "$line" && break
@@ -28,13 +30,18 @@ if [ ! -f $TOP/obj/initramfs-busybox-$ARC.cpio.gz ]; then
     echo "initramfs could not be found, run build first!"
     exit
 fi
-
-    if [ ! -f $TOP/obj/linux-$ARC/arch/$ARC/boot/bzImage ]; then
-    echo "Linux kernel could not be found, run build first!"
-    exit
-fi
+	if [ $ARCH == "i686" ]; then
+		ARCHF="i386"	# not arch full, but what the actual kernel folder is called
+						# when compiling for pentium3
+	fi
+	#echo "Using kernel folder: $ARCHF"
+    if [ ! -f "$TOP/obj/linux-$ARC/arch/${ARCHF}/boot/bzImage" ]; then
+        echo "Error: bzImage not found in $TOP/obj/linux-$ARC/arch/${ARCHF}/boot/"
+        exit 1
+    fi
 
 # Everything seems to be in place, lets rock and roll baby -----------------
+rm -rf iso # recreate iso folder
 mkdir iso
 cd iso
 mkdir boot
@@ -57,8 +64,14 @@ menuentry "TeenyLinux $KERNEL Serial" {
 	initrd	/boot/initramfs.cpio.gz
 }
 EOF
+
 cd $TOP
-cp obj/linux-x86/arch/x86/boot/bzImage iso/boot/vmlinuz
-cp obj/initramfs-busybox-x86.cpio.gz iso/boot/initramfs.cpio.gz
-grub-mkrescue --xorriso=/bin/xorriso -o boot.iso iso/ 
-qemu-system-x86_64 -cdrom boot.iso -m 2G
+cp obj/linux-$ARC/arch/${ARCHF}/boot/bzImage iso/boot/vmlinuz
+cp obj/initramfs-busybox-$ARC.cpio.gz iso/boot/initramfs.cpio.gz
+grub-mkrescue --xorriso=/bin/xorriso -o boot-$ARCH.iso iso/ 
+if [ "$ARCH" == "i686" ]; then
+	Q_ARCH="i386"
+else
+	Q_ARCH="$ARCH"
+fi
+qemu-system-$Q_ARCH -cdrom boot-$ARCH.iso -m 2G
