@@ -1,35 +1,30 @@
-# Teeny Linux
+# TeenyLinux
+
+TeenyLinux is a do it yourself kernel and userland build script to make a bootable and somewhat useable Linux envirement.
+Busybox provides the shell, some basic utilities and init system. We target a few common older,commonly used and newer architectures and bootable systems.
 
 Based on Mitch Galgs instructions on how to build a Linux kernel for qemu.
 This awesome guy also updated his buildinstructions so expect some updates on my attempt if he updates too.
-
 <http://mgalgs.github.io/2015/05/16/how-to-build-a-custom-linux-kernel-for-qemu-2015-edition.html>
+
+His latest update included a docker build system, here I chose to add crosscompilation support to other ARCH types.
+So no docker, everything should run locally and save enough to not need containers or virtual envirements. 
+Due to superiority of buildroot, I dont think we need all their features or goals. If your new here, this is an experiment to build a small linux system that could be, but just isnt it yet.
 
 ![teenylinux booting Screenshot](https://raw.githubusercontent.com/codeasm/teeny-linux/main/resources/Screenshot.png)
 
-* The kernel currently is: 8.8Mb
-* The initramfs without other programs but busybox: 694K
+* The kernel currently is: 8.8M (14M - x86_64)
+* Boots in qemu within 2.71 seconds.
+* The initramfs without other programs but busybox: 1.3M
 * Added musl will grow the initramfs: 78Mb
-With carefull manipulation, the kernel can be made smaller, so does initramfs
 
-My goals in non particular order are:
+With carefull manipulation, the kernel can be made smaller, so does initramfs (which seems to have grown over the lifespan of this little project)
 
-* Run Linux on any/most CPU (that qemu offers, and that intrests me ;) ).
-* Crosscompile Linux (probably x86_64 as a base).
-  * Partial functional
-* Have Firewire terminal on PowerPC. (this is part of another project)
-* Have small amount of scripts that can build and partialy test various goals
-* get a update system working
-* smaller compiler for inside (TCC, work has started in a branch)
+__*user root, password root*__
 
-Most of my research and/or playing is done on a x86_64 Arch Linux system, I asume the reader is skilled enough to translate any commands or hints to their own system or reading other resources to accomplish their own goals.
-This is never ment for production or replacing LFS for example.
+When dropbear is added and ssh enabled, __!! change default password !!__
 
-I do not recommend this documentation or scripts as a teaching tool or seen as fact. this is just me playing arround.
-You can however learn from it, or teach how not to do things.
-*user root, password root*
-
-## news
+## News
 
 Updated to the latest I know Kernel and applications
 
@@ -42,18 +37,47 @@ Updated to the latest I know Kernel and applications
 ![teenylinux booting musl and networking Screenshot](https://raw.githubusercontent.com/codeasm/teeny-linux/main/resources/Screenshot3.png)
 Latest TeenyLinux with (optional) Musl and networking turned on (slower startup due to 270mb extra musl compiler)
 
-* fixed undocumented make iso script, added documentation
-* Added time function, to measure compile time (no qemu)
-* Made ((d)a)sh now default, including the profile, so no bash_profile/rc
-* Since 5.18, Symbol CONFIG_WERROR is causing me trouble, added "fix" in config
 * Added a ReqCheck.sh to check for basic program requirements and permisions.
 * extracted the user variables to vars.sh, nomore main build.sh updates too often
 * beta tools script, based on LFS.
+* Added a license file, [COPYING](COPYING), we are now GPL2.0 (or later)
+* Succesfull build a i686 (Pentium III like) system.
 
-Powerpc still fails, no other arch beside x86_64 and i686 (pentium III) work.
 see crosstools.sh for a ARM attempt, currently boots the kernel, and no busybox or temp init.
-Dropbear has been added as a extra one could compile. everything inside the build directory gets included
-network has been changed to reflect my current tap/bridge layout.
+
+
+### busybox TC
+Linux kernel 6.8 removed a number of traffic control related symbols.
+a easy fix has been applied: <https://bugs.busybox.net/show_bug.cgi?id=15934>
+but more elegant untill Busybox fixes the TC command would be:
+<https://bugs.gentoo.org/926872>
+
+## Future goals
+
+My goals in non particular order are:
+
+* Run Linux on any/most CPU (that qemu offers, and that intrests me ;) ).
+* Crosscompile Linux (probably x86_64 as a base).
+  * Partial functional
+* Have Firewire terminal on PowerPC. (this is part of another project)
+* Have small amount of scripts that can build and partialy test various goals
+* get a update system working (possibly pacman, for LFS, or busybox dpkg)
+* smaller compiler for inside (TCC, work has started in a branch)
+* seperate certain documentation to other files.
+
+Most of my research and/or experimenting is done on a x86_64 Arch Linux system, I asume the reader is skilled enough to translate any commands or hints to their own system or reading other resources to accomplish their own goals.
+This is never ment for production or replacing LFS for example.
+
+## usage and building
+
+run the buildscript :D
+
+```sh
+./build.sh
+```
+if your system does not meet the build requirements, [ReqCheck.sh](ReqCheck.sh) will tell you, its automatically called by build.sh, install whats needed or change to your liking.
+
+If wanted, customize versions in [vars.sh](vars.sh), here you can test kernel versions, busybox versions and arch variables. this file also changes the most often upon version bumps. Some intresting variables can be changes here aswell that are used by the final running linux, ip adresses, hostname. One could even change the default init, if you install your own before compilation (../bin/build/)
 
 ## options
 
@@ -61,23 +85,18 @@ The build script knows the following commands passable as arguments:
 
 ```bash
 ./build.sh -d
-./build.sh -delete
-./build.sh -deleteall
 ```
 
 deletes all but the tarbal files (handy to restart building without downloading the tarbals
 
 ```bash
 ./build.sh -arch [ppc|x86_64|i686]
-./build.sh -cpu [ppc|x86_64|i686]
 ```
 
 builds for the selected arch, x86_64 is default tho, for x86, specify i686.
 
 ```bash
 ./build.sh -init
-./build.sh -makeInit
-./build.sh -makeinit
 ```
 
 Builds or rebuilds only the initramfs and then tries to run qemu, handy when trying new init programs or
@@ -85,7 +104,7 @@ other initramfs tests
 
 ```bash
 ./build.sh -k <kernel version>
-./build.sh-kernel
+./build.sh -kernel
 ```
 
 ### Network
@@ -95,7 +114,6 @@ Build and start a instance with a mac adress of choice
 ```bash
 ./build.sh -net <macaddr>
 ```
-
 for example
 
 ```bash
@@ -104,23 +122,19 @@ for example
 
 Will run a VM with that specific macaddr (you need to change the ip inside or do DHCP trickery).
 
+More networking documentation, hints and tricks can be found in [Networking.md](resources/Networking.md)
+
 
 ### Useraccounts
 
-Ive added a user called root inside the passwd file, to login, use password root
+Ive added a user called ``root`` inside the passwd file, to login, use password ``root``
 to build without login prompt:
 
 ```bash
 ./build.sh -nl
-```
-
-or
-
-```bash
 ./build.sh -nologin
 ```
-
-this is like the old behavior.
+this is like the old behavior like M.Galgs blogposts.
 
 ### Timed compilation
 
@@ -137,10 +151,8 @@ Busybox can use a precompiled sourcetree just fine. overall not much different. 
 before any module can be compiled, a first run without support has to be done, or atleast the linux kernel source folder should be compiled. The sample module is a git submodule, and you should init this if you havent already by:
 
 ```sh
-
 git submodule init
 git submodule update
-
 ```
 
 for more submodule details, check: [Cloning a Project with Submodules](https://git-scm.com/book/en/v2/Git-Tools-Submodules#)
@@ -149,7 +161,6 @@ Then first do a dry run build without modules:
 
 ```sh
 ./build
-
 ```
 
 After building the kernel, termination of the qemu instance is posible, a simple test to see there are no mods also posible
@@ -182,53 +193,12 @@ modprobe -r [module name]
 check buildscipt where to place module or change code to load yours.
 default script copies the hello.ko to /lib/module/[arch]/
 
-## building
-
-run the buildscript :D
-
-__select arch support comming__ this feature is being worked on. I want 1 scritp to do all,
-altho I might consider building the crosstools externaly. so you might need to run that first.
-
-A temporarely ARM target inside crosstools is in the work. requires arm-none-eabi- set of build tools as well as a
-fake init static compiled
-
-### busybox TC
-Linux kernel 6.8 removed a number of traffic control related symbols.
-a easy fix has been applied: <https://bugs.busybox.net/show_bug.cgi?id=15934>
-but more elegant untill Busybox fixes the TC command would be:
-<https://bugs.gentoo.org/926872>
-
 ## Adding new programs
 
 For new programs to be added, there are multiple ways to do so. The easiest I think is to either manualy or using a script to build and copy the required files into the to be made initramfs.
 
 Everything inside the ``$TOP/bin/build/`` will be copied over to the new initramfs.
 Dropbear is an example build script that will build dropbear (an SSH server/client) staticly compiled.
-
-In case of dropbear, if the right keys are in place, starting with network support:
-
-```sh
-./build.sh -net 52:55:00:d1:55:01
-```
-
-then inside the system:
-
-```sh
-dropbear -R
-```
-
-You should now be able to ssh into this (maybe remove the old known host ip and key from your hosts .ssh/known_hosts)
-
-```sh
-ssh root@192.168.66.6
-```
-
-__tip__
-add the following to prevent a bloating knownhosts file.
-
-```sh
--o "UserKnownHostsFile /dev/null"
-```
 
 ### Musl
 
@@ -272,59 +242,6 @@ The mkiso file will check if mkrescue and xorriso are installed on your system, 
 If you want Musl and or dropbear to be included or any other tool in the iniramfs, please add them to the build folder as described in chapter *Adding new programs*
 .
 the ../bin/iso/ folder isnt removed, one could add files there aswell to be included with the iso file (grub modules maybe?). checking mkiso.sh and making appropiate modifications is probably best.
-
-## Network
-
-To get basic network working, the current buildscipt and setup of qemu will use basic networking.
-The IP will be 10.0.2.15 and you can reach the internet if your host and qemu allows other virtual machines aswell.
-
-To use a bridge setup (wich I wanted to try anyway) and be able to ping another virtual machine do the following:
-Create a bridge and 2 taps (1 tap for a virual machine, either eth0/or wireless for internet, or another tap for another virtual machine).
-As root (or use sudo)
-
-```sh
-ip tuntap add tap0 mode tap
-ip tuntap add tap1 mode tap
-```
-
-Create the actual bridge
-
-```sh
-brctl  addbr br0
-```
-
-Add the two taps to the bridge
-
-```sh
-brctl addif br0 tap0
-brctl addif br0 tap1
-```
-
-Bring the interfaces up, so they actualy work.
-
-```sh
-ifconfig tap0 up
-ifconfig tap1 up
-ifconfig br0 up
-```
-
-then add a network device to your qemu instance, if using my buildscript, run the following
-
-```sh
-./build -net 52:55:00:d1:55:01
-```
-
-The system should get an IP from your dhcp server (you can also add one using dnsmasq)
-
-sometimes you need to change the ip of an instance, then
-inside one of the qemu instances, change to static ip for example:
-
-```sh
-ifconfig eth0 down
-ifconfig eth0 up 10.0.2.16 netmask 255.255.255.0 up
-```
-
-And now you should be able to ping eachother and do stuff. If you setup a DHCP server or add the bridge to a network with a DHCP server, you can set the instances to recieve a IP from the said DHCP server, which in the current version is the case.
 
 ## SSH
 
