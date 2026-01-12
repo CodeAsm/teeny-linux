@@ -69,6 +69,44 @@ ifconfig eth0 up 10.0.2.16 netmask 255.255.255.0 up
 ```
 
 And now you should be able to ping eachother and do stuff. If you setup a DHCP server or add the bridge to a network with a DHCP server, you can set the instances to recieve a IP from the said DHCP server, which in the current version is the case.
+### Removing
+
+To remove interfaces and shutdown stuff
+delete a tap (also for tap1 or eth0) and deteling the tap
+
+```sh
+brctl delif br0 tap0
+tunctl -d tap0
+```
+
+Bring the bridge down and remove it:
+
+```sh
+ifconfig br0 down
+brctl delbr br0
+```
+
+Now you can up your eth0 or wirelless again for internets or use a VM without these bridges and use usermode networking.
+
+### Extra handy network commands and links
+
+To flush the ip and be able to add eth0 of your host to the bridge:
+
+```sh
+ip addr flush dev eth0
+```
+
+Checking out if the bridge has the right and all taps or interfaces you wanted:
+
+```sh
+brctl show
+```
+
+More details and tips can be found at:
+
+* <https://gist.github.com/extremecoders-re/e8fd8a67a515fee0c873dcafc81d811c>
+* <https://wiki.qemu.org/Documentation/Networking#Tap>
+* <https://wiki.archlinux.org/index.php/Network_bridge#With_bridge-utils>
 
 ## Dropbear
 
@@ -97,3 +135,16 @@ add the following to prevent a bloating knownhosts file.
 ```sh
 -o "UserKnownHostsFile /dev/null"
 ```
+
+
+## SSH
+
+To ssh into your freshly build TeenyLinux, you simply type:
+
+```sh
+$ ssh root@192.168.66.6 -o "UserKnownHostsFile=/dev/null"
+```
+
+The added -o option redirects the known host key to /dev/null, because each rerun of dropbear generates a new hostkey. These steps are not nececairy when reusing the hostkey (by supplying it during the init build fase etc.)
+
+
