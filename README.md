@@ -46,7 +46,7 @@ Latest TeenyLinux with (optional) Musl and networking turned on (slower startup 
 see crosstools.sh for a ARM attempt, currently boots the kernel, and no busybox or temp init.
 
 
-### busybox TC
+### Busybox TC
 Linux kernel 6.8 removed a number of traffic control related symbols.
 a easy fix has been applied: <https://bugs.busybox.net/show_bug.cgi?id=15934>
 but more elegant untill Busybox fixes the TC command would be:
@@ -68,7 +68,7 @@ My goals in non particular order are:
 Most of my research and/or experimenting is done on a x86_64 Arch Linux system, I asume the reader is skilled enough to translate any commands or hints to their own system or reading other resources to accomplish their own goals.
 This is never ment for production or replacing LFS for example.
 
-## usage and building
+## Usage and building
 
 run the buildscript :D
 
@@ -79,7 +79,7 @@ if your system does not meet the build requirements, [ReqCheck.sh](ReqCheck.sh) 
 
 If wanted, customize versions in [vars.sh](vars.sh), here you can test kernel versions, busybox versions and arch variables. this file also changes the most often upon version bumps. Some intresting variables can be changes here aswell that are used by the final running linux, ip adresses, hostname. One could even change the default init, if you install your own before compilation (../bin/build/)
 
-## options
+## Options
 
 The build script knows the following commands passable as arguments:
 
@@ -93,7 +93,7 @@ deletes all but the tarbal files (handy to restart building without downloading 
 ./build.sh -arch [ppc|x86_64|i686]
 ```
 
-builds for the selected arch, x86_64 is default tho, for x86, specify i686.
+builds for the selected arch, x86_64 is default tho, for x86, specify i686. For now, its best to set these in vars.sh
 
 ```bash
 ./build.sh -init
