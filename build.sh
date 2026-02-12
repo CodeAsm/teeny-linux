@@ -65,8 +65,10 @@ mkdir /dev/pts
 mount -t devpts devpts /dev/pts
 mount -t proc none /proc
 mount -t sysfs none /sys
- 
- hostname 
+mkdir -p /tmp
+mount -t tmpfs tmpfs /tmp
+
+hostname 
 /sbin/mdev -s
 /sbin/ifconfig lo 127.0.0.1 netmask 255.0.0.0 up
 /sbin/ifconfig eth0 up $IP netmask 255.255.255.0 up
@@ -133,15 +135,19 @@ if [ "$ARCH" == "i686" ]; then
 	export LDFLAGS="-m32"
 fi
 
-# do a static lib thing for busy, 
+# do a static lib thing for busy,
 sed -i '/# CONFIG_STATIC is not set/c\CONFIG_STATIC=y' ../obj/busybox-$ARC/.config
-#for musl we experimentaly determined these to be nececairy
+# for musl we experimentaly determined these to be nececairy
 
-#There are traffic control related symbols removed in Kernel 6.8
-#sed -i '/CONFIG_TC=y/c\# CONFIG_TC is not set\r\n# CONFIG_FEATURE_TC_INGRESS is not set' ../obj/busybox-$ARC/.config
-sed -i '/CONFIG_TC=y/c\# CONFIG_TC is not set\n# CONFIG_FEATURE_TC_INGRESS is not set' ../obj/busybox-$ARC/.config
+# There are traffic control related symbols removed in Kernel 6.8
 # Gentoo has some patches availeble but disableing this command seems to fix it for me.
 # https://bugs.gentoo.org/926872
+sed -i '/^CONFIG_TC=/d;/^# CONFIG_TC is not set$/d;/^CONFIG_FEATURE_TC_INGRESS=/d;/^# CONFIG_FEATURE_TC_INGRESS is not set$/d' ../obj/busybox-$ARC/.config
+printf '%s\n' "# CONFIG_TC is not set" "# CONFIG_FEATURE_TC_INGRESS is not set" >> ../obj/busybox-$ARC/.config
+
+# Enable CGI support in httpd
+sed -i '/^CONFIG_FEATURE_HTTPD_CGI=/d;/^# CONFIG_FEATURE_HTTPD_CGI is not set$/d' ../obj/busybox-$ARC/.config
+printf '%s\n' "CONFIG_FEATURE_HTTPD_CGI=y" >> ../obj/busybox-$ARC/.config
 
 cd ../obj/busybox-$ARC
 make -j$CORECOUNT $COMPILER
@@ -201,8 +207,9 @@ echo nameserver $DNS > etc/resolv.conf
 
 chmod +x init
 if [ -f $TOP/obj/busybox-$ARC/busybox ]; then
+    # Create cpio with root:root ownership in archive without touching host files
     find . -print0 \
-        | cpio --null -ov --format=newc \
+        | cpio --null -ov --format=newc -R 0:0 \
         | gzip -9 > $TOP/obj/initramfs-busybox-$ARC.cpio.gz
 else
 echo "[ error ] busybox is missing"
@@ -244,7 +251,7 @@ else
 	echo "[ error ] Unsupported architecture: $ARCH"
 	exit 1
 fi
-sed -i 's/CONFIG_WERROR=y/# CONFIG_WERROR is not set/' ../obj/linux-x86/.config
+sed -i 's/CONFIG_WERROR=y/# CONFIG_WERROR is not set/' ../obj/linux-$ARC/.config
 make O=../obj/linux-$ARC EXTRA_CFLAGS="-Wno-use-after-free" -j$CORECOUNT
 
 }
