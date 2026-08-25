@@ -30,9 +30,9 @@ Updated to the latest I know Kernel and applications
 
 | Package        | Version    | Date        |
 | :------------- | :--------- | ----------: |
-| Linux kernel   | 7.0.6      | 2026-05-11  |
+| Linux kernel   | 7.2        | 2026-08-16  |
 | BusyBox        | 1.37.0     | 2024-09-27  |
-| Drobbear       | 2025.89    | 2025-12-16  |
+| Drobbear       | 2026.91    | 2026-05-10  |
 
 ![teenylinux booting musl and networking Screenshot](https://raw.githubusercontent.com/codeasm/teeny-linux/main/resources/Screenshot3.png)
 
