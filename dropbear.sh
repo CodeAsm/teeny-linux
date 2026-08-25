@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
 
 . ./vars.sh
-DROP="2025.89"                   #Dropbear release number
+DROP="2026.91"                   #Dropbear release number
 ARCH="x86_64"                    #default arch
 TARGET=$TOP/build    
                                  #location for the build, change this for your location
@@ -66,6 +66,18 @@ function install {
     mkdir -pv $TARGET/etc/dropbear/
     #cp ~/.ssh/id_rsa.pub $TARGET/etc/dropbear/authorized_keys
     #cp ~/.ssh/id_rsa.pub $TARGET/root/authorized_keys
+
+	 mkdir -pv $TARGET/var/lib/dpkg
+    #touch $TARGET/var/lib/dpkg/status
+    cat << EOF >> $TARGET/var/lib/dpkg/status
+Package: dropbear
+Status: install ok installed
+Priority: optional
+Section: net
+Version: $DROP
+
+EOF
+    
 }
 
 #----------------------------------------------------------------------
