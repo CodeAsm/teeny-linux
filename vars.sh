@@ -6,7 +6,7 @@ KERNEL="7.2"                    #Kernel release number. (or see cli options)
 V="${KERNEL:0:1}"               #Kernel version for folder (probably breaks when 10 or larger)
 KTYPE="xz"                      #gz used by RC, xz by stable releases, but should work.
                                 #if posible, I would prever xz for its size and decompress seed
-BUSY="1.37.0"                   #busybox release number
+BUSY="1.38.0"                   #busybox release number
 ARCH="x86_64"                   #default arch (options: x86_64, i686, arm64, armhf, powerpc64le)
 ARC="x86"                       #short arch (x86, pentium3)
 
