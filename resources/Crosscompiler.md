@@ -160,3 +160,7 @@ clean:
 ```
 
 a device tree database is required for proper functioning arm targets, for my example ive used versatile-pb.dtb that is also provided after compiling the kernel.
+
+## resources and helpfull links
+
+- [ppc osx on qemu for osx](https://www.emaculation.com/doku.php/ppc-osx-on-qemu-for-osx)
