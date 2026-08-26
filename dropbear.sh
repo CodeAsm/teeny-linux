@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
 
 . ./vars.sh
-DROP="2026.91"                   #Dropbear release number
+DROP="2025.89"                   #Dropbear release number
 ARCH="x86_64"                    #default arch
 TARGET=$TOP/build    
                                  #location for the build, change this for your location
@@ -17,7 +17,7 @@ cd $TARGET
 
 # a bunch of helpfull functions
 #----------------------------------------------------------------------
-function delete {
+delete() {
 cd $TARGET
 mv ../dropbear-$DROP.tar.bz2 ../../
 #need to remove only dropbear stuff instead of everything
@@ -28,13 +28,13 @@ cp ../../dropbear-$DROP.tar.bz2 ../dropbear-$DROP.tar.bz2
 exit 1
 }
 
-function extract {
+extract() {
     echo "[ extract dropbear ]"
     cd $TARGET/..
     tar -xvf dropbear-$DROP.tar.bz2 
 }
 
-function build {
+build() {
     echo "[ building dropbear ]"
     cd $TARGET/../dropbear-$DROP
     ./configure             \
@@ -55,7 +55,7 @@ function build {
     make -j8 $COMPILER #PROGRAMS="dropbear dbclient dropbearkey dropbearconvert scp"
 }
 
-function install {
+install() {
     echo "[ install dropbear ]"
     cd $TARGET/../dropbear-$DROP
     mkdir -pv $TARGET/usr/sbin/
@@ -82,7 +82,7 @@ EOF
 
 #----------------------------------------------------------------------
 #process commandline arguments
-while [[ $# -gt 0 ]]
+while [ $# -gt 0 ]
 do
 key="$1"
 case $key in
