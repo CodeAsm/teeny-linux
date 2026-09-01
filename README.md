@@ -113,10 +113,10 @@ A new command has been added that allows pretty much very many network options, 
 To get some usernet working:
 
 ```bash
--netdev user,id=net0,net=192.168.66.0/24,dhcpstart=192.168.66.6,hostfwd=tcp:127.0.0.1:2222-192.168.66.6:22 -device e1000,netdev=net0
+ ./build.sh -usrnet '-netdev user,id=net0,net=192.168.66.0/24,dhcpstart=192.168.66.6,hostfwd=tcp:127.0.0.1:2222-192.168.66.6:22 -device e1000,netdev=net0'
 ```
 
-now one could start dropbear with:
+now one could start dropbear inside the vm with:
 ```bash
 dropbear -R
 ```
