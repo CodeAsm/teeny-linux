@@ -30,7 +30,7 @@ Updated to the latest I know Kernel and applications
 
 | Package        | Version    | Date        |
 | :------------- | :--------- | ----------: |
-| Linux kernel   | 7.2        | 2026-08-16  |
+| Linux kernel   | 7.2.2      | 2026-08-28  |
 | BusyBox        | 1.38.0     | 2026-05-13  |
 | Dropbear       | 2026.91    | 2026-05-10  |
 
