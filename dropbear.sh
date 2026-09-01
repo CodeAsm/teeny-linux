@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
 
 . ./vars.sh
-DROP="2025.89"                   #Dropbear release number
+DROP="2026.94"                   #Dropbear release number
 ARCH="x86_64"                    #default arch
 TARGET=$TOP/build    
                                  #location for the build, change this for your location

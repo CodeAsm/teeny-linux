@@ -32,7 +32,7 @@ Updated to the latest I know Kernel and applications
 | :------------- | :--------- | ----------: |
 | Linux kernel   | 7.2.2      | 2026-08-28  |
 | BusyBox        | 1.38.0     | 2026-05-13  |
-| Dropbear       | 2026.91    | 2026-05-10  |
+| Dropbear       | 2026.94    | 2026-07-23  |
 
 ![teenylinux booting musl and networking Screenshot](https://raw.githubusercontent.com/codeasm/teeny-linux/main/resources/Screenshot3.png)
 
