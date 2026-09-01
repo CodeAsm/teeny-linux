@@ -109,6 +109,24 @@ Builds or rebuilds only the initramfs and then tries to run qemu, handy when try
 
 ### Network
 
+A new command has been added that allows pretty much very many network options, old behaviour is still availeble.
+To get some usernet working:
+
+```bash
+-netdev user,id=net0,net=192.168.66.0/24,dhcpstart=192.168.66.6,hostfwd=tcp:127.0.0.1:2222-192.168.66.6:22 -device e1000,netdev=net0
+```
+
+now one could start dropbear with:
+```bash
+dropbear -R
+```
+and connnect from the host with:
+```bash
+ssh -p 2222 root@127.0.0.1
+```
+
+The old behaviour assummes a bridge for qemu to connect to. this code is work in progress as it allows also to connect more easily online, ping and potencially be dangerous. 
+
 Build and start an instance with a MAC address of choice
 
 ```bash

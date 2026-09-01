@@ -294,6 +294,9 @@ case $key in
     ;;-net)
     NET="-net nic,model=e1000,macaddr=$2 -net bridge,br=br0"
     shift; shift
+	;;-usrnet)
+    NET="$2"
+    shift; shift
     ;;-mod|-module)
     MODULE=true
     MAKEINIT=true
