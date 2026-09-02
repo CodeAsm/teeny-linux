@@ -113,9 +113,15 @@ A new command has been added that allows pretty much very many network options, 
 To get some usernet working:
 
 ```bash
- ./build.sh -usrnet '-netdev user,id=net0,net=192.168.66.0/24,dhcpstart=192.168.66.6,hostfwd=tcp:127.0.0.1:2222-192.168.66.6:22 -device e1000,netdev=net0'
+./build.sh -usrnet '-netdev user,id=net0,dhcpstart=10.0.2.15,hostfwd=tcp:127.0.0.1:2222-10.0.2.15:22 -device e1000,netdev=net0'
 ```
-
+now we need to get network working, once booted and logged in:
+```bash
+ifconfig eth0 10.0.2.15 netmask 255.255.255.0 up
+route del default
+route add default gw 10.0.2.2
+echo 'nameserver 10.0.2.3' > /etc/resolv.conf
+```
 now one could start dropbear inside the vm with:
 ```bash
 dropbear -R
@@ -124,6 +130,24 @@ and connnect from the host with:
 ```bash
 ssh -p 2222 root@127.0.0.1
 ```
+To not check nor add this temporary host to your hostfile:
+```bash
+ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 2222 root@127.0.0.1
+```
+
+to transfer a file
+```bash
+ wget 10.0.2.2:8000/build-crappie.sh
+```
+(if a file is hosted on the host using some webserver.)
+```bash
+python3 -m http.server 8000
+```
+totally sidetracked now, if you had musl installed aswell, build crappie with:
+```bash
+  CC=gcc sh ./build-crappie.sh -install
+```
+And now you have my crappie fork of bmake and musl gcc.
 
 The old behaviour assummes a bridge for qemu to connect to. this code is work in progress as it allows also to connect more easily online, ping and potencially be dangerous. 
 
