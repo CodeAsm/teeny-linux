@@ -26,11 +26,12 @@ When dropbear is added and ssh enabled, __!! change default password !!__
 
 ## News
 
-Updated to the latest I know Kernel and applications
+Updated to the latest I know Kernelroot
+ and applications
 
 | Package        | Version    | Date        |
 | :------------- | :--------- | ----------: |
-| Linux kernel   | 7.2.2      | 2026-08-28  |
+| Linux kernel   | 7.3.4      | 2026-11-10  |
 | BusyBox        | 1.38.0     | 2026-05-13  |
 | Dropbear       | 2026.94    | 2026-07-23  |
 
@@ -118,7 +119,6 @@ To get some usernet working:
 now we need to get network working, once booted and logged in:
 ```bash
 ifconfig eth0 10.0.2.15 netmask 255.255.255.0 up
-route del default
 route add default gw 10.0.2.2
 echo 'nameserver 10.0.2.3' > /etc/resolv.conf
 ```
