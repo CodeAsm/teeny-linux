@@ -31,7 +31,7 @@ Updated to the latest I know Kernelroot
 
 | Package        | Version    | Date        |
 | :------------- | :--------- | ----------: |
-| Linux kernel   | 7.3.4      | 2026-11-10  |
+| Linux kernel   | 7.3.5      | 2026-11-17  |
 | BusyBox        | 1.38.0     | 2026-05-13  |
 | Dropbear       | 2026.94    | 2026-07-23  |
 
